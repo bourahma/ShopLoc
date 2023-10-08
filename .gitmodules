@@ -1,3 +1,6 @@
 [submodule "shoploc-fe"]
 	path = shoploc-fe
 	url = https://github.com/bourahma/ShopLoc-FE
+[submodule "shoploc-be"]
+	path = shoploc-be
+	url = https://github.com/bourahma/ShopLoc-BE
