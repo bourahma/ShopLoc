@@ -1,12 +1,12 @@
 # Contexte 
 Dans le cadre de notre **Master 2 Informatique** parcours **MIAGE** (**M**éthodes **I**nformatiques **A**ppliquées à la **G**estion des **E**ntreprises) et de l'UE **GLOP** (**G**énie **LO**giciel par la **P**ratique), nous sommes amenés à réaliser un projet de développement logiciel en équipe. L'objectif du projet étant de : 
 
-- [ ] Comprendre la problématique et les enjeux de la conception de logiciels complexes.
-- [ ] Mettre en place un processus de développement adapté au contexte et aux contraintes.
-- [ ] Mettre en oeuvre un ensemble de méthodes et d'outils pour mener à bien un projet, et d'être agile dans leur application.
-- [ ] Organiser un travail en équipe : planification, répartition des tâches, gestion du temps, négociation, résolution de conflits, amélioration continue ...
-- [ ] Interagir avec un client pour expliciter les besoins, communiquer les solutions et les avancées.
-- [ ] Formaliser des besoins, passer de la spécification à la conception puis à la réalisation en utilisant les méthodes et les bonnes pratiques du génie logiciel.
+- Comprendre la problématique et les enjeux de la conception de logiciels complexes.
+- Mettre en place un processus de développement adapté au contexte et aux contraintes.
+- Mettre en oeuvre un ensemble de méthodes et d'outils pour mener à bien un projet, et d'être agile dans leur application.
+- Organiser un travail en équipe : planification, répartition des tâches, gestion du temps, négociation, résolution de conflits, amélioration continue ...
+- Interagir avec un client pour expliciter les besoins, communiquer les solutions et les avancées.
+- Formaliser des besoins, passer de la spécification à la conception puis à la réalisation en utilisant les méthodes et les bonnes pratiques du génie logiciel.
 
 Pour plus d'informations [Ici](https://www.fil.univ-lille.fr/portail/index.php?dipl=MMiage&sem=M2MIAGE&ue=GLOP&label=Programme).
 
@@ -62,15 +62,51 @@ Cet environnement de travail suit une approche de gestion de version basée sur 
 
 Le workflow typique dans cet environnement de travail suit les étapes suivantes :
 
-1. Les développeurs créent des branches de fonctionnalités à partir de `develop` pour travailler sur des fonctionnalités spécifiques.
+- Les développeurs créent des branches de fonctionnalités à partir de `develop` pour travailler sur des fonctionnalités spécifiques.
 
-2. Les fonctionnalités en cours de développement sont testées et validées dans les branches de fonctionnalités.
+- Les fonctionnalités en cours de développement sont testées et validées dans les branches de fonctionnalités.
 
-3. Une fois qu'une fonctionnalité est prête, elle est fusionnée dans `preprod` pour être testée en tant qu'ensemble.
+- Une fois qu'une fonctionnalité est prête, elle est fusionnée dans `preprod` pour être testée en tant qu'ensemble.
 
-4. La branche `preprod` est continuellement testée pour s'assurer que le code fonctionne correctement et qu'il peut être fusionné en toute sécurité dans `main`.
+- La branche `preprod` est continuellement testée pour s'assurer que le code fonctionne correctement et qu'il peut être fusionné en toute sécurité dans `main`.
 
-5. Lorsque la branche `preprod` est stable, elle est fusionnée dans `main` pour être déployée en production.
+- Lorsque la branche `preprod` est stable, elle est fusionnée dans `main` pour être déployée en production.
+
+# Architecture
+
+- **Maven**
+   - **Objectif**: Gérer efficacement les dépendances du projet et faciliter sa construction.
+   - **Utilisation**: Le fichier `pom.xml` est au cœur de la configuration de Maven, définissant toutes les bibliothèques nécessaires. Il facilite la compilation, les tests et la construction du projet.
+
+- **Docker & Docker Compose**
+   - **Objectif**: Assurer un déploiement cohérent, isolé et portable des applications et de leurs services associés.
+   - **Description**: 
+     - **Docker** Pour l'encapsulation de l'application et ses dépendances dans des conteneurs.
+     - **Docker Compose** Pour la gestion des applications multi-conteneurs.
+   - **Utilisation**: Des fichiers Dockerfile définissent les images Docker. Un fichier `docker-compose.yml` orchestre les services, incluant l'application principale et les instances PostgreSQL.
+
+- **PostgreSQL**
+   - **Objectif**: Pour la persistance des données.
+   - **Description**: Un SGBD relationnel.
+   - **Utilisation**: Avec Docker Compose, deux instances PostgreSQL distinctes vont être déployées, une pour les données transactionnelles et une autre pour les données analytiques.
+
+- **GitHub Actions**
+   - **Objectif**: Pour l'automatisation des pipelines CI/CD.
+   - **Description**: GitHub Actions facilite l'automatisation des workflows.
+   - **Utilisation**: Les workflows sont déclenchés par des événements tels que des commits, ils compilent et testent le projet, construisent les images Docker et déploient les conteneurs via Docker Compose.
+
+- **SonarCloud**
+   - **Objectif**: Offrir une garantie de la qualité du code.
+   - **Utilisation**: Intégré à GitHub Actions pour analyser le code.
+
+
+# Avantages de l'Architecture
+
+- **Gestion efficace du projet**: Maven facilite la gestion des dépendances, la compilation et la construction du projet.
+- **Flexibilité et Portabilité**: Docker et Docker Compose garantissent un déploiement uniforme.
+- **Persistance des données robuste**: L'utilisation de PostgreSQL assure une gestion solide des données.
+- **Automatisation complète**: GitHub Actions élimine la nécessité d'interventions manuelles dans le pipeline CI/CD.
+- **Qualité du code**: SonarCloud évalue la qualité du code, aidant à maintenir de hauts standards.
 
 
 # Livrables
