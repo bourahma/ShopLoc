@@ -1,0 +1,60 @@
+# Ignore Node.js modules folder
+node_modules/
+
+# Ignore build artifacts and production build folder
+build/
+dist/
+out/
+*.log
+npm-debug.log*
+
+# Ignore .env files (store environment variables)
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Ignore IDE and editor-specific files
+.vscode/
+.idea/
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore test snapshots
+__snapshots__/
+
+# Ignore yarn.lock file
+yarn.lock
+
+# Ignore generated files and folders from various build tools
+*.pnp.js
+.pnp/
+.cache/
+coverage/
+
+# Ignore logs and temporary files
+logs/
+*.log
+*.swp
+*.bak
+
+# Ignore TypeScript and JavaScript configuration files
+tsconfig.json
+tsconfig.*.json
+*.jsconfig.json
+
+# Ignore eslint configuration
+.eslintcache
+
+# Ignore automatically generated coverage reports
+coverage/
+
+# Ignore next.js build directory
+.next/
+
+# Ignore serverless generated files
+.serverless/
+
+# Ignore Nest output folder
+dist/
