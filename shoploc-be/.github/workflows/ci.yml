@@ -1,0 +1,25 @@
+name: Develop Branch CI
+
+on:
+  push:
+    branches:
+      - '*'
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: Clean project
+        run: mvn clean
+
+      - name: Run Tests
+        run: mvn test
