@@ -20,7 +20,7 @@ Ce répertoire contient le code source pour l'implémentation de la partie back-
 - **DBeaver** (Version X.X)
   - Comme outil de gestion de base de données, notamment pour l'exploration de la base de données.
 
-## Workflows & Automation
+## Workflows & Automatisation
 
 1. Le fichier **ci.yml** dans le répertoire **.github/workflows** définit le flux de travail d'intégration continue (CI) pour ce projet sur GitHub Actions. A Chaque commit, la CI sera déclenché pour effectuer les actions suivantes :
 
