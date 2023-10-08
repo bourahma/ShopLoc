@@ -19,12 +19,12 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
-      - name: Set working directory to shoploc-be
-        working-directory: ShopLoc
-        run: cd shoploc-be
-
       - name: Clean project
-        run: mvn clean
+        run: |
+          cd shoploc-be
+          mvn clean
 
       - name: Run Tests
-        run: mvn test
+        run: |
+          cd shoploc-be
+          mvn test
