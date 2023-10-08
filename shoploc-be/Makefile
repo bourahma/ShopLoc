@@ -6,3 +6,15 @@ stopDB:
 
 restartDB:
 	docker restart shoploc-db-container
+
+runApp:
+	mvn spring-boot:run
+
+clean:
+	- make stopDB
+	- docker system prune
+	- mvn clean
+
+run: clean
+	make runDB
+	make runApp

@@ -38,12 +38,9 @@ Pour exécuter ce l'application localement, vous devez configurer la bases de do
 
 Ce projet utilise un fichier Makefile pour simplifier l'exécution des commandes courantes. Vous pouvez utiliser `make` pour exécuter les tâches suivantes :
 
-- `make test` : Exécute les tests de l'application.
 - `make runApp` : Démarre l'application.
-- `make stopApp` : Arrête l'application.
 
 Ces commandes permettent de tout lancer simultanément :
 
-- `make build` : Fais un `make runDB` puis `make runApp`.
-- `make stop` : Fais un `make stopDB` puis `make stopApp`.
+- `make run` : Fais un `make runDB` puis `make runApp`.
 - `make clean` : Fais un clean du projet.
