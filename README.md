@@ -33,9 +33,9 @@ Ce travail est réalisé en équipe dont les membres sont :
 # Organisation du projet
 
 Le projet se répartit de la façon suivante :
-- Un dossier *<strong>shoploc-be</strong>* pour les fichiers sources couvrant le developpement de la partie de l'application.
-- Un dossier *<strong>shoploc-fe</strong>* pour les fichiers sources couvrant le developpement de la partie front-end de l'application.
-- La partie *<strong>back-end</strong>* ainsi que la partie *<strong>front-end</strong>* de l'application disposent de leur propre fichier **README** fournissant des explications détaillées.
+- Un dossier **shoploc-be** pour les fichiers sources couvrant le developpement de la partie back-end de l'application.
+- Un dossier **shoploc-fe** pour les fichiers sources couvrant le developpement de la partie front-end de l'application.
+- La partie **back-end** ainsi que la partie *<strong>front-end</strong>* de l'application disposent de leur propre fichier **README** fournissant des explications détaillées.
 
 # Environnement de Travail
 
@@ -45,53 +45,51 @@ Cet environnement de travail suit une approche de gestion de version basée sur 
 
 ### Production
 
-- **Non de la branche**: `main`
+- **Nom de la branche**: `main`
 - **Description de la branche**: La branche `main` est la branche de production de ce projet. Elle contient le code stable et approuvé qui est prêt à être déployé en production. Les déploiements en production sont effectués à partir de cette branche.
 
-### Tests
+### Test
 
-- **Non de la branche**: `develop`
+- **Nom de la branche**: `preprod`
 - **Description de la branche**: La branche `develop` est utilisée pour les tests et l'intégration continue. C'est là où les fonctionnalités développées sont combinées pour former une version de test de l'application. Les tests et les validations sont effectués sur cette branche avant de fusionner dans `main`.
 
 ### Développement
 
-- **Non de la branche**: `features-develop`
+- **Nom de la branche**: `develop`
 - **Description de la branche**: La branche `features-develop` est destinée au développement actif des fonctionnalités. Les développeurs travaillent sur des fonctionnalités ou des correctifs de bogues dans des branches de fonctionnalités distinctes basées sur cette branche. Une fois que les fonctionnalités sont complètes et testées, elles sont fusionnées dans `develop` pour l'intégration continue.
 
 ## Workflow
 
 Le workflow typique dans cet environnement de travail suit les étapes suivantes :
 
-1. Les développeurs créent des branches de fonctionnalités à partir de `features-develop` pour travailler sur des fonctionnalités spécifiques.
+1. Les développeurs créent des branches de fonctionnalités à partir de `develop` pour travailler sur des fonctionnalités spécifiques.
 
 2. Les fonctionnalités en cours de développement sont testées et validées dans les branches de fonctionnalités.
 
-3. Une fois qu'une fonctionnalité est prête, elle est fusionnée dans `develop` pour être testée en tant qu'ensemble.
+3. Une fois qu'une fonctionnalité est prête, elle est fusionnée dans `preprod` pour être testée en tant qu'ensemble.
 
-4. La branche `develop` est continuellement testée pour s'assurer que le code fonctionne correctement et qu'il peut être fusionné en toute sécurité dans `main`.
+4. La branche `preprod` est continuellement testée pour s'assurer que le code fonctionne correctement et qu'il peut être fusionné en toute sécurité dans `main`.
 
-5. Lorsque la branche `develop` est stable, elle est fusionnée dans `main` pour être déployée en production.
-
-Ce modèle de gestion de version permet un développement continu, des tests rigoureux et une gestion efficace des versions de votre projet.
+5. Lorsque la branche `preprod` est stable, elle est fusionnée dans `main` pour être déployée en production.
 
 
 # Livrables
 
-### Livrable I : premiére version de l’application
+### Livrable I : Réponse à l'appel d'offre
 
-Date : 10 / 10 / 2021
+**Date** : 13 / 09 / 2023
 
 Ce Livrable 1 du projet, présente notre réponse à l'appel d'offre au projet.
 
 #### Présentation du Livrable :
 
 Pour cette première version de l'application, il y a deux objectifs principaux :
-- [] Estimation des coûts du projet.
-- [] Présentation des premiers éléments de l'architecture logicielle.
+- [ ] Estimation des coûts du projet.
+- [ ] Présentation des premiers éléments de l'architecture logicielle.
 
 # Journal de bord
 
-#### Semaine du 25 Octobre 2023
+#### Semaine du 25 Septembre 2023
 - Configuration des outils et de l'environnement de travail.
 
 #### Semaine du 09 Octobre 2023
