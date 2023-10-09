@@ -1,5 +1,5 @@
 # Contexte 
-Dans le cadre de notre **Master 2 Informatique** parcours **MIAGE** (**M**éthodes **I**nformatiques **A**ppliquées à la **G**estion des **E**ntreprises) et de l'UE **GLOP** (**G**énie **LO**giciel par la **P**ratique), nous sommes amenés à réaliser un projet de développement logiciel en équipe. L'objectif du projet étant de : 
+Dans le cadre de notre **Master 2 Informatique** parcours **MIAGE** (**M**éthodes **I**nformatiques **A**ppliquées à la **G**estion des **E**ntreprises) et de l'UE **GLOP** (**G**énie **LO**giciel par la **P**ratique), nous sommes amenés à réaliser un projet de développement logiciel en équipe, L'objectif du projet étant de : 
 
 - Comprendre la problématique et les enjeux de la conception de logiciels complexes.
 - Mettre en place un processus de développement adapté au contexte et aux contraintes.
