@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - '*'
-  paths:
-    - 'shoploc-be/'
 jobs:
     build-and-test:
       runs-on: ubuntu-latest
@@ -15,6 +13,7 @@ jobs:
         - name: Checkout code
           uses: actions/checkout@v2
 
+          working-directory: shoploc-be
         - name: Set up JDK
           uses: actions/setup-java@v2
           with:
@@ -22,13 +21,11 @@ jobs:
             java-version: '17'
 
         - name: Clean project
-          run: |
-            cd shoploc-be
+          run:
             mvn clean
 
         - name: Run Tests
-          run: |
-            cd shoploc-be
+          run:
             mvn test
 
         # CI Sonar
@@ -56,6 +53,5 @@ jobs:
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          run: | 
-            cd shoploc-be 
+          run: 
             mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=glop_shoploc
