@@ -32,18 +32,18 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
-          context: ./
+          context: ./shoploc-be
           push: true
-          dockerfile: ./shoploc-be/Dockerfile
+          dockerfile: Dockerfile
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/shoploc-be:latest
 
       # Build and deploy shoploc-be image on docker hub.
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
-          context: ./
+          context: ./shoploc-fe
           push: true
-          dockerfile: ./shoploc-fe/Dockerfile
+          dockerfile: Dockerfile
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/shoploc-fe:latest
 
   deploy:
