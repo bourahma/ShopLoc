@@ -66,23 +66,23 @@ jobs:
       # Deploy shoploc-be on EC2 instance.
       - name: Pull shoploc-be docker image
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ env.IP_BE_ADDRESS }} 'sudo docker pull ${{ env.DOCKERHUB_USERNAME }}/shoploc-be:latest'
+          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@$13.38.106.88 'sudo docker pull ${{ env.DOCKERHUB_USERNAME }}/shoploc-be:latest'
       - name: Stop running shoploc-be-container
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@{{ env.IP_BE_ADDRESS }} 'sudo docker stop shoploc-be-container || true'
-          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@{{ env.IP_BE_ADDRESS }} 'sudo docker rm shoploc-be-container || true'
+          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@13.38.106.88 'sudo docker stop shoploc-be-container || true'
+          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@13.38.106.88 'sudo docker rm shoploc-be-container || true'
       - name: Run new shoploc-be-container
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@{{ env.IP_BE_ADDRESS }} 'sudo docker run -d --name shoploc-be-container -p 80:8080 ${{ env.DOCKERHUB_USERNAME }}/shoploc-be:latest'
+          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@13.38.106.88 'sudo docker run -d --name shoploc-be-container -p 80:8080 ${{ env.DOCKERHUB_USERNAME }}/shoploc-be:latest'
 
       # Deploy shoploc-fe on EC2 instance.
       - name: Pull shoploc-fe docker image
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@{{ env.IP_FE_ADDRESS }} 'sudo docker pull ${{ env.DOCKERHUB_USERNAME }}/shoploc-fe:latest'
+          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@35.181.56.65 'sudo docker pull ${{ env.DOCKERHUB_USERNAME }}/shoploc-fe:latest'
       - name: Stop running shoploc-fe-container
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@{{ env.IP_FE_ADDRESS }} 'sudo docker stop shoploc-fe-container || true'
-          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@{{ env.IP_FE_ADDRESS }} 'sudo docker rm shoploc-fe-container || true'
+          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@35.181.56.65 'sudo docker stop shoploc-fe-container || true'
+          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@35.181.56.65 'sudo docker rm shoploc-fe-container || true'
       - name: Run new shoploc-fe-container
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@{{ env.IP_FE_ADDRESS }} 'sudo docker run -d --name shoploc-fe-container -p 80:3000 ${{ env.DOCKERHUB_USERNAME }}/shoploc-be:latest'
+          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@35.181.56.65 'sudo docker run -d --name shoploc-fe-container -p 80:3000 ${{ env.DOCKERHUB_USERNAME }}/shoploc-be:latest'
