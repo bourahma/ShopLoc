@@ -6,7 +6,7 @@ COPY .mvn/ .mvn
 
 COPY mvnw pom.xml ./
 
-RUN ./mvnw dependency:resolve
+RUN chmod +x ./mvnw dependency:resolve
 
 COPY src ./src
 
