@@ -15,12 +15,12 @@ services:
     volumes:
         - ./mysql-data:/var/lib/mysql
 
-  # ShopLoc Back End App
+  # ShopLoc Back End Apps
   shoploc-be:
     build:
       context: ./shoploc-be
       dockerfile: Dockerfile
-    image: shoploc-be
+    image: shoploc-be:latest
     container_name: shoploc-be
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://shoploc-db:5432/shoploc-db
@@ -34,7 +34,7 @@ services:
     build:
       context: ./shoploc-fe
       dockerfile: Dockerfile
-    image: shoploc-fe
+    image: shoploc-fe:latest
     container_name: shoploc-fe
     ports:
       - '3000:3000' 
