@@ -52,6 +52,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:
@@ -75,6 +76,17 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@13.38.106.88 'sudo docker run -d --name shoploc-be-container -p 80:8080 bourahma/shoploc-be:latest'
 
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ env.DOCKERHUB_USERNAME }}
+          password: ${{ env.DOCKERHUB_TOKEN }}
+
+      - name: Set permissions for private key
+        run: |
+          echo "${{ env.AWS_PRIVATE_KEY }}" > key.pem
+          chmod 600 key.pem
+          
       # Deploy shoploc-fe on EC2 instance.
       - name: Pull shoploc-fe docker image
         run: |
