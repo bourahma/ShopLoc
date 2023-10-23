@@ -54,6 +54,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc8</artifactId> <!-- Use the appropriate version -->
+			<version>19.8.0.0</version> <!-- Specify the desired version -->
+		</dependency>
 	</dependencies>
 
 	<build>
