@@ -4,23 +4,23 @@ services:
 
    #ShopLoc Data Base
   shoploc-db:
-    image: postgres:latest
+    image: postgres
     container_name: shoploc-db
     environment:
       - POSTGRES_DB=shoploc-db
       - POSTGRES_USER=shoplocU
       - POSTGRES_PASSWORD=shoplocP
     ports:
-      - "5432:5432"
+      - "5430:5432"
     volumes:
         - ./mysql-data:/var/lib/mysql
 
-  # ShopLoc Back End Apps
+  # ShopLoc Back End
   shoploc-be:
     build:
       context: ./shoploc-be
       dockerfile: Dockerfile
-    image: shoploc-be:latest
+    image: shoploc-be
     container_name: shoploc-be
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://shoploc-db:5432/shoploc-db
@@ -29,14 +29,14 @@ services:
     depends_on:
       - shoploc-db
 
-  # ShopLoc Front End App
+  # ShopLoc Front End
   shoploc-fe:
     build:
       context: ./shoploc-fe
       dockerfile: Dockerfile
-    image: shoploc-fe:latest
+    image: shoploc-fe
     container_name: shoploc-fe
     ports:
-      - '3000:3000' 
+      - '3000:3000'
     depends_on:
       - shoploc-be
