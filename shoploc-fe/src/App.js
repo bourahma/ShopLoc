@@ -1,41 +1,25 @@
 import './App.css';
 
 import React, { useState, useEffect } from 'react';
+import AuthComponent from "./components/AuthComponent";
+import InfosComponent from "./components/InfosComponent";
+import LegacyInfosComponent from "./components/LegacyInfosComponent";
 
 function App() {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Use the fetch API to get data from an endpoint
-    fetch('http://localhost:8080/users')
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((responseData) => {
-        setData(responseData); // Update the state with the fetched data
-        setLoading(false); // Set loading to false
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-        setLoading(false);
-      });
-  }, []); // The empty dependency array ensures this effect runs once, similar to componentDidMount
-
   return (
     <div>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <ul>
-          {data.map((item) => (
-            <li key={item.firstname}>{item.lastname}</li>
-          ))}
-        </ul>
-      )}
+      <div id="header">
+        <div id='auth'>
+          <InfosComponent></InfosComponent>
+        </div>
+        <div id='info'>
+          <AuthComponent></AuthComponent>
+        </div>
+      </div>
+      <div id='bottom'>
+        <LegacyInfosComponent></LegacyInfosComponent>
+      </div>
+
     </div>
   );
 }
