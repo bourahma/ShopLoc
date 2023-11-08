@@ -6,10 +6,10 @@ const InfosComponent = () => {
 
   return (
       <div id="legacy-info">
-          <div id="shfe-logo">
-              <img src={logo} alt="Gain de points" />
+          <div className="flex items-center justify-center h-full">
+              <img className="h-full" src={logo} alt="Gain de points" />
           </div>
-          <div>
+          <div className="flex items-center justify-center">
               <img id="shfe-spg" src={offre} alt="Gain de points" />
           </div>
       </div>

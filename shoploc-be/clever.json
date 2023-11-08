@@ -1,0 +1,8 @@
+{
+	  "deploy": {
+		      "dockerfile": "Dockerfile",
+		          "flavor": "custom",
+			      "instances": 1
+			        }
+}
+
