@@ -11,10 +11,15 @@ import lombok.Setter;
 public class RegistrationToken {
 
     @Id
-    @Column(name = "uuid")
+    @Column(name = "token_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "token_sequence")
+    @SequenceGenerator(name = "token_sequence", sequenceName = "token_seq", allocationSize = 1, initialValue = 1)
+    private Long userId;
+
+    @Column(name = "uuid", nullable = false, unique = true)
     private String uuid;
 
     @OneToOne(orphanRemoval = false)
-    @JoinColumn(name = "utilisateur_id", referencedColumnName = "utilisateur_id")
+    @JoinColumn(name = "utilisateur_id", referencedColumnName = "utilisateur_id", nullable = false, unique = true)
     private User user;
 }

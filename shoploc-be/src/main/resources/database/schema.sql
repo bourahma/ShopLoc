@@ -3,8 +3,16 @@ DROP TABLE IF EXISTS Utilisateur CASCADE;
 DROP TABLE IF EXISTS Role CASCADE;
 DROP TABLE IF EXISTS Token CASCADE;
 DROP SEQUENCE IF EXISTS utilisateur_sequence;
+DROP SEQUENCE IF EXISTS token_sequence;
 
 CREATE SEQUENCE utilisateur_sequence
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+CREATE SEQUENCE token_sequence
     INCREMENT 1
     START 1
     MINVALUE 1
@@ -27,13 +35,13 @@ CREATE TABLE Utilisateur (
     password VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     enabled BOOLEAN NOT NULL,
-    phone_number VARCHAR(20),
-    uuid VARCHAR(36)
+    phone_number VARCHAR(20)
 );
 
 -- Create the Role table :
 CREATE TABLE Token (
-    uuid VARCHAR PRIMARY KEY,
-    utilisateur_id INT NOT NULL,
+    token_id INT DEFAULT nextval('token_sequence') PRIMARY KEY,
+    uuid VARCHAR UNIQUE,
+    utilisateur_id INT NOT NULL UNIQUE,
     FOREIGN KEY (utilisateur_id) REFERENCES Utilisateur (utilisateur_id)
 );

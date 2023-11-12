@@ -1,5 +1,7 @@
 package com.mimka.shoplocbe.dto.user;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,20 +13,12 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+public class AuthDTO {
 
+    @NotBlank(message = "Username cannot be empty")
     private String username;
 
-    private String lastname;
-
-    private String firstname;
-
+    @NotBlank(message = "Password cannot be empty")
+    @Size(min = 8, max = 20, message = "Password must be between 8 and 20 characters")
     private String password;
-
-    private String confirmedPassword;
-
-    private String email;
-
-    private String phoneNumber;
-
 }

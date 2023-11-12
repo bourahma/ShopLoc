@@ -1,10 +1,13 @@
 package com.mimka.shoplocbe.controller;
 
-import com.mimka.shoplocbe.dto.user.UserDTO;
+import com.mimka.shoplocbe.dto.user.AuthDTO;
+import com.mimka.shoplocbe.dto.user.RegisterDTO;
 import com.mimka.shoplocbe.exception.EmailAlreadyUsedException;
+import com.mimka.shoplocbe.exception.HandleMailSendException;
 import com.mimka.shoplocbe.service.AuthenticationServiceImpl;
 import com.mimka.shoplocbe.service.RegistrationServiceImpl;
 import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -28,14 +31,14 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public Map<String, String> loginUserWithUsername (@RequestBody UserDTO userDTO) {
-        return this.authenticationServiceImpl.loginUserWithUsername(userDTO.getUsername(), userDTO.getPassword());
+    public Map<String, String> loginUserWithUsername (@RequestBody @Valid AuthDTO authDTO) {
+        return this.authenticationServiceImpl.loginUserWithUsername(authDTO.getUsername(), authDTO.getPassword());
     }
 
     @PostMapping( "/register")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void registerUser (@RequestBody UserDTO userDTO) throws MessagingException, EmailAlreadyUsedException {
-        this.registrationServiceImpl.register(userDTO);
+    public void registerUser (@RequestBody @Valid RegisterDTO registerDTO) throws Exception {
+        this.registrationServiceImpl.register(registerDTO);
     }
 
     @GetMapping("/verify/{uuid}")

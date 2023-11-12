@@ -20,9 +20,9 @@ public class UserController {
     private UserServiceImpl userServiceImpl;
 
     @GetMapping(path = "/users")
-    @PreAuthorize("hasAnyAuthority('SCOPE_USER', 'SCOPE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_USER', 'SCOPE_ADMIN', 'SCOPE_ORGA')")
     public List<User> getUsers () {
-        System.out.println("toto");return userServiceImpl.getUsers();
+        return userServiceImpl.getUsers();
     }
 
     @PreAuthorize("hasAuthority('SCOPE_USER')")
@@ -35,5 +35,11 @@ public class UserController {
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public String helloAdmin () {
         return "Hello Admin";
+    }
+
+    @GetMapping(path = "/orga")
+    @PreAuthorize("hasAuthority('SCOPE_ORGA')")
+    public String helloOrga () {
+        return "Hello Orga";
     }
 }

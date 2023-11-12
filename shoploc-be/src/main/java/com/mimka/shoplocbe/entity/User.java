@@ -50,7 +50,4 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     private RegistrationToken registrationToken;
-
-    @Column(name = "uuid")
-    private String uuid;
 }
