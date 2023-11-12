@@ -1,14 +1,52 @@
-name: clever cloud
+name: Clever Cloud Deployment
 
 on:
   push:
     branches:
       - main
+
+env:
+  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+  DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  CLEVER_TOKEN: ${{ secrets.CLEVER_TOKEN }}
+  CLEVER_SECRET: ${{ secrets.CLEVER_SECRET }}
+
 jobs:
-  deploy:
-    image:
-      name: clevercloud/clever-tools
-      entrypoint: [ "/bin/sh", "-c" ]
-    stage: deploy
-    script:
-      - clever deploy --force
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: Build and package Spring Boot app
+        run: mvn clean package -DskipTests
+
+      - name: Build Docker image
+        run: docker build -t shoploc-be .
+
+      - name: Login to Clever Cloud
+        env:
+          CC_API_ID: app_eb2c1097-1738-4df6-86ff-0232d5599c98
+          CC_API_SECRET: ${{ secrets.CLEVER_SECRET }}
+        run: |
+          echo app_eb2c1097-1738-4df6-86ff-0232d5599c98 | clever login
+          echo ${{ secrets.CLEVER_SECRET }} | clever login
+
+      - name: Push Docker image to Clever Cloud registry
+        run: docker push registry.clever-cloud.com/orga_d02d9099-9664-47fd-8029-d90e36628e1d/shoploc-be:latest
+
+      - name: Deploy to Clever Cloud
+        env:
+          CC_API_ID: app_eb2c1097-1738-4df6-86ff-0232d5599c98
+          CC_API_SECRET: ${{ secrets.CLEVER_SECRET }}
+        run: |
+          echo app_eb2c1097-1738-4df6-86ff-0232d5599c98 | clever login
+          echo ${{ secrets.CLEVER_SECRET }} | clever login
+          clever deploy
