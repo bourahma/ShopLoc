@@ -54,14 +54,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Deploy backend image to Clever Cloud
-      uses: 47ng/actions-clever-cloud@v1.3.1
+    - uses: 47ng/actions-clever-cloud@v1.3.1
+      with:
+        appID: ${{ env.BE_APP_ID }}
+        force: true
+        image: bourahma/shoploc-be:latest
       env:
         CLEVER_TOKEN: ${{ secrets.CLEVER_TOKEN }}
         CLEVER_SECRET: ${{ secrets.CLEVER_SECRET }}
-      with:
-        app-id: ${{ env.BE_APP_ID }}
-        force: true
-        image: bourahma/shoploc-be:latest
 
     - name: Deploy frontend image to Clever Cloud
       uses: 47ng/actions-clever-cloud@v1.3.1
