@@ -60,11 +60,11 @@ jobs:
         CLEVER_TOKEN: ${{ secrets.CLEVER_TOKEN }}
         CLEVER_SECRET: ${{ secrets.CLEVER_SECRET }}
       with:
-        app-id: ${{ env.BACK_END_APP_ID }}
+        app-id: ${{ env.BE_APP_ID }}
         image: bourahma/shoploc-be:latest
 
     - name: Deploy frontend image to Clever Cloud
       uses: 47ng/actions-clever-cloud@master
       with:
-        app-id: ${{ env.FRONT_END_APP_ID }}
+        app-id: ${{ env.FE_APP_ID }}
         image: bourahma/shoploc-fe:latest
