@@ -26,8 +26,9 @@ jobs:
           java-version: '17'
 
       - name: Build and package Spring Boot app
-        context: ./shoploc-be
-        run: mvn clean package -DskipTests
+        with:
+          context: ./shoploc-be
+          run: mvn clean package -DskipTests
 
       - name: Build Docker image
         run: docker build -t shoploc-be .
