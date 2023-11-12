@@ -4,10 +4,11 @@ on:
   push:
     branches:
       - main
-deploy:
-  image:
-    name: clevercloud/clever-tools
-    entrypoint: [ "/bin/sh", "-c" ]
-  stage: deploy
-  script:
-    - clever deploy --force
+jobs:
+  deploy:
+    image:
+      name: clevercloud/clever-tools
+      entrypoint: [ "/bin/sh", "-c" ]
+    stage: deploy
+    script:
+      - clever deploy --force
