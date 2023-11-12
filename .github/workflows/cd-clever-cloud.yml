@@ -1,4 +1,9 @@
-name: deploy
+name: clever cloud
+
+on:
+  push:
+    branches:
+      - main
 deploy:
   image:
     name: clevercloud/clever-tools
