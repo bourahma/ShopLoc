@@ -53,7 +53,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-
+    - name: Initialize Git
+      run: git init
     - name: Deploy backend image to Clever Cloud
       uses: 47ng/actions-clever-cloud@master
       env:
@@ -65,6 +66,9 @@ jobs:
 
     - name: Deploy frontend image to Clever Cloud
       uses: 47ng/actions-clever-cloud@master
+      env:
+        CLEVER_TOKEN: ${{ secrets.CLEVER_TOKEN }}
+        CLEVER_SECRET: ${{ secrets.CLEVER_SECRET }}
       with:
         app-id: ${{ env.FE_APP_ID }}
         image: bourahma/shoploc-fe:latest
