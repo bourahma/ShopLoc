@@ -53,15 +53,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - name: Initialize Git
-      run: git init
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Link Clever Cloud application
-      run:
-        clever link --alias shoploc-be-api
     - name: Deploy backend image to Clever Cloud
-      uses: 47ng/actions-clever-cloud@master
+      uses: 47ng/actions-clever-cloud@v1.3.1
       env:
         CLEVER_TOKEN: ${{ secrets.CLEVER_TOKEN }}
         CLEVER_SECRET: ${{ secrets.CLEVER_SECRET }}
@@ -70,7 +63,7 @@ jobs:
         image: bourahma/shoploc-be:latest
 
     - name: Deploy frontend image to Clever Cloud
-      uses: 47ng/actions-clever-cloud@master
+      uses: 47ng/actions-clever-cloud@v1.3.1
       env:
         CLEVER_TOKEN: ${{ secrets.CLEVER_TOKEN }}
         CLEVER_SECRET: ${{ secrets.CLEVER_SECRET }}
