@@ -1,4 +1,3 @@
-import './InfosComponent.css';
 import logo from "../images/logo.png"
 import offre from "../images/offre-bienvenue.png"
 
