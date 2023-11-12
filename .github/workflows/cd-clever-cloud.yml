@@ -60,6 +60,7 @@ jobs:
         CLEVER_SECRET: ${{ secrets.CLEVER_SECRET }}
       with:
         app-id: ${{ env.BE_APP_ID }}
+        force: true
         image: bourahma/shoploc-be:latest
 
     - name: Deploy frontend image to Clever Cloud
