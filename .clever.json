@@ -1,0 +1,11 @@
+{
+  "apps": [
+    {
+      "my-app": "app_eb2c1097-1738-4df6-86ff-0232d5599c98",
+      "org_id": "orga_d02d9099-9664-47fd-8029-d90e36628e1d",
+      "deploy_url": "https://push-n3-par-clevercloud-customers.services.clever-cloud.com/app_eb2c1097-1738-4df6-86ff-0232d5599c98",
+      "name": "shoploc-be-api",
+      "alias": "shoploc-be-api"
+    }
+  ]
+}
