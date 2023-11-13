@@ -2,6 +2,7 @@
 DROP TABLE IF EXISTS Utilisateur CASCADE;
 DROP TABLE IF EXISTS Role CASCADE;
 DROP TABLE IF EXISTS Token CASCADE;
+DROP TABLE IF EXISTS Utilisateurs_Roles CASCADE;
 DROP SEQUENCE IF EXISTS utilisateur_sequence;
 DROP SEQUENCE IF EXISTS token_sequence;
 
@@ -36,6 +37,14 @@ CREATE TABLE Utilisateur (
     email VARCHAR(255) UNIQUE NOT NULL,
     enabled BOOLEAN NOT NULL,
     phone_number VARCHAR(20)
+);
+
+CREATE TABLE Utilisateurs_Roles (
+    utilisateur_id INT,
+    role_id INT,
+    PRIMARY KEY (utilisateur_id, role_id),
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(utilisateur_id),
+    FOREIGN KEY (role_id) REFERENCES role(role_id)
 );
 
 -- Create the Role table :
