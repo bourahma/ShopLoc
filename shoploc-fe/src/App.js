@@ -1,42 +1,31 @@
-import './App.css';
-
-import React, { useState, useEffect } from 'react';
+import React from "react";
+import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
+import HomeComponent from "./components/HomeComponent";
+import AuthComponent from "./components/AuthComponent";
+import Header from "./components/Header";
+import LegacyInfosComponent from "./components/Footer";
 
 function App() {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Use the fetch API to get data from an endpoint
-    fetch('http://localhost:8080/users')
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((responseData) => {
-        setData(responseData); // Update the state with the fetched data
-        setLoading(false); // Set loading to false
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-        setLoading(false);
-      });
-  }, []); // The empty dependency array ensures this effect runs once, similar to componentDidMount
-
   return (
-    <div>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <ul>
-          {data.map((item) => (
-            <li key={item.firstname}>{item.lastname}</li>
-          ))}
-        </ul>
-      )}
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <div className="flex flex-col min-h-screen">
+              <div className="flex-1">
+                <Header />
+                <Outlet />
+              </div>
+              <LegacyInfosComponent className="bg-gray-300 py-4 text-center" />
+            </div>
+          }
+        >
+          <Route index element={<HomeComponent />} />
+          <Route path="login" element={<AuthComponent />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

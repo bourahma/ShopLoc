@@ -29,28 +29,28 @@ CREATE TABLE Role (
 
 -- Create the User table :
 CREATE TABLE Utilisateur (
-                             utilisateur_id INT DEFAULT nextval('utilisateur_sequence') PRIMARY KEY,
-                             username VARCHAR(255) NOT NULL,
-                             lastname VARCHAR(255) NOT NULL,
-                             firstname VARCHAR(255) NOT NULL,
-                             password VARCHAR(255) NOT NULL,
-                             email VARCHAR(255) UNIQUE NOT NULL,
-                             enabled BOOLEAN NOT NULL,
-                             phone_number VARCHAR(20)
+    utilisateur_id INT DEFAULT nextval('utilisateur_sequence') PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    lastname VARCHAR(255) NOT NULL,
+    firstname VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    enabled BOOLEAN NOT NULL,
+    phone_number VARCHAR(20)
 );
 
 CREATE TABLE Utilisateurs_Roles (
-                                    utilisateur_id INT,
-                                    role_id INT,
-                                    PRIMARY KEY (utilisateur_id, role_id),
-                                    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(utilisateur_id),
-                                    FOREIGN KEY (role_id) REFERENCES role(role_id)
+    utilisateur_id INT,
+    role_id INT,
+    PRIMARY KEY (utilisateur_id, role_id),
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(utilisateur_id),
+    FOREIGN KEY (role_id) REFERENCES role(role_id)
 );
 
 -- Create the Role table :
 CREATE TABLE Token (
-                       token_id INT DEFAULT nextval('token_sequence') PRIMARY KEY,
-                       uuid VARCHAR UNIQUE,
-                       utilisateur_id INT NOT NULL UNIQUE,
-                       FOREIGN KEY (utilisateur_id) REFERENCES Utilisateur (utilisateur_id)
+    token_id INT DEFAULT nextval('token_sequence') PRIMARY KEY,
+    uuid VARCHAR UNIQUE,
+    utilisateur_id INT NOT NULL UNIQUE,
+    FOREIGN KEY (utilisateur_id) REFERENCES Utilisateur (utilisateur_id)
 );

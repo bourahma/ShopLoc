@@ -1,7 +1,10 @@
 target/
+bin/
+.mvn
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+.sdkmanrc
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
