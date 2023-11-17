@@ -86,6 +86,22 @@ jobs:
           chmod 600 shoploc.pem
 
       # Deploy shoploc-be on OpenStack instance.
+      # Install VPN to access OpenStack with univ lille credentials
+      - name: Install OpenVPN Client
+        run: sudo apt-get update && sudo apt-get install openvpn
+
+      - name: Download VPN Configuration
+        run: |
+          ssh -i shoploc.pem -o StrictHostKeyChecking=no ubuntu@$IP_BE_ADDRESS 'wget https://infotuto.univ-lille.fr/fileadmin/user_upload/infotuto/images/DSI/Fichiers_telechargeables/Clients_VPN/ULILLE_VPN_ETUDIANT_Linux_v4.zip
+          unzip ULILLE_VPN_ETUDIANT_Linux_v4.zip'
+
+      - name: OpenVPN-Connect
+        uses: kota65535/github-openvpn-connect-action@v2.1.0
+        with:
+          config_file: ULILLE_VPN_ETU_TCP_v4_Linux.ovpn
+          username: ${{ secrets.VPN_USERNAME }}
+          password: ${{ secrets.VPN_PASSWORD }}
+
       - name: Pull shoploc-be docker image
         run: |
           ssh -i shoploc.pem -o StrictHostKeyChecking=no ubuntu@$IP_BE_ADDRESS 'sudo docker pull bourahma/shoploc-be:latest'
