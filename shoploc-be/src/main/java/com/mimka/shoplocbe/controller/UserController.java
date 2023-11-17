@@ -7,11 +7,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
+@RequestMapping(value = "authentication/")
 @CrossOrigin(origins = "*")
 @EnableMethodSecurity(prePostEnabled = true)
 public class UserController {
@@ -19,25 +21,25 @@ public class UserController {
     @Autowired
     private UserServiceImpl userServiceImpl;
 
-    @GetMapping(path = "/users")
+    @GetMapping(path = "users")
     @PreAuthorize("hasAnyAuthority('SCOPE_USER', 'SCOPE_ADMIN', 'SCOPE_ORGA')")
     public List<User> getUsers () {
         return userServiceImpl.getUsers();
     }
 
     @PreAuthorize("hasAuthority('SCOPE_USER')")
-    @GetMapping(path = "/user")
+    @GetMapping(path = "user")
     public String helloUser () {
         return "Hello User";
     }
 
-    @GetMapping(path = "/admin")
+    @GetMapping(path = "admin")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public String helloAdmin () {
         return "Hello Admin";
     }
 
-    @GetMapping(path = "/orga")
+    @GetMapping(path = "orga")
     @PreAuthorize("hasAuthority('SCOPE_ORGA')")
     public String helloOrga () {
         return "Hello Orga";
