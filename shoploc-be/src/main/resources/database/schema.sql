@@ -22,9 +22,9 @@ CREATE SEQUENCE token_sequence
 
 -- Create the Role table :
 CREATE TABLE Role (
-                      role_id INT PRIMARY KEY,
-                      role_name VARCHAR(50) NOT NULL,
-                      role_description VARCHAR(250)
+    role_id INT PRIMARY KEY,
+    role_name VARCHAR(50) NOT NULL,
+    role_description VARCHAR(250)
 );
 
 -- Create the User table :
