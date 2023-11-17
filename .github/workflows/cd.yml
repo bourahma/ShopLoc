@@ -82,8 +82,7 @@ jobs:
           password: ${{ env.DOCKERHUB_TOKEN }}
 
       - name: Set permissions for private key
-        run: |
-          echo "${{ env.AWS_PRIVATE_KEY }}" > shoploc.pem
+        run:
           chmod 600 shoploc.pem
 
       # Deploy shoploc-be on OpenStack instance.
