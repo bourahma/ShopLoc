@@ -1,0 +1,76 @@
+{
+    "commercants": [
+        {
+            "id": 1,
+            "nom": "Auchan",
+            "image": "auchan.png",
+            "description": "Description du fournisseur 1.",
+            "produits": [
+                {
+                    "id": 101,
+                    "nom": "Produit A",
+                    "image": "url_de_l_image_produit_A.jpg",
+                    "description": "Description du produit A.",
+                    "prix": 20.99,
+                    "stock": 50
+                },
+                {
+                    "id": 102,
+                    "nom": "Produit B",
+                    "image": "url_de_l_image_produit_B.jpg",
+                    "description": "Description du produit B.",
+                    "prix": 30.49,
+                    "stock": 30
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "nom": "Planetebain",
+            "image": "planetbain.jpg",
+            "description": "Description du fournisseur 2.",
+            "produits": [
+                {
+                    "id": 201,
+                    "nom": "Produit X",
+                    "image": "url_de_l_image_produit_X.jpg",
+                    "description": "Description du produit X.",
+                    "prix": 15.99,
+                    "stock": 20
+                },
+                {
+                    "id": 202,
+                    "nom": "Produit Y",
+                    "image": "url_de_l_image_produit_Y.jpg",
+                    "description": "Description du produit Y.",
+                    "prix": 25.49,
+                    "stock": 40
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "nom": "Le Roy Merlin",
+            "image": "le roy merlin.jpeg",
+            "description": "Description du fournisseur 3.",
+            "produits": [
+                {
+                    "id": 301,
+                    "nom": "Produit X",
+                    "image": "url_de_l_image_produit_X.jpg",
+                    "description": "Description du produit X.",
+                    "prix": 15.99,
+                    "stock": 20
+                },
+                {
+                    "id": 302,
+                    "nom": "Produit Y",
+                    "image": "url_de_l_image_produit_Y.jpg",
+                    "description": "Description du produit Y.",
+                    "prix": 25.49,
+                    "stock": 40
+                }
+            ]
+        }
+    ]
+}
