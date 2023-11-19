@@ -1,8 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { Card } from "flowbite-react";
-import Auchan from "../images/auchan.png";
-import Planetbain from "../images/planetbain.jpg";
-import LeRoyMerlin from "../images/le roy merlin.jpeg";
 
 function HomeComponent() {
     const navigate = useNavigate();

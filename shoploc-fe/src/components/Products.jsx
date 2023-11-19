@@ -1,8 +1,9 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const Product = () => {
     const { commercantId } = useParams();
+    const navigate = useNavigate();
     console.log(commercantId);
     const dummyData = require("../utils/commerçants.json");
     const commercant = dummyData.commercants.find(
@@ -13,9 +14,34 @@ const Product = () => {
         return <div>commercant non trouvé</div>;
     }
 
+     const handleBackButtonClick = () => {
+         navigate(-1); // This will navigate back to the previous page
+     };
+
     return (
         <div className="container mx-auto mt-8">
             <div className="flex items-center mb-4">
+                <button
+                    type="button"
+                    class="bg-gray-800 text-white rounded-md border-r border-gray-100 py-2 hover:bg-red-700 hover:text-white px-3 mr-4"
+                    onClick={handleBackButtonClick}
+                >
+                    <div class="flex flex-row align-middle">
+                        <svg
+                            class="w-5 mr-2"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z"
+                                clip-rule="evenodd"
+                            ></path>
+                        </svg>
+                        <p class="ml-2">Back</p>
+                    </div>
+                </button>
                 <img
                     src={require(`../images/${commercant.image}`)}
                     alt={commercant.nom}
