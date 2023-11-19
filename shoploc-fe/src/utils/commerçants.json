@@ -8,18 +8,26 @@
             "produits": [
                 {
                     "id": 101,
-                    "nom": "Produit A",
-                    "image": "url_de_l_image_produit_A.jpg",
+                    "nom": "Auchan Bâtonnet de pommes de terres façon rosti sauce barbecue 20 pièces 240g pas cher",
+                    "image": "auchan1.jpeg",
                     "description": "Description du produit A.",
                     "prix": 20.99,
                     "stock": 50
                 },
                 {
                     "id": 102,
-                    "nom": "Produit B",
-                    "image": "url_de_l_image_produit_B.jpg",
+                    "nom": "Auchan Terroir petit saint nectaire 600g pas cher",
+                    "image": "auchan2.jpeg",
                     "description": "Description du produit B.",
                     "prix": 30.49,
+                    "stock": 30
+                },
+                {
+                    "id": 103,
+                    "nom": "AUCHAN Poêlées légumes à l'italienne 750g pas cher",
+                    "image": "auchan3.jpeg",
+                    "description": "Description du produit C.",
+                    "prix": 24.49,
                     "stock": 30
                 }
             ]
@@ -32,16 +40,16 @@
             "produits": [
                 {
                     "id": 201,
-                    "nom": "Produit X",
-                    "image": "url_de_l_image_produit_X.jpg",
+                    "nom": "Meubles lave-mains et Lave-mains",
+                    "image": "planet1.jpg",
                     "description": "Description du produit X.",
                     "prix": 15.99,
                     "stock": 20
                 },
                 {
                     "id": 202,
-                    "nom": "Produit Y",
-                    "image": "url_de_l_image_produit_Y.jpg",
+                    "nom": "Meuble Lave-Mains Complet Couleur Chêne Avec Mitigeur Pour WC",
+                    "image": "planet2.jpg",
                     "description": "Description du produit Y.",
                     "prix": 25.49,
                     "stock": 40
@@ -56,16 +64,16 @@
             "produits": [
                 {
                     "id": 301,
-                    "nom": "Produit X",
-                    "image": "url_de_l_image_produit_X.jpg",
+                    "nom": "Fenêtre Bois Essentiel H.95xl.120cm, 2 vantaux",
+                    "image": "fenetre.webp",
                     "description": "Description du produit X.",
                     "prix": 15.99,
                     "stock": 20
                 },
                 {
                     "id": 302,
-                    "nom": "Produit Y",
-                    "image": "url_de_l_image_produit_Y.jpg",
+                    "nom": "Peinture mur blanc mat LUXENS Séjour et chambre 10l",
+                    "image": "peinture.webp",
                     "description": "Description du produit Y.",
                     "prix": 25.49,
                     "stock": 40
