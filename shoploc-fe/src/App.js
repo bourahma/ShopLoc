@@ -1,9 +1,10 @@
 import React from "react";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import HomeComponent from "./components/HomeComponent";
-import AuthComponent from "./components/AuthComponent";
 import Header from "./components/Header";
 import LegacyInfosComponent from "./components/Footer";
+import SignupForm from "./components/SignupForm";
+import LoginForm from "./components/LoginForm";
 
 function App() {
   return (
@@ -22,7 +23,8 @@ function App() {
           }
         >
           <Route index element={<HomeComponent />} />
-          <Route path="login" element={<AuthComponent />} />
+          <Route path="login" element={<LoginForm />} />
+          <Route path="signup" element={<SignupForm />} />
         </Route>
       </Routes>
     </BrowserRouter>

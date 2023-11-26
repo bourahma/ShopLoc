@@ -1,11 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { Navbar } from "flowbite-react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
+  const loggedUser = localStorage.getItem("loggedUser");
   return (
     <Navbar fluid rounded>
-      <Navbar.Brand as={Link} href="https://flowbite-react.com">
+      <Navbar.Brand href="#">
         <img
           src="https://picsum.photos/200/300"
           className="mr-3 h-6 sm:h-9"
@@ -17,15 +18,26 @@ const Header = () => {
       </Navbar.Brand>
       <Navbar.Toggle />
       <Navbar.Collapse>
-        <Navbar.Link href="#" active>
-          Home
-        </Navbar.Link>
-        <Navbar.Link as={Link} href="#">
-          About
-        </Navbar.Link>
-        <Navbar.Link href="#">Services</Navbar.Link>
-        <Navbar.Link href="#">Pricing</Navbar.Link>
-        <Navbar.Link href="#">Contact</Navbar.Link>
+        {loggedUser ? (
+          <>
+            <Navbar.Link href="#" active>
+              Home
+            </Navbar.Link>
+            <Navbar.Link href="#">About</Navbar.Link>
+            <Navbar.Link href="#">Services</Navbar.Link>
+            <Navbar.Link href="#">Pricing</Navbar.Link>
+            <Navbar.Link href="#">Contact</Navbar.Link>
+          </>
+        ) : (
+          <>
+            <Navbar.Link as={Link} to="/login">
+              Se connecter
+            </Navbar.Link>
+            <Navbar.Link as={Link} to="/signup">
+              S'inscrire
+            </Navbar.Link>
+          </>
+        )}
       </Navbar.Collapse>
     </Navbar>
   );
