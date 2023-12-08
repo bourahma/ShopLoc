@@ -1,13 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Navbar } from "flowbite-react";
 import { Link, useNavigate } from "react-router-dom";
 
-const Header = ({ loggedUser }) => {
+const Header = () => {
+  const [loggedUser, setLoggedUser] = useState(null);
+
+  useEffect(() => {
+    const loggedUser = window.localStorage.getItem("loggedUser");
+    if (loggedUser) {
+      setLoggedUser(JSON.parse(loggedUser));
+    }
+  }, []);
+
   const navigate = useNavigate();
 
   const logout = (e) => {
     e.preventDefault();
     window.localStorage.removeItem("userToken");
+    window.localStorage.removeItem("loggedUser");
     window.location.reload();
     navigate("/");
   };

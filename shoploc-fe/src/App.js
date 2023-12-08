@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import HomeComponent from "./components/HomeComponent";
 import Header from "./components/Header";
@@ -8,24 +8,8 @@ import SignupForm from "./components/SignupForm";
 import LoginForm from "./components/LoginForm";
 import { AuthenticatedOnly } from "./components/AuthenticatedOnly";
 import { AnonymousOnly } from "./components/AnonymousOnly";
-import loginService from "./services/login";
 
 function App() {
-  const [loggedUser, setLoggedUser] = useState(null);
-  const handleLogin = (e, formData) => {
-    e.preventDefault();
-    loginService
-      .login(formData)
-      .then((data) => {
-        console.log(data);
-        setLoggedUser(formData.username);
-        window.localStorage.setItem("userToken", JSON.stringify(data));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
   return (
     <BrowserRouter>
       <Routes>
@@ -46,7 +30,7 @@ function App() {
             index
             element={
               <AuthenticatedOnly>
-                <Header loggedUser={loggedUser} />
+                <Header />
                 <HomeComponent />
               </AuthenticatedOnly>
             }
@@ -55,7 +39,7 @@ function App() {
             path="/signup"
             element={
               <AnonymousOnly>
-                <Header loggedUser={loggedUser} />
+                <Header />
                 <SignupForm />
               </AnonymousOnly>
             }
@@ -64,8 +48,8 @@ function App() {
             path="/login"
             element={
               <AnonymousOnly>
-                <Header loggedUser={loggedUser} />
-                <LoginForm handleSubmit={handleLogin} />
+                <Header />
+                <LoginForm />
               </AnonymousOnly>
             }
           />
@@ -73,7 +57,7 @@ function App() {
             path="/commercant/:commercantId"
             element={
               <AuthenticatedOnly>
-                <Header loggedUser={loggedUser} />
+                <Header />
                 <Products />
               </AuthenticatedOnly>
             }

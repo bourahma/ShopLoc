@@ -1,19 +1,39 @@
 import React, { useState } from "react";
 import { Button, Label, TextInput } from "flowbite-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import loginService from "../services/login";
 
-const LoginForm = ({ handleSubmit }) => {
+const LoginForm = () => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
 
+  const navigate = useNavigate();
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [id]: value,
     }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    loginService
+      .login(formData)
+      .then((data) => {
+        console.log(data);
+        window.localStorage.setItem(
+          "loggedUser",
+          JSON.stringify(formData.username)
+        );
+        window.localStorage.setItem("userToken", JSON.stringify(data));
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
