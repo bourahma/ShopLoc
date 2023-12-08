@@ -1,9 +1,17 @@
 import React from "react";
-import { Navbar } from "flowbite-react";
-import { Link } from "react-router-dom";
+import { Button, Navbar } from "flowbite-react";
+import { Link, useNavigate } from "react-router-dom";
 
-const Header = () => {
-  const loggedUser = localStorage.getItem("loggedUser");
+const Header = ({ loggedUser }) => {
+  const navigate = useNavigate();
+
+  const logout = (e) => {
+    e.preventDefault();
+    window.localStorage.removeItem("userToken");
+    window.location.reload();
+    navigate("/");
+  };
+
   return (
     <Navbar fluid rounded>
       <Navbar.Brand href="#">
@@ -20,13 +28,10 @@ const Header = () => {
       <Navbar.Collapse>
         {loggedUser ? (
           <>
-            <Navbar.Link href="#" active>
-              Home
-            </Navbar.Link>
-            <Navbar.Link href="#">About</Navbar.Link>
-            <Navbar.Link href="#">Services</Navbar.Link>
-            <Navbar.Link href="#">Pricing</Navbar.Link>
-            <Navbar.Link href="#">Contact</Navbar.Link>
+            <h2>Bonjour {loggedUser}</h2>
+            <Button className="bg-black" onClick={logout}>
+              Se déconnecter
+            </Button>
           </>
         ) : (
           <>

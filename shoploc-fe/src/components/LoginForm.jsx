@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { Button, Label, TextInput } from "flowbite-react";
-import loginService from "../services/login";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-const LoginForm = () => {
+const LoginForm = ({ handleSubmit }) => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -17,25 +16,12 @@ const LoginForm = () => {
     }));
   };
 
-  const navigate = useNavigate();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    loginService
-      .login(formData)
-      .then((data) => {
-        console.log(data);
-        window.localStorage.setItem("userToken", JSON.stringify(data));
-        navigate("/");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
   return (
-    <div className="flex justify-center">
-      <form className="flex max-w-md flex-col gap-4" onSubmit={handleSubmit}>
+    <div className="flex justify-center gap-10">
+      <form
+        className="flex max-w-md flex-col gap-4"
+        onSubmit={(e) => handleSubmit(e, formData)}
+      >
         <div>
           <div className="mb-2 block">
             <Label htmlFor="username">Nom d'utilisateur</Label>
@@ -59,8 +45,16 @@ const LoginForm = () => {
             onChange={handleChange}
           />
         </div>
-        <Button type="submit">Connexion</Button>
+        <Button type="submit" className="bg-black">
+          Connexion
+        </Button>
       </form>
+      <div className="flex max-w-md flex-col gap-4">
+        Vous n'avez pas de encore compte ? &nbsp;
+        <Link to="/signup" className="text-blue-500">
+          Inscrivez-vous
+        </Link>
+      </div>
     </div>
   );
 };

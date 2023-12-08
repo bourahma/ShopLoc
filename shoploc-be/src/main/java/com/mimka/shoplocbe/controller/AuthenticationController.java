@@ -19,6 +19,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/authentication")
 @CrossOrigin(origins = "*")
+@Slf4j
 public class AuthenticationController {
 
     @Autowired

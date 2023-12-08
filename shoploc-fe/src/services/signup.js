@@ -9,4 +9,6 @@ const signup = async (credentials) => {
   return response.data;
 };
 
-export default { signup };
+const signupService = { signup };
+
+export default signupService;

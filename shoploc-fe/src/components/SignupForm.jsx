@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import signupService from "../services/signup";
 
 const SignupForm = () => {
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     lastname: "",
@@ -15,13 +14,7 @@ const SignupForm = () => {
     phoneNumber: "",
   });
 
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [id]: value,
-    }));
-  };
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -29,12 +22,19 @@ const SignupForm = () => {
       .signup(formData)
       .then((data) => {
         console.log(data);
-        window.localStorage.setItem("userToken", JSON.stringify(data));
-        navigate("/");
+        navigate("/login");
       })
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
   };
 
   return (
@@ -113,7 +113,7 @@ const SignupForm = () => {
             <TextInput
               id="email"
               type="email"
-              placeholder="name@flowbite.com"
+              placeholder="addresse@gmail.com"
               required
               onChange={handleChange}
             />
