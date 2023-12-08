@@ -9,4 +9,5 @@ public class ShoplocBeApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ShoplocBeApplication.class, args);
 	}
+
 }

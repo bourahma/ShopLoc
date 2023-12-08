@@ -12,7 +12,7 @@ public class Role {
 
     @Id
     @Column(name = "role_id")
-    private Integer roleId;
+    private Long roleId;
 
     @Column(name = "role_name", nullable = false)
     private String roleName;

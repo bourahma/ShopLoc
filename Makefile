@@ -1,5 +1,5 @@
 clean:
-	docker-compose stop
+	docker-compose down
 	docker system prune
 	docker volume prune
 	docker rmi shoploc-be:latest
@@ -12,7 +12,7 @@ stop:
 	docker-compose stop
 
 runDevDB:
-	docker run --name shoploc-db-dev -e POSTGRES_USER=shoplocU -e POSTGRES_PASSWORD=shoplocP -e POSTGRES_DB=shoploc-db -d -p 5432:5432 postgres:latest --add-env POSTGRES_HOST_AUTH_METHOD=trust
+	docker run --name shoploc-db-dev -e POSTGRES_USER=shoplocU -e POSTGRES_PASSWORD=shoplocP -e POSTGRES_DB=shoploc-db -d -p 5430:5432 postgres
 
 stopDevDB:
 	docker stop shoploc-db-dev
