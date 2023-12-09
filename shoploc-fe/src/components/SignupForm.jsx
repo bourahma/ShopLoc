@@ -137,7 +137,7 @@ const SignupForm = () => {
             J'accepte les &nbsp;
             <Link
               to="#"
-              className="text-cyan-600 hover:underline dark:text-cyan-500"
+              className="text-cyan-600 hover:underline dark:text-cyan-400"
             >
               termes et conditions
             </Link>
