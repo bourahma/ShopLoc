@@ -143,7 +143,9 @@ const SignupForm = () => {
             </Link>
           </Label>
         </div>
-        <Button type="submit">S'inscrire</Button>
+        <Button type="submit" className="bg-black">
+          S'inscrire
+        </Button>
       </form>
     </div>
   );
