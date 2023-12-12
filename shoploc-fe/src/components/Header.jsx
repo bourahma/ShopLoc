@@ -1,11 +1,30 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Navbar } from "flowbite-react";
+import React, { useEffect, useState } from "react";
+import { Button, Navbar } from "flowbite-react";
+import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const [loggedUser, setLoggedUser] = useState(null);
+
+  useEffect(() => {
+    const loggedUser = window.localStorage.getItem("loggedUser");
+    if (loggedUser) {
+      setLoggedUser(JSON.parse(loggedUser));
+    }
+  }, []);
+
+  const navigate = useNavigate();
+
+  const logout = (e) => {
+    e.preventDefault();
+    window.localStorage.removeItem("userToken");
+    window.localStorage.removeItem("loggedUser");
+    window.location.reload();
+    navigate("/");
+  };
+
   return (
     <Navbar fluid rounded>
-      <Navbar.Brand as={Link} href="https://flowbite-react.com">
+      <Navbar.Brand href="#">
         <img
           src="https://picsum.photos/200/300"
           className="mr-3 h-6 sm:h-9"
@@ -17,15 +36,23 @@ const Header = () => {
       </Navbar.Brand>
       <Navbar.Toggle />
       <Navbar.Collapse>
-        <Navbar.Link href="#" active>
-          Home
-        </Navbar.Link>
-        <Navbar.Link as={Link} href="#">
-          About
-        </Navbar.Link>
-        <Navbar.Link href="#">Services</Navbar.Link>
-        <Navbar.Link href="#">Pricing</Navbar.Link>
-        <Navbar.Link href="#">Contact</Navbar.Link>
+        {loggedUser ? (
+          <>
+            <h2>Bonjour {loggedUser}</h2>
+            <Button className="bg-black" onClick={logout}>
+              Se déconnecter
+            </Button>
+          </>
+        ) : (
+          <>
+            <Navbar.Link as={Link} to="/login">
+              Se connecter
+            </Navbar.Link>
+            <Navbar.Link as={Link} to="/signup">
+              S'inscrire
+            </Navbar.Link>
+          </>
+        )}
       </Navbar.Collapse>
     </Navbar>
   );
