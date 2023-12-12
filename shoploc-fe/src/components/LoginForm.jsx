@@ -1,48 +1,65 @@
-import React from "react";
-import { Button, Checkbox, Label, TextInput } from "flowbite-react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Button, Label, TextInput } from "flowbite-react";
+import loginService from "../services/login";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
+
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    loginService
+      .login(formData)
+      .then((data) => {
+        console.log(data);
+        window.localStorage.setItem("userToken", JSON.stringify(data));
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <div className="flex justify-center">
-      <form className="flex max-w-md flex-col gap-4">
+      <form className="flex max-w-md flex-col gap-4" onSubmit={handleSubmit}>
         <div>
           <div className="mb-2 block">
-            <Label htmlFor="email2" value="Your email" />
+            <Label htmlFor="username">Nom d'utilisateur</Label>
           </div>
           <TextInput
-            id="email2"
-            type="email"
-            placeholder="name@flowbite.com"
+            id="username"
+            type="text"
+            placeholder="Votre nom d'utilisateur"
             required
-            shadow
+            onChange={handleChange}
           />
         </div>
         <div>
           <div className="mb-2 block">
-            <Label htmlFor="password2" value="Your password" />
+            <Label htmlFor="password">Mot de passe</Label>
           </div>
-          <TextInput id="password2" type="password" required shadow />
+          <TextInput
+            id="password"
+            type="password"
+            required
+            onChange={handleChange}
+          />
         </div>
-        <div>
-          <div className="mb-2 block">
-            <Label htmlFor="repeat-password" value="Repeat password" />
-          </div>
-          <TextInput id="repeat-password" type="password" required shadow />
-        </div>
-        <div className="flex items-center gap-2">
-          <Checkbox id="agree" />
-          <Label htmlFor="agree" className="flex">
-            I agree with the&nbsp;
-            <Link
-              to="#"
-              className="text-cyan-600 hover:underline dark:text-cyan-500"
-            >
-              terms and conditions
-            </Link>
-          </Label>
-        </div>
-        <Button type="submit">Register new account</Button>
+        <Button type="submit">Connexion</Button>
       </form>
     </div>
   );
