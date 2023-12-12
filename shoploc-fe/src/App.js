@@ -18,7 +18,7 @@ function App() {
           element={
             <div className="flex flex-col min-h-screen">
               <div className="flex-1">
-                <div className="px-20 py-8">
+                <div className="">
                   <Outlet />
                 </div>
               </div>
