@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Label, TextInput } from "flowbite-react";
+import { Link, useNavigate } from "react-router-dom";
 import loginService from "../services/login";
-import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +9,7 @@ const LoginForm = () => {
     password: "",
   });
 
+  const navigate = useNavigate();
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
@@ -17,14 +18,16 @@ const LoginForm = () => {
     }));
   };
 
-  const navigate = useNavigate();
-
   const handleSubmit = (e) => {
     e.preventDefault();
     loginService
       .login(formData)
       .then((data) => {
         console.log(data);
+        window.localStorage.setItem(
+          "loggedUser",
+          JSON.stringify(formData.username)
+        );
         window.localStorage.setItem("userToken", JSON.stringify(data));
         navigate("/");
       })
@@ -34,8 +37,11 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="flex justify-center">
-      <form className="flex max-w-md flex-col gap-4" onSubmit={handleSubmit}>
+    <div className="flex justify-center gap-10">
+      <form
+        className="flex max-w-md flex-col gap-4"
+        onSubmit={(e) => handleSubmit(e, formData)}
+      >
         <div>
           <div className="mb-2 block">
             <Label htmlFor="username">Nom d'utilisateur</Label>
@@ -59,8 +65,16 @@ const LoginForm = () => {
             onChange={handleChange}
           />
         </div>
-        <Button type="submit">Connexion</Button>
+        <Button type="submit" className="bg-black">
+          Connexion
+        </Button>
       </form>
+      <div className="flex max-w-md flex-col gap-4">
+        Vous n'avez pas de encore compte ? &nbsp;
+        <Link to="/signup" className="text-blue-500">
+          Inscrivez-vous
+        </Link>
+      </div>
     </div>
   );
 };

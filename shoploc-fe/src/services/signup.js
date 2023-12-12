@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const SERVER_URL = "http://localhost:8080";
+const SERVER_URL = "http://172.28.101.175";
 
 const baseUrl = "authentication/register";
 
@@ -9,4 +9,6 @@ const signup = async (credentials) => {
   return response.data;
 };
 
-export default { signup };
+const signupService = { signup };
+
+export default signupService;
