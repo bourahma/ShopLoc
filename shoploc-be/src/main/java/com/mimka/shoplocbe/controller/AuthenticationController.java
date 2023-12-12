@@ -2,16 +2,12 @@ package com.mimka.shoplocbe.controller;
 
 import com.mimka.shoplocbe.dto.user.AuthDTO;
 import com.mimka.shoplocbe.dto.user.RegisterDTO;
-import com.mimka.shoplocbe.exception.EmailAlreadyUsedException;
-import com.mimka.shoplocbe.exception.HandleMailSendException;
 import com.mimka.shoplocbe.service.AuthenticationServiceImpl;
 import com.mimka.shoplocbe.service.RegistrationServiceImpl;
-import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;

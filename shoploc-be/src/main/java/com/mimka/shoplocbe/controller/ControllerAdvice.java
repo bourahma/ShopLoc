@@ -1,8 +1,8 @@
 package com.mimka.shoplocbe.controller;
 
-import com.mimka.shoplocbe.exception.EmailAlreadyUsedException;
 import com.mimka.shoplocbe.exception.HandleMailSendException;
-import com.mimka.shoplocbe.exception.UserPasswordException;
+import com.mimka.shoplocbe.exception.RegistrationException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -16,15 +16,15 @@ import java.util.Map;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-    @ExceptionHandler(value = EmailAlreadyUsedException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public Map<String, String> authenticationFailed(EmailAlreadyUsedException exception) {
-        return Map.of("message", exception.getMessage());
-    }
+    @Value("${auth.message.password.incorrect}")
+    private String passwordIncorrect;
 
     @ExceptionHandler(value = BadCredentialsException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public Map<String, String> authenticationFailed(BadCredentialsException exception) {
+        if (!exception.getMessage().contains("Nom d\\'utilisateur incorrect")) {
+            return Map.of("message", passwordIncorrect);
+        }
         return Map.of("message", exception.getMessage());
     }
 
@@ -46,9 +46,9 @@ public class ControllerAdvice {
         return Map.of("message", exception.getMessage());
     }
 
-    @ExceptionHandler(value = UserPasswordException.class)
+    @ExceptionHandler(value = RegistrationException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public Map<String, String> passwordsDontMatch(UserPasswordException exception) {
+    public Map<String, String> registrationExceptionHandler(RegistrationException exception) {
         return Map.of("message", exception.getMessage());
     }
 }

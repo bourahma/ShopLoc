@@ -4,10 +4,7 @@ import com.mimka.shoplocbe.dto.user.RegisterDTO;
 import com.mimka.shoplocbe.dto.user.UserDTOUtil;
 import com.mimka.shoplocbe.entity.RegistrationToken;
 import com.mimka.shoplocbe.entity.User;
-import com.mimka.shoplocbe.exception.EmailAlreadyUsedException;
-import com.mimka.shoplocbe.exception.HandleMailSendException;
-import com.mimka.shoplocbe.exception.UserPasswordException;
-import com.mimka.shoplocbe.exception.UsernameExistsException;
+import com.mimka.shoplocbe.exception.*;
 import com.mimka.shoplocbe.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
@@ -37,7 +34,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private UserDTOUtil userDTOUtil;
 
     @Override
-    public void register(RegisterDTO registerDTO) throws EmailAlreadyUsedException, MessagingException, HandleMailSendException, UserPasswordException, UsernameExistsException {
+    public void register(RegisterDTO registerDTO) throws MessagingException, HandleMailSendException, RegistrationException {
         this.userDTOUtil.checkPasswords(registerDTO);
         String encodedPassword = passwordEncoder.encode(registerDTO.getPassword());
         registerDTO.setPassword(encodedPassword);

@@ -1,24 +1,22 @@
 package com.mimka.shoplocbe.service;
 
 import com.mimka.shoplocbe.dto.user.RegisterDTO;
-import com.mimka.shoplocbe.dto.user.UserDTO;
 import com.mimka.shoplocbe.dto.user.UserDTOUtil;
 import com.mimka.shoplocbe.entity.Role;
 import com.mimka.shoplocbe.entity.User;
-import com.mimka.shoplocbe.exception.EmailAlreadyUsedException;
 import com.mimka.shoplocbe.exception.HandleMailSendException;
-import com.mimka.shoplocbe.exception.UsernameExistsException;
+import com.mimka.shoplocbe.exception.RegistrationException;
 import com.mimka.shoplocbe.repository.RoleRepository;
 import com.mimka.shoplocbe.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -39,6 +37,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
     private EmailServiceImpl emailService;
 
+    @Value("${auth.message.username.invalid}")
+    private String invalidUsernameMessage;
+
+    @Value("${auth.message.email.invalid}")
+    private String invalidEmailMessage;
+
+    @Value("${register.message.email.exists}")
+    private String registrationEmailMessage;
+
+    @Value("${register.message.username.exists}")
+    private String registrationUsernameMessage;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return this.getUserDetails(username);
@@ -47,20 +57,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User getUserByEmail(String email) {
         User user = this.userRepository.findByEmail(email);
-        if (user == null)  throw new BadCredentialsException("E-mail do not match any user.");
+        if (user == null) {
+            throw new BadCredentialsException(invalidUsernameMessage);
+        }
         return user;
     }
 
     @Override
     public User getUserByUsername(String username) {
         User user = this.userRepository.findByUsername(username);
-        if (user == null)  throw new UsernameNotFoundException("Username do not match any user.");
+        if (user == null)  throw new BadCredentialsException (invalidEmailMessage);
         return user;
     }
 
 
     @Override
-    public User createUser(RegisterDTO registerDTO) throws EmailAlreadyUsedException, UsernameExistsException {
+    public User createUser(RegisterDTO registerDTO) throws RegistrationException {
         return this.addUser(registerDTO, this.userRoles());
     }
     private UserDetails getUserDetails(String username) {
@@ -82,7 +94,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 authorities);
     }
 
-    public User addUser(RegisterDTO registerDTO, Set<Role> roles) throws EmailAlreadyUsedException, UsernameExistsException {
+    public User addUser(RegisterDTO registerDTO, Set<Role> roles) throws RegistrationException {
         this.emailAndUsernameNotUsedYet(registerDTO);
         this.noRegistrationInitiatedYet(registerDTO);
         User user = this.userDTOUtil.toUser(registerDTO);
@@ -95,14 +107,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return user;
     }
 
-    public boolean emailAndUsernameNotUsedYet (RegisterDTO registerDTO) throws EmailAlreadyUsedException, UsernameExistsException {
+    public boolean emailAndUsernameNotUsedYet (RegisterDTO registerDTO) throws RegistrationException {
         User user = this.userRepository.findByEmail(registerDTO.getEmail());
         if (user != null) {
-            throw new EmailAlreadyUsedException("E-mail already used.");
+            throw new RegistrationException(registrationEmailMessage);
         }
         user = this.userRepository.findByUsername(registerDTO.getUsername());
         if (user != null) {
-            throw new UsernameExistsException("Username already used.");
+            throw new RegistrationException(registrationUsernameMessage);
         }
         return true;
     }

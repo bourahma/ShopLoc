@@ -3,8 +3,7 @@ package com.mimka.shoplocbe.controller.it;
 import com.mimka.shoplocbe.controller.AuthenticationController;
 import com.mimka.shoplocbe.dto.user.AuthDTO;
 import com.mimka.shoplocbe.dto.user.RegisterDTO;
-import com.mimka.shoplocbe.exception.EmailAlreadyUsedException;
-import com.mimka.shoplocbe.exception.UsernameExistsException;
+import com.mimka.shoplocbe.exception.RegistrationException;
 import com.mimka.shoplocbe.repository.RegistrationTokenRepository;
 import com.mimka.shoplocbe.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
@@ -14,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 
 import java.util.Map;
 
@@ -94,20 +93,20 @@ public class AuthenticationControllerIT {
         authDTO.setUsername("Janne");
         authDTO.setPassword("12345678");
 
-        assertThrows(BadCredentialsException.class, () -> authenticationController.loginUserWithUsername(authDTO));
+        assertThrows(InternalAuthenticationServiceException.class, () -> authenticationController.loginUserWithUsername(authDTO));
     }
 
     @Test
     void registerUser_ShouldThrowEmailAlreadyUsedException () {
         registerDTO.setEmail("jane.smith@gmail.com");
-        assertThrows(EmailAlreadyUsedException.class, () -> authenticationController.registerUser(registerDTO));
+        assertThrows(RegistrationException.class, () -> authenticationController.registerUser(registerDTO));
     }
 
     @Test
     void registerUser_ShouldThrowUsernameAlreadyUsedException () {
         registerDTO.setEmail("janne.smith@gmail.com");
         registerDTO.setUsername("Joe");
-        assertThrows(UsernameExistsException.class, () -> authenticationController.registerUser(registerDTO));
+        assertThrows(RegistrationException.class, () -> authenticationController.registerUser(registerDTO));
     }
 
     @Test
