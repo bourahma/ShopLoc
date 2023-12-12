@@ -1,4 +1,4 @@
-name: Build on DockerHub and Deploy to AWS
+name: Build on DockerHub and Deploy to OpenStack
 
 on:
   push:

@@ -1,6 +1,5 @@
 package com.mimka.shoplocbe.dto.user;
 
-import com.mimka.shoplocbe.util.MatchingPasswords;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -16,7 +15,6 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @AllArgsConstructor
 @NoArgsConstructor
-@MatchingPasswords
 public class RegisterDTO {
 
     @NotBlank(message = "Username cannot be empty")

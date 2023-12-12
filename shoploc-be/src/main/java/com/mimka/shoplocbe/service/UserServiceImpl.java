@@ -7,6 +7,7 @@ import com.mimka.shoplocbe.entity.Role;
 import com.mimka.shoplocbe.entity.User;
 import com.mimka.shoplocbe.exception.EmailAlreadyUsedException;
 import com.mimka.shoplocbe.exception.HandleMailSendException;
+import com.mimka.shoplocbe.exception.UsernameExistsException;
 import com.mimka.shoplocbe.repository.RoleRepository;
 import com.mimka.shoplocbe.repository.UserRepository;
 import jakarta.mail.MessagingException;
@@ -17,6 +18,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -43,37 +45,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public List<User> getUsers() {
-        return userRepository.findAll();
-    }
-
-    @Override
     public User getUserByEmail(String email) {
         User user = this.userRepository.findByEmail(email);
         if (user == null)  throw new BadCredentialsException("E-mail do not match any user.");
-        return this.userRepository.findByEmail(email);
+        return user;
     }
 
     @Override
     public User getUserByUsername(String username) {
         User user = this.userRepository.findByUsername(username);
-        if (user == null)  throw new BadCredentialsException("Username do not match any user.");
-        return this.userRepository.findByUsername(username);
+        if (user == null)  throw new UsernameNotFoundException("Username do not match any user.");
+        return user;
     }
 
 
     @Override
-    public User createUser(RegisterDTO registerDTO) throws EmailAlreadyUsedException {
-        return this.createUser(registerDTO, this.userRoles());
+    public User createUser(RegisterDTO registerDTO) throws EmailAlreadyUsedException, UsernameExistsException {
+        return this.addUser(registerDTO, this.userRoles());
     }
-
-    @Override
-    public User createOrga(UserDTO userDTO) {
-        return null;
-    }
-
-    // Privates methods.
-
     private UserDetails getUserDetails(String username) {
         User user = this.getUserByUsername(username);
 
@@ -93,53 +82,60 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 authorities);
     }
 
-    private User createUser(RegisterDTO userDTO, Set<Role> roles) throws EmailAlreadyUsedException {
-        this.checkEmail(userDTO.getEmail());
-        User user = this.userDTOUtil.toUser(userDTO);
+    public User addUser(RegisterDTO registerDTO, Set<Role> roles) throws EmailAlreadyUsedException, UsernameExistsException {
+        this.emailAndUsernameNotUsedYet(registerDTO);
+        this.noRegistrationInitiatedYet(registerDTO);
+        User user = this.userDTOUtil.toUser(registerDTO);
         // Add user authorities.
         user.setRoles(roles);
         // Disable the user until he confirms his registration.
         user.setEnabled(false);
-        // User is saved first.
+        // User is saved.
         this.userRepository.save(user);
-
         return user;
     }
 
-    private void checkEmail (String email) throws EmailAlreadyUsedException {
-        // Check if the e-mail is already used for another account.
-        User user = this.userRepository.findByEmail(email);
-        if (user != null && user.getEnabled()) {
+    public boolean emailAndUsernameNotUsedYet (RegisterDTO registerDTO) throws EmailAlreadyUsedException, UsernameExistsException {
+        User user = this.userRepository.findByEmail(registerDTO.getEmail());
+        if (user != null) {
             throw new EmailAlreadyUsedException("E-mail already used.");
-        } else if (user != null && !user.getEnabled()) {
+        }
+        user = this.userRepository.findByUsername(registerDTO.getUsername());
+        if (user != null) {
+            throw new UsernameExistsException("Username already used.");
+        }
+        return true;
+    }
+
+    public boolean noRegistrationInitiatedYet (RegisterDTO registerDTO) {
+        User user = this.userRepository.findByEmail(registerDTO.getEmail());
+        if (user != null && !user.getEnabled()) {
             try {
                 this.emailService.resendVerificationEmail(user);
+                return false;
             } catch (MessagingException e) {
                 throw new RuntimeException(e);
             } catch (HandleMailSendException e) {
                 throw new RuntimeException(e);
             }
-            throw new EmailAlreadyUsedException("A registration initiated. Please validate your registration.");
-
         }
+        return true;
     }
 
-    private Set<Role> userRoles () {
+    public Set<Role> userRoles () {
         Set<Role> roles = new HashSet<>();
         roles.add(this.roleRepository.findByRoleId(1L));
         return roles;
     }
 
-    private Set<Role> orgaRoles () {
+    public Set<Role> orgaRoles () {
         Set<Role> roles = new HashSet<>();
-        roles.add(this.roleRepository.findByRoleId(1L));
         roles.add(this.roleRepository.findByRoleId(2L));
         return roles;
     }
 
-    private Set<Role> amdinRoles () {
+    public Set<Role> amdinRoles () {
         Set<Role> roles = this.roleRepository.findAll().stream().collect(Collectors.toSet());
         return roles;
     }
-
 }

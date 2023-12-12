@@ -12,6 +12,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class EmailServiceImpl {
 
@@ -65,6 +67,7 @@ public class EmailServiceImpl {
         try {
             javaMailSender.send(message);
         } catch (MailSendException e) {
+            System.out.println(e.getMessage());
             throw new HandleMailSendException("Invalid Address e-mail");
         }
 
@@ -75,7 +78,7 @@ public class EmailServiceImpl {
         MimeMessage message = javaMailSender.createMimeMessage();
 
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        String uuid = this.registrationTokenServiceImpl.resetVerificationToken(user);
+        String uuid = this.registrationTokenServiceImpl.resetVerificationToken(UUID.randomUUID().toString(), user);
         String url = beUrl + "/registration/verify/" + uuid;
         String content = "<!DOCTYPE html>\n" +
                 "<html>\n" +

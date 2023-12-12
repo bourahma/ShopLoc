@@ -25,13 +25,9 @@ public class AuthenticationController {
     @Autowired
     private RegistrationServiceImpl registrationServiceImpl;
 
-    @GetMapping("/profile")
-    public Authentication authenticationProfile (Authentication authentication) {
-        return authentication;
-    }
-
     @PostMapping("/login")
     public Map<String, String> loginUserWithUsername (@RequestBody @Valid AuthDTO authDTO) {
+        System.out.println(authDTO.getUsername());
         return this.authenticationServiceImpl.loginUserWithUsername(authDTO.getUsername(), authDTO.getPassword());
     }
 

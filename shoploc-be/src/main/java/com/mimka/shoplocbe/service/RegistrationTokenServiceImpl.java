@@ -15,7 +15,7 @@ public class RegistrationTokenServiceImpl implements RegistrationTokenService {
     @Autowired
     private RegistrationTokenRepository registrationTokenRepository;
 
-    RegistrationToken getByUuid (String uuid) {
+    public RegistrationToken getByUuid (String uuid) {
         return registrationTokenRepository.findByUuid(uuid);
     }
 
@@ -34,8 +34,7 @@ public class RegistrationTokenServiceImpl implements RegistrationTokenService {
 
     @Transactional
     @Override
-    public String resetVerificationToken(User user) {
-        String uuid = UUID.randomUUID().toString();
+    public String resetVerificationToken(String uuid, User user) {
         this.registrationTokenRepository.updateToken(uuid, user);
 
         return uuid;

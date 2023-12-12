@@ -6,7 +6,7 @@ public interface RegistrationTokenService {
 
     public String setUserVerificationToke (User user);
 
-    public String resetVerificationToken (User user);
+    public String resetVerificationToken (String uuid, User user);
 
     public void deleteVerificationToken (String uuid);
 }

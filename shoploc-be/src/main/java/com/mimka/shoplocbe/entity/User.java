@@ -40,7 +40,7 @@ public class User {
     @Column(name = "phone_number", unique = true)
     private String phoneNumber;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "utilisateurs_roles",
             joinColumns = @JoinColumn(name = "utilisateur_id"),
