@@ -7,7 +7,7 @@ const FooterComponent = () => {
     return (
         <Footer container className="bg-shopgray text-black rounded-none">
             <div className="w-full">
-                <div className="flex text-shopgraytext flex-wrap justify-around font-bold">
+                <div className="flex text-shopgraytext flex-wrap justify-around font-bold gap-4">
                     <Link to="#">A propos</Link>
                     <Link to="#">FAQ</Link>
                     <Link to="#">Politique de confidentialité</Link>

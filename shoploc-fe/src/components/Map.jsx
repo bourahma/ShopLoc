@@ -51,9 +51,6 @@ export const Map = () => {
         }
     }, [userLocation]);
 
-
-    console.log(userLocation)
-
     const position = userLocation || [50.62925, 3.057256]; 
     const mapRef = React.useRef();
     return (
