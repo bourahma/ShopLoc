@@ -29,7 +29,7 @@ const LoginForm = () => {
           JSON.stringify(formData.username)
         );
         window.localStorage.setItem("userToken", JSON.stringify(data));
-        navigate("/");
+        navigate("/home");
       })
       .catch((error) => {
         console.log(error);

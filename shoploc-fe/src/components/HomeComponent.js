@@ -11,7 +11,7 @@ function HomeComponent() {
   return (
     <div>
       <div className="container mx-auto mt-8">
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-3 gap-4">
           {dummyData.commercants.map((commercant) => (
             <Card
               key={commercant.id}
