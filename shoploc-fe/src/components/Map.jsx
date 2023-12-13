@@ -1,27 +1,67 @@
+import React,{ useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import customMarkerSvg from "../images/marker.svg";
+import customUserPositionSvg from "../images/user_marker.svg";
 
-const position = [50.62925, 3.057256]; // Lille
 const merchants = [
     { id: 1, name: "Auchan", coordinates: [50.62925, 3.057256] },
     { id: 2, name: "Le Roy Merlin", coordinates: [50.631008, 3.058092] },
     { id: 3, name: "Planet Bain", coordinates: [50.625018, 3.065499] },
 ];
+const customIcon = new L.Icon({
+    iconUrl: customMarkerSvg,
+    iconSize: [32, 32], // Adjust the size as needed
+    iconAnchor: [16, 32], // Adjust the anchor point as needed
+    popupAnchor: [0, -32], // Adjust the popup anchor point as needed
+});
+
+const customUserPositionIcon = new L.Icon({
+    iconUrl: customUserPositionSvg,
+    iconSize: [32, 32], // Adjust the size as needed
+    iconAnchor: [16, 32], // Adjust the anchor point as needed
+    popupAnchor: [0, -32], // Adjust the popup anchor point as needed
+});
 
 export const Map = () => {
-    const customIcon = new L.Icon({
-        iconUrl: customMarkerSvg,
-        iconSize: [32, 32], // Adjust the size as needed
-        iconAnchor: [16, 32], // Adjust the anchor point as needed
-        popupAnchor: [0, -32], // Adjust the popup anchor point as needed
-    });
+    const [userLocation, setUserLocation] = useState(null);
+
+    useEffect(() => {
+        // Get user's location using geolocation API
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    setUserLocation([latitude, longitude]);
+                },
+                (error) => {
+                    console.error("Error getting user location:", error);
+                }
+            );
+        } else {
+            console.error("Geolocation is not supported by your browser");
+        }
+    }, []);
+
+    useEffect(() => {
+        // If userLocation is available, set the view to the user's location
+        if (userLocation) {
+            mapRef.current.setView(userLocation, 12);
+        }
+    }, [userLocation]);
+
+
+    console.log(userLocation)
+
+    const position = userLocation || [50.62925, 3.057256]; 
+    const mapRef = React.useRef();
     return (
         <MapContainer
             center={position}
-            zoom={13}
+            zoom={12}
             style={{ height: "400px", width: "100%" }}
+            ref={mapRef}
         >
             <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -36,6 +76,11 @@ export const Map = () => {
                     <Popup>{merchant.name}</Popup>
                 </Marker>
             ))}
+            {userLocation && (
+                <Marker position={userLocation} icon={customUserPositionIcon}>
+                    <Popup>Your Position</Popup>
+                </Marker>
+            )}
         </MapContainer>
     );
 };
