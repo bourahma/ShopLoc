@@ -26,12 +26,6 @@ const Header = () => {
     <Navbar className="bg-shopgray py-4">
       <Navbar.Brand as={Link} to="/home" className="md:pl-12">
         <div className="flex gap-2">
-          <div>
-            <h3 className="font-bold text-center">SHOPLOC</h3>
-            <span className="text-shopred font-bold">
-              Trouver mon commerçant
-            </span>
-          </div>
           <svg
             width="45"
             height="45"
@@ -44,13 +38,34 @@ const Header = () => {
               fill="#B24439"
             />
           </svg>
+          <div>
+            <h3 className="font-bold text-center">SHOPLOC</h3>
+            <span className="text-shopred font-bold">
+              Trouver mon commerçant
+            </span>
+          </div>
         </div>
       </Navbar.Brand>
       <Navbar.Toggle />
       <Navbar.Collapse className="pr-12 items-end">
+        <svg
+          className="hidden md:block"
+          width="45"
+          height="45"
+          viewBox="0 0 50 50"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M25 0C28.3152 0 31.4946 1.31696 33.8388 3.66116C36.183 6.00537 37.5 9.18479 37.5 12.5C37.5 15.8152 36.183 18.9946 33.8388 21.3388C31.4946 23.683 28.3152 25 25 25C21.6848 25 18.5054 23.683 16.1612 21.3388C13.817 18.9946 12.5 15.8152 12.5 12.5C12.5 9.18479 13.817 6.00537 16.1612 3.66116C18.5054 1.31696 21.6848 0 25 0ZM25 31.25C38.8125 31.25 50 36.8438 50 43.75V50H0V43.75C0 36.8438 11.1875 31.25 25 31.25Z"
+            fill="#B24439"
+          />
+        </svg>
         {loggedUser ? (
           <>
-            <h2 className="font-bold text-xl">Bonjour {loggedUser}</h2>
+            <Navbar.Brand className="font-bold text-xl">
+              Bonjour {loggedUser}
+            </Navbar.Brand>
             <Button className="bg-black" onClick={logout}>
               Se déconnecter
             </Button>
@@ -69,19 +84,6 @@ const Header = () => {
             </div>
           </div>
         )}
-        <svg
-          className="hidden md:block"
-          width="45"
-          height="45"
-          viewBox="0 0 50 50"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M25 0C28.3152 0 31.4946 1.31696 33.8388 3.66116C36.183 6.00537 37.5 9.18479 37.5 12.5C37.5 15.8152 36.183 18.9946 33.8388 21.3388C31.4946 23.683 28.3152 25 25 25C21.6848 25 18.5054 23.683 16.1612 21.3388C13.817 18.9946 12.5 15.8152 12.5 12.5C12.5 9.18479 13.817 6.00537 16.1612 3.66116C18.5054 1.31696 21.6848 0 25 0ZM25 31.25C38.8125 31.25 50 36.8438 50 43.75V50H0V43.75C0 36.8438 11.1875 31.25 25 31.25Z"
-            fill="#B24439"
-          />
-        </svg>
       </Navbar.Collapse>
     </Navbar>
   );

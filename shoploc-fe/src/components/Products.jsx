@@ -19,7 +19,7 @@ const Product = () => {
   };
 
   return (
-    <div className="container mx-auto mt-8">
+    <div className="container mx-auto my-8">
       <div className="flex items-center mb-4">
         <button
           type="button"
@@ -53,7 +53,7 @@ const Product = () => {
         </div>
       </div>
       <h2 className="text-xl font-semibold mb-4">Produits</h2>
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid md:grid-cols-4  grid-cols-1 gap-4">
         {commercant.produits.map((produit) => (
           <div key={produit.id} className="border border-gray-300 rounded">
             <img
@@ -64,8 +64,19 @@ const Product = () => {
             <div className="p-4">
               <h3 className="text-lg font-semibold mb-1">{produit.nom}</h3>
               <p className="text-gray-600 mb-2">{produit.description}</p>
-              <p className="text-gray-700">Prix: ${produit.prix.toFixed(2)}</p>
-              <p className="text-gray-700">En stock: {produit.stock}</p>
+              <p className="text-gray-700">{produit.prix.toFixed(2)} €</p>
+
+              {produit.stock > 1 ? (
+                <p className="text-gray-700">
+                  {produit.stock} produits restants
+                </p>
+              ) : produit.stock === 1 ? (
+                <p className="text-gray-700">
+                  "{produit.stock} produit restant"
+                </p>
+              ) : (
+                <p className="text-gray-700">"Produit indisponible"</p>
+              )}
             </div>
           </div>
         ))}

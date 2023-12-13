@@ -38,7 +38,7 @@ const SignupForm = () => {
   };
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center my-12 mx-6">
       <form
         className="grid grid-cols-2 gap-4 max-w-2xl mx-auto"
         onSubmit={handleSubmit}

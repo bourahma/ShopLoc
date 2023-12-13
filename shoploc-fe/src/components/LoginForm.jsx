@@ -37,7 +37,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="flex justify-center gap-10">
+    <div className="flex justify-center gap-10 my-12 mx-6">
       <form
         className="flex max-w-md flex-col gap-4"
         onSubmit={(e) => handleSubmit(e, formData)}
