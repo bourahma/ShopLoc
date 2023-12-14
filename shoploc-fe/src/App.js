@@ -1,4 +1,6 @@
 import React from "react";
+import "matchmedia-polyfill";
+import "matchmedia-polyfill/matchMedia.addListener";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import Products from "./components/Products";

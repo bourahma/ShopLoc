@@ -1,5 +1,5 @@
-import { Map } from "./Map";
 import NewsSlider from "./NewsSlider";
+import Map from "./Map";
 
 import offre_img from "../images/offre_1.png";
 

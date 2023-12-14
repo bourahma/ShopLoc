@@ -89,6 +89,7 @@ const SignupForm = () => {
             <TextInput
               id="password"
               type="password"
+              placeholder="Votre mot de passe"
               required
               onChange={handleChange}
             />
@@ -102,6 +103,7 @@ const SignupForm = () => {
             <TextInput
               id="confirmedPassword"
               type="password"
+              placeholder="Confirmer votre mot de passe"
               required
               onChange={handleChange}
             />

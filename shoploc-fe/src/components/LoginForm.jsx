@@ -61,6 +61,7 @@ const LoginForm = () => {
           <TextInput
             id="password"
             type="password"
+            placeholder="Votre mot de passe"
             required
             onChange={handleChange}
           />

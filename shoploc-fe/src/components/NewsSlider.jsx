@@ -4,7 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import newsService from "../services/news";
 
-export default function NewsSlider() {
+const NewsSlider = () => {
   const [newsData, setNewsData] = useState([]);
   const sliderSettings = {
     dots: false,
@@ -50,4 +50,6 @@ export default function NewsSlider() {
       ))}
     </Slider>
   );
-}
+};
+
+export default NewsSlider;

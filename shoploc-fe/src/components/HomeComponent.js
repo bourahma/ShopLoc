@@ -16,7 +16,7 @@ function HomeComponent() {
             <Card
               key={commercant.id}
               className="max-w-sm cursor-pointer"
-              imgAlt="Meaningful alt text for an image that is not purely decorative"
+              imgAlt={`commerce ${commercant.id}`}
               imgSrc={require(`../images/${commercant.image}`)}
               onClick={() => handleCardClick(commercant.id)}
             >
@@ -35,3 +35,5 @@ function HomeComponent() {
 }
 
 export default HomeComponent;
+
+//TODO: renommer ce composant Commerces
