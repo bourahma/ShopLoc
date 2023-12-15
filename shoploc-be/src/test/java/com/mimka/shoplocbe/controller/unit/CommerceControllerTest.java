@@ -1,7 +1,6 @@
 package com.mimka.shoplocbe.controller.unit;
 
 import com.mimka.shoplocbe.controller.CommerceController;
-import com.mimka.shoplocbe.dto.user.AuthDTO;
 import com.mimka.shoplocbe.service.CommerceServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.verify;
 
-public class CommerceControllerTest {
+class CommerceControllerTest {
 
     @Mock
     private CommerceServiceImpl commerceServiceImpl;

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class UserServiceImplIT {
+class UserServiceImplIT {
 
     @Mock
     private UserRepository userRepository;

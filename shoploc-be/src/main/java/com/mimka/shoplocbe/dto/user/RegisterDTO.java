@@ -35,7 +35,7 @@ public class RegisterDTO {
     @Email(message = "Invalid email address")
     private String email;
 
-    @Pattern(regexp = "^[0-9]+$", message = "Phone number must contain only digits")
+    @Pattern(regexp = "\\d", message = "Phone number must contain only digits")
     @Size(min = 10, max = 10, message = "Phone number must contain 10 characters")
     private String phoneNumber;
 }

@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.verify;
 
-public class ProductControllerTest {
+class ProductControllerTest {
 
     @Mock
     private ProductServiceImpl productServiceImpl;

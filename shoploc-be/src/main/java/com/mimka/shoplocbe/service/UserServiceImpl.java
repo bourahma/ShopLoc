@@ -125,7 +125,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     public Set<Role> amdinRoles () {
-        Set<Role> roles = this.roleRepository.findAll().stream().collect(Collectors.toSet());
-        return roles;
+        return this.roleRepository.findAll().stream().collect(Collectors.toSet());
     }
 }

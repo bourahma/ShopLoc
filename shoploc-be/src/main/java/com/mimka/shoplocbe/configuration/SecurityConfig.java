@@ -42,7 +42,7 @@ public class SecurityConfig {
                 // The session will be handled in the client side.
                 .sessionManagement(sm->sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // CRSF must be disabled with STATELESS session
-                .csrf(crsf-> crsf.disable())
+                //.csrf(crsf-> crsf.disable())
                 // These requests do not need authentication.
                 .authorizeHttpRequests(requests -> requests.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console"),
                         AntPathRequestMatcher.antMatcher("/authentication/**"),

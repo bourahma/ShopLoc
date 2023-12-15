@@ -18,7 +18,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AuthenticationControllerIT {
+class AuthenticationControllerIT {
 
     @LocalServerPort
     private int port;
@@ -80,7 +80,7 @@ public class AuthenticationControllerIT {
         authDTO.setPassword("12345678");
 
         Map<String, String> token = authenticationController.loginUserWithUsername(authDTO);
-        Assertions.assertTrue(token.get("access-token").split("\\.").length == 3);
+        Assertions.assertEquals(token.get("access-token").split("\\.").length, 3);
     }
 
     @Test
@@ -109,8 +109,8 @@ public class AuthenticationControllerIT {
     void registerUser_ShouldCreateUser () throws Exception {
         Assertions.assertNull(userRepository.findByUsername(registerDTO.getUsername()));
         authenticationController.registerUser(registerDTO);
-        Assertions.assertTrue(userRepository.findByUsername(registerDTO.getUsername()).getEmail().equals(registerDTO.getEmail()));
-        Assertions.assertTrue(userRepository.findByUsername(registerDTO.getUsername()).getUsername().equals(registerDTO.getUsername()));
+        Assertions.assertEquals(userRepository.findByUsername(registerDTO.getUsername()).getEmail(), registerDTO.getEmail());
+        Assertions.assertEquals(userRepository.findByUsername(registerDTO.getUsername()).getUsername(), registerDTO.getUsername());
         Assertions.assertTrue(userRepository.findByUsername(registerDTO.getUsername()).getEnabled());
     }
 }

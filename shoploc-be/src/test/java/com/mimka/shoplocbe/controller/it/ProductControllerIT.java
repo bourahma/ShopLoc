@@ -3,11 +3,8 @@ package com.mimka.shoplocbe.controller.it;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mimka.shoplocbe.controller.CommerceController;
 import com.mimka.shoplocbe.controller.ProductController;
-import com.mimka.shoplocbe.dto.commerce.CommerceDTO;
 import com.mimka.shoplocbe.dto.product.ProductDTO;
-import com.mimka.shoplocbe.service.CommerceServiceImpl;
 import com.mimka.shoplocbe.service.ProductServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ProductControllerIT {
+class ProductControllerIT {
 
     @LocalServerPort
     private int port;
