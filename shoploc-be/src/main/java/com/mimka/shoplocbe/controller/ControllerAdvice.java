@@ -15,13 +15,13 @@ import java.util.Map;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-    private String passwordIncorrect = "Les mots de passes sont différents.";
+    private String pIncorrect = "Les mots de passes sont différents.";
 
     @ExceptionHandler(value = BadCredentialsException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public Map<String, String> authenticationFailed(BadCredentialsException exception) {
         if (!exception.getMessage().contains("Nom d\'utilisateur incorrect.")) {
-            return Map.of("message", passwordIncorrect);
+            return Map.of("message", pIncorrect);
         }
         return Map.of("message", exception.getMessage());
     }
