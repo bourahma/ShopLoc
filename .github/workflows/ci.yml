@@ -56,4 +56,4 @@ jobs:
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           run: | 
             cd shoploc-be 
-            mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=glop_shoploc
+            mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=g_shoploc
