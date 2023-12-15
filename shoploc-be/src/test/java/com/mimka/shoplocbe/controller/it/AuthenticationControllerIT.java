@@ -80,7 +80,7 @@ class AuthenticationControllerIT {
         authDTO.setPassword("12345678");
 
         Map<String, String> token = authenticationController.loginUserWithUsername(authDTO);
-        Assertions.assertEquals(token.get("access-token").split("\\.").length, 3);
+        Assertions.assertEquals(3, token.get("access-token").split("\\.").length);
     }
 
     @Test

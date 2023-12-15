@@ -32,8 +32,8 @@ class CommerceTest {
     void toString_ShouldReturnExpectedString() {
         Commerce commerce = new Commerce(1L, "TestCommerce", LocalTime.of(8, 0), LocalTime.of(18, 0));
 
-        assertEquals(commerce.getCommerceId(), 1);
-        assertEquals(commerce.getCommerceName(), "TestCommerce");
+        assertEquals(1, commerce.getCommerceId());
+        assertEquals("TestCommerce", commerce.getCommerceName());
         assertEquals(commerce.getOpeningHour(), LocalTime.of(8, 0));
         assertEquals(commerce.getClosingHour(), LocalTime.of(18, 0));
     }
