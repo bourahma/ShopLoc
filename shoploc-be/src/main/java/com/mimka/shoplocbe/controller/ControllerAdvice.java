@@ -1,6 +1,5 @@
 package com.mimka.shoplocbe.controller;
 
-import com.mimka.shoplocbe.exception.HandleMailSendException;
 import com.mimka.shoplocbe.exception.RegistrationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -16,13 +15,12 @@ import java.util.Map;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-    @Value("${auth.message.password.incorrect}")
-    private String passwordIncorrect;
+    private String passwordIncorrect = "Les mots de passes sont différents.";
 
     @ExceptionHandler(value = BadCredentialsException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public Map<String, String> authenticationFailed(BadCredentialsException exception) {
-        if (!exception.getMessage().contains("Nom d\\'utilisateur incorrect")) {
+        if (!exception.getMessage().contains("Nom d\'utilisateur incorrect.")) {
             return Map.of("message", passwordIncorrect);
         }
         return Map.of("message", exception.getMessage());
@@ -31,12 +29,6 @@ public class ControllerAdvice {
     @ExceptionHandler(value = AuthenticationException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public Map<String, String> authenticationFailed(AuthenticationException exception) {
-        return Map.of("message", exception.getMessage());
-    }
-
-    @ExceptionHandler(value = HandleMailSendException.class)
-    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    public Map<String, String> registrationFailed(HandleMailSendException exception) {
         return Map.of("message", exception.getMessage());
     }
 

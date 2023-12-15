@@ -4,6 +4,4 @@ import com.mimka.shoplocbe.dto.user.RegisterDTO;
 public interface RegistrationService {
 
     public void register (RegisterDTO registerDTO) throws Exception;
-
-    public boolean verify (String uuid);
 }

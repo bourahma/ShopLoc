@@ -10,18 +10,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserDTOUtil {
 
-    @Autowired
     private ModelMapper modelMapper;
 
     @Value("${register.message.passwrods.different}")
     private String differentPasswords;
 
-    public UserDTO toUserDTO (User user) {
-        return modelMapper.map(user, UserDTO.class);
-    }
-
-    public User toUser (UserDTO userDTO) {
-        return modelMapper.map(userDTO, User.class);
+    @Autowired
+    public UserDTOUtil(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
     }
 
     public User toUser (RegisterDTO registerDTO) {

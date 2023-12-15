@@ -4,13 +4,10 @@ import com.mimka.shoplocbe.dto.user.RegisterDTO;
 import com.mimka.shoplocbe.dto.user.UserDTOUtil;
 import com.mimka.shoplocbe.entity.Role;
 import com.mimka.shoplocbe.entity.User;
-import com.mimka.shoplocbe.exception.HandleMailSendException;
 import com.mimka.shoplocbe.exception.RegistrationException;
 import com.mimka.shoplocbe.repository.RoleRepository;
 import com.mimka.shoplocbe.repository.UserRepository;
-import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,30 +21,27 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
-
-    @Autowired
+    
     private UserRepository userRepository;
 
-    @Autowired
     private UserDTOUtil userDTOUtil;
 
-    @Autowired
     private RoleRepository roleRepository;
 
+    private String invalidUsernameMessage = "Nom d\'utilisateur incorrect.";
+
+    private String invalidEmailMessage = "Adresse e-mail incorrecte.";
+
+    private String registrationEmailMessage = "L'adresse e-mail est déjà associée à un compte existant.";
+
+    private String registrationUsernameMessage = "Ce nom d'utilisateur est déjà utilisé.";
+
     @Autowired
-    private EmailServiceImpl emailService;
-
-    @Value("${auth.message.username.invalid}")
-    private String invalidUsernameMessage;
-
-    @Value("${auth.message.email.invalid}")
-    private String invalidEmailMessage;
-
-    @Value("${register.message.email.exists}")
-    private String registrationEmailMessage;
-
-    @Value("${register.message.username.exists}")
-    private String registrationUsernameMessage;
+    public UserServiceImpl (UserRepository userRepository, UserDTOUtil userDTOUtil, RoleRepository roleRepository) {
+        this.userRepository = userRepository;
+        this.userDTOUtil = userDTOUtil;
+        this.roleRepository = roleRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -58,7 +52,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public User getUserByEmail(String email) {
         User user = this.userRepository.findByEmail(email);
         if (user == null) {
-            throw new BadCredentialsException(invalidUsernameMessage);
+            throw new BadCredentialsException(invalidEmailMessage);
         }
         return user;
     }
@@ -66,7 +60,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User getUserByUsername(String username) {
         User user = this.userRepository.findByUsername(username);
-        if (user == null)  throw new BadCredentialsException (invalidEmailMessage);
+        if (user == null)  throw new BadCredentialsException (invalidUsernameMessage);
         return user;
     }
 
@@ -96,12 +90,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     public User addUser(RegisterDTO registerDTO, Set<Role> roles) throws RegistrationException {
         this.emailAndUsernameNotUsedYet(registerDTO);
-        this.noRegistrationInitiatedYet(registerDTO);
         User user = this.userDTOUtil.toUser(registerDTO);
         // Add user authorities.
         user.setRoles(roles);
         // Disable the user until he confirms his registration.
-        user.setEnabled(false);
+        user.setEnabled(true);
         // User is saved.
         this.userRepository.save(user);
         return user;
@@ -115,21 +108,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user = this.userRepository.findByUsername(registerDTO.getUsername());
         if (user != null) {
             throw new RegistrationException(registrationUsernameMessage);
-        }
-        return true;
-    }
-
-    public boolean noRegistrationInitiatedYet (RegisterDTO registerDTO) {
-        User user = this.userRepository.findByEmail(registerDTO.getEmail());
-        if (user != null && !user.getEnabled()) {
-            try {
-                this.emailService.resendVerificationEmail(user);
-                return false;
-            } catch (MessagingException e) {
-                throw new RuntimeException(e);
-            } catch (HandleMailSendException e) {
-                throw new RuntimeException(e);
-            }
         }
         return true;
     }

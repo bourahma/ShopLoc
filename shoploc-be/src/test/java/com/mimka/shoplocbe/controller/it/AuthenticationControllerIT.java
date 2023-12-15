@@ -4,7 +4,6 @@ import com.mimka.shoplocbe.controller.AuthenticationController;
 import com.mimka.shoplocbe.dto.user.AuthDTO;
 import com.mimka.shoplocbe.dto.user.RegisterDTO;
 import com.mimka.shoplocbe.exception.RegistrationException;
-import com.mimka.shoplocbe.repository.RegistrationTokenRepository;
 import com.mimka.shoplocbe.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -32,9 +31,6 @@ public class AuthenticationControllerIT {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private RegistrationTokenRepository registrationTokenRepository;
 
     private static RegisterDTO registerDTO;
 
@@ -115,11 +111,6 @@ public class AuthenticationControllerIT {
         authenticationController.registerUser(registerDTO);
         Assertions.assertTrue(userRepository.findByUsername(registerDTO.getUsername()).getEmail().equals(registerDTO.getEmail()));
         Assertions.assertTrue(userRepository.findByUsername(registerDTO.getUsername()).getUsername().equals(registerDTO.getUsername()));
-        Assertions.assertFalse(userRepository.findByUsername(registerDTO.getUsername()).getEnabled());
+        Assertions.assertTrue(userRepository.findByUsername(registerDTO.getUsername()).getEnabled());
     }
-
-    /*@Test
-    void registerUser_ShouldEncodePassword () {
-        Assertions.assertFalse(userRepository.findByUsername(registerDTO.getUsername()).getPassword().equals(registerDTO.getPassword()));
-    }*/
 }

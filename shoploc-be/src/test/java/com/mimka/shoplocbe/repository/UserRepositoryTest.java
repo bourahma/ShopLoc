@@ -42,37 +42,4 @@ public class UserRepositoryTest {
         Assertions.assertEquals(4, userRepository.findAll().size());
 
     }
-
-    /*@Test
-    void save_ShouldNotSaveUserWithUsernameThatAlreadyExists() {
-        User user = new User();
-        user.setUsername("Joe");
-        user.setPassword("password");
-        user.setFirstname("firstname");
-        user.setLastname("lastname");
-        user.setPhoneNumber("00 11 22 33 44");
-        user.setEnabled(false);
-        user.setEmail("address@email.com");
-        userRepository.save(user);
-        Assertions.assertEquals(3, userRepository.findAll().size());
-    }
-
-    @Test
-    void save_ShouldNotSaveUserWithEmailThatAlreadyExists() {
-        User user = new User();
-        user.setUsername("user");
-        user.setPassword("password");
-        user.setFirstname("firstname");
-        user.setLastname("lastname");
-        user.setPhoneNumber("00 11 22 33 44");
-        user.setEnabled(false);
-        user.setEmail("john.doe@gmail.com");
-        try {
-        userRepository.save(user);
-         } catch (Exception e) {
-            System.out.println(e.getClass().toString());
-        }
-        Assertions.assertEquals(3, userRepository.findAll().size());
-    }*/
-
 }

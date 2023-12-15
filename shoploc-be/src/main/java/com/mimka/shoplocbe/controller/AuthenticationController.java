@@ -18,13 +18,18 @@ import java.util.Map;
 @Slf4j
 public class AuthenticationController {
 
-    @Autowired
     private AuthenticationServiceImpl authenticationServiceImpl;
 
-    @Autowired
     private RegistrationServiceImpl registrationServiceImpl;
 
+    @Autowired
+    public AuthenticationController(AuthenticationServiceImpl authenticationServiceImpl, RegistrationServiceImpl registrationServiceImpl) {
+        this.authenticationServiceImpl = authenticationServiceImpl;
+        this.registrationServiceImpl = registrationServiceImpl;
+    }
+
     @PostMapping("/login")
+    @ResponseStatus(value = HttpStatus.OK)
     public Map<String, String> loginUserWithUsername (@RequestBody @Valid AuthDTO authDTO) {
         log.info("Authentication attempt from : {}", authDTO.getUsername());
         return this.authenticationServiceImpl.loginUserWithUsername(authDTO.getUsername(), authDTO.getPassword());
@@ -35,11 +40,5 @@ public class AuthenticationController {
     public void registerUser (@RequestBody @Valid RegisterDTO registerDTO) throws Exception {
         log.info("Registration attempt for : {}", registerDTO.getUsername());
         this.registrationServiceImpl.register(registerDTO);
-    }
-
-    @GetMapping("/verify/{uuid}")
-    public void verifyUserRegistration (@PathVariable String uuid) {
-        log.info("Registration validation attempt");
-        this.registrationServiceImpl.verify(uuid);
     }
 }

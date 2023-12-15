@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class CommerceServiceImpl {
+public class CommerceServiceImpl implements CommerceService {
 
     private CommerceRepository commerceRepository;
 
@@ -22,6 +22,7 @@ public class CommerceServiceImpl {
         this.commerceDTOUtil = commerceDTOUtil;
     }
 
+    @Override
     public List<CommerceDTO> getCommerces () {
         return this.commerceRepository.findAll()
                 .stream()
