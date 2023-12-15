@@ -1,7 +1,6 @@
 package com.mimka.shoplocbe.controller;
 
 import com.mimka.shoplocbe.exception.RegistrationException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -17,30 +16,32 @@ public class ControllerAdvice {
 
     private String pIncorrect = "Les mots de passes sont différents.";
 
+    private String message = "message";
+
     @ExceptionHandler(value = BadCredentialsException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public Map<String, String> authenticationFailed(BadCredentialsException exception) {
         if (!exception.getMessage().contains("Nom d\'utilisateur incorrect.")) {
-            return Map.of("message", pIncorrect);
+            return Map.of(message, pIncorrect);
         }
-        return Map.of("message", exception.getMessage());
+        return Map.of(message, exception.getMessage());
     }
 
     @ExceptionHandler(value = AuthenticationException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public Map<String, String> authenticationFailed(AuthenticationException exception) {
-        return Map.of("message", exception.getMessage());
+        return Map.of(message, exception.getMessage());
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public Map<String, String> methodArgumentValidation(MethodArgumentNotValidException exception) {
-        return Map.of("message", exception.getMessage());
+        return Map.of(message, exception.getMessage());
     }
 
     @ExceptionHandler(value = RegistrationException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public Map<String, String> registrationExceptionHandler(RegistrationException exception) {
-        return Map.of("message", exception.getMessage());
+        return Map.of(message, exception.getMessage());
     }
 }
