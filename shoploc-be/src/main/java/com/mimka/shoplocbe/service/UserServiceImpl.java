@@ -117,14 +117,4 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         roles.add(this.roleRepository.findByRoleId(1L));
         return roles;
     }
-
-    public Set<Role> orgaRoles () {
-        Set<Role> roles = new HashSet<>();
-        roles.add(this.roleRepository.findByRoleId(2L));
-        return roles;
-    }
-
-    public Set<Role> amdinRoles () {
-        return this.roleRepository.findAll().stream().collect(Collectors.toSet());
-    }
 }

@@ -108,16 +108,4 @@ class UserServiceImplTest {
         userServiceImpl.userRoles();
         verify(roleRepository).findByRoleId(1L);
     }
-
-    @Test
-    void orgaRoles_ShouldCallTheUserRepository() {
-        userServiceImpl.orgaRoles();
-        verify(roleRepository).findByRoleId(2L);
-    }
-
-    @Test
-    void amdinRoles_ShouldCallTheUserRepository() {
-        userServiceImpl.amdinRoles();
-        verify(roleRepository).findAll();
-    }
 }
