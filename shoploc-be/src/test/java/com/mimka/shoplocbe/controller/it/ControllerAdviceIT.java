@@ -19,7 +19,7 @@ class ControllerAdviceIT {
     private MockMvc mockMvc;
 
     @Test
-    public void authenticationFailed_whenPasswordIncorrect () throws Exception {
+    void authenticationFailed_whenPasswordIncorrect () throws Exception {
         var expectedJson = """
                 {
                     "message": "Mot de passe incorrect."
@@ -40,7 +40,7 @@ class ControllerAdviceIT {
     }
 
     @Test
-    public void authenticationFailed_whenUsernameIncorrect () throws Exception {
+    void authenticationFailed_whenUsernameIncorrect () throws Exception {
         var expectedJson = """
                 {
                     "message": "Nom d\\'utilisateur incorrect."
@@ -62,7 +62,7 @@ class ControllerAdviceIT {
     }
 
     @Test
-    public void registrationExceptionHandler_whenUsernameAlreadyExists () throws Exception {
+    void registrationExceptionHandler_whenUsernameAlreadyExists () throws Exception {
         var expectedJson = """
                 {
                     "message": "Le nom d\\'utilisateur est déjà utilisé."
@@ -89,7 +89,7 @@ class ControllerAdviceIT {
     }
 
     @Test
-    public void registrationExceptionHandler_whenEmailAlreadyExists () throws Exception {
+    void registrationExceptionHandler_whenEmailAlreadyExists () throws Exception {
         var expectedJson = """
                 {
                     "message": "L\\'adresse e-mail est déjà associée à un compte existant."
@@ -116,7 +116,7 @@ class ControllerAdviceIT {
     }
 
     @Test
-    public void registrationExceptionHandler_whenPasswordsAreDifferent () throws Exception {
+    void registrationExceptionHandler_whenPasswordsAreDifferent () throws Exception {
         var expectedJson = """
                 {
                     "message": "Les mots de passe sont différents."

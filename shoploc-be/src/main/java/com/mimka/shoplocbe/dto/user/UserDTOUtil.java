@@ -13,7 +13,7 @@ public class UserDTOUtil {
     private ModelMapper modelMapper;
 
 
-    private String differentPasswords = "Les mots de passe sont différents.";
+    private String differentP = "Les mots de passe sont différents.";
 
     @Autowired
     public UserDTOUtil(ModelMapper modelMapper) {
@@ -26,7 +26,7 @@ public class UserDTOUtil {
 
     public boolean checkPasswords (RegisterDTO registerDTO) throws RegistrationException {
         if (!registerDTO.getConfirmedPassword().equals(registerDTO.getPassword())) {
-            throw new RegistrationException(differentPasswords);
+            throw new RegistrationException(differentP);
         }
         return true;
     }
