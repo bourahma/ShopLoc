@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class UserDTOUtilTest {
+class UserDTOUtilTest {
     @Mock
     private ModelMapper modelMapper;
 
