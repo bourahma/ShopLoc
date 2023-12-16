@@ -14,7 +14,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-    private String pIncorrect = "Les mots de passes sont différents.";
+    private String pIncorrect = "Mot de passe incorrect.";
 
     private String message = "message";
 
@@ -40,7 +40,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(value = RegistrationException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseStatus(value = HttpStatus.CONFLICT)
     public Map<String, String> registrationExceptionHandler(RegistrationException exception) {
         return Map.of(message, exception.getMessage());
     }

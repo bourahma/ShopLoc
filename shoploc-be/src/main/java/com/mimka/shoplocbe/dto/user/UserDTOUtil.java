@@ -12,8 +12,8 @@ public class UserDTOUtil {
 
     private ModelMapper modelMapper;
 
-    @Value("${register.message.passwrods.different}")
-    private String differentPasswords;
+
+    private String differentPasswords = "Les mots de passe sont différents.";
 
     @Autowired
     public UserDTOUtil(ModelMapper modelMapper) {

@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private String registrationEmailMessage = "L'adresse e-mail est déjà associée à un compte existant.";
 
-    private String registrationUsernameMessage = "Ce nom d'utilisateur est déjà utilisé.";
+    private String registrationUsernameMessage = "Le nom d'utilisateur est déjà utilisé.";
 
     @Autowired
     public UserServiceImpl (UserRepository userRepository, UserDTOUtil userDTOUtil, RoleRepository roleRepository) {
