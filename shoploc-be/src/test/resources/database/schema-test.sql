@@ -80,7 +80,8 @@ CREATE TABLE Commerce (
                           commerce_id INT DEFAULT nextval('commerce_sequence') PRIMARY KEY,
                           commerce_name VARCHAR(255) NOT NULL,
                           opening_hour time NOT NULL,
-                          closing_hour time NOT NULL
+                          closing_hour time NOT NULL,
+                          image_url TEXT
 );
 
 -- Create the Commerce_Product table :

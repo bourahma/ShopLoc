@@ -21,16 +21,16 @@ VALUES
     (3, 3);
 
 -- Commerce's insertion :
-INSERT INTO Commerce (commerce_id, commerce_name, opening_hour, closing_hour) VALUES
-                                                                                  (nextval('commerce_sequence'), 'Boulangerie du Coin', '08:00:00', '18:00:00'),
-                                                                                  (nextval('commerce_sequence'), 'Le Petit Café', '09:00:00', '20:00:00'),
-                                                                                  (nextval('commerce_sequence'), 'Pizzeria Bella Napoli', '10:00:00', '17:00:00'),
-                                                                                  (nextval('commerce_sequence'), 'Magasin Magique', '07:30:00', '16:30:00'),
-                                                                                  (nextval('commerce_sequence'), 'Café des Artistes', '11:00:00', '19:30:00'),
+INSERT INTO Commerce (commerce_id, commerce_name, opening_hour, closing_hour, image_url) VALUES
+                                                                                  (nextval('commerce_sequence'), 'Boulangerie du Coin', '08:00:00', '18:00:00', ''),
+                                                                                  (nextval('commerce_sequence'), 'Le Petit Café', '09:00:00', '20:00:00', ''),
+                                                                                  (nextval('commerce_sequence'), 'Pizzeria Bella Napoli', '10:00:00', '17:00:00', ''),
+                                                                                  (nextval('commerce_sequence'), 'Magasin Magique', '07:30:00', '16:30:00', ''),
+                                                                                  (nextval('commerce_sequence'), 'Café des Artistes', '11:00:00', '19:30:00', ''),
                                                                                   -- Other entries...
-                                                                                  (nextval('commerce_sequence'), 'Fleuriste Parfumé', '09:30:00', '17:00:00'),
-                                                                                  (nextval('commerce_sequence'), 'Artisan du Bois', '10:00:00', '18:00:00'),
-                                                                                  (nextval('commerce_sequence'), 'Délice du Café', '07:00:00', '21:00:00');
+                                                                                  (nextval('commerce_sequence'), 'Fleuriste Parfumé', '09:30:00', '17:00:00', ''),
+                                                                                  (nextval('commerce_sequence'), 'Artisan du Bois', '10:00:00', '18:00:00', ''),
+                                                                                  (nextval('commerce_sequence'), 'Délice du Café', '07:00:00', '21:00:00', '');
 
 -- Product's insertion :
 INSERT INTO Product (product_id, product_name, description, price, quantity) VALUES
