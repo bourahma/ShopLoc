@@ -28,7 +28,10 @@ const LoginForm = () => {
           "loggedUser",
           JSON.stringify(formData.username)
         );
-        window.localStorage.setItem("userToken", JSON.stringify(data));
+        window.localStorage.setItem(
+            "userToken",
+            JSON.stringify(data["access-token"] )
+        );
         navigate("/home");
       })
       .catch((error) => {
