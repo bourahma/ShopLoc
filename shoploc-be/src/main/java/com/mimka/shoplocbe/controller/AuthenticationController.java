@@ -15,6 +15,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/authentication")
 @Slf4j
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AuthenticationController {
 
     private AuthenticationServiceImpl authenticationServiceImpl;

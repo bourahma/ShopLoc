@@ -1,32 +1,32 @@
-import { useNavigate } from "react-router-dom";
-import { Card } from "flowbite-react";
+import { useEffect, useState } from "react";
+import CommerceCard from "./CommerceCard";
+import fetchCommercants from "../services/fetchCommerces";
 
 function HomeComponent() {
-  const navigate = useNavigate();
   const dummyData = require("../utils/commerçants.json");
+  const [commercants, setCommercants] = useState([]);
+  const token = localStorage.getItem("userToken");
+  const cleanedToken = token ? token.replace(/['"]+/g, "") : null;
+  console.log(cleanedToken);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchCommercants(cleanedToken);
+        setCommercants(data);
+      } catch (error) {
+        console.error("Error in HomeComponent:", error);
+      }
+    };
 
-  const handleCardClick = (commercantId) => {
-    navigate(`/commercant/${commercantId}`);
-  };
+    fetchData().then((r) => console.log(r));
+  }, [token, cleanedToken]);
+  console.log(commercants);
   return (
     <div>
       <div className="container mx-auto my-8">
         <div className="grid md:grid-cols-3 gap-4">
           {dummyData.commercants.map((commercant) => (
-            <Card
-              key={commercant.id}
-              className="max-w-sm cursor-pointer"
-              imgAlt={`commerce ${commercant.id}`}
-              imgSrc={require(`../images/${commercant.image}`)}
-              onClick={() => handleCardClick(commercant.id)}
-            >
-              <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                {commercant.nom}
-              </h5>
-              <p className="font-normal text-gray-700 dark:text-gray-400">
-                {commercant.description}
-              </p>
-            </Card>
+            <CommerceCard commercant={commercant} key={commercant.id} />
           ))}
         </div>
       </div>
@@ -35,5 +35,3 @@ function HomeComponent() {
 }
 
 export default HomeComponent;
-
-//TODO: renommer ce composant Commerces
