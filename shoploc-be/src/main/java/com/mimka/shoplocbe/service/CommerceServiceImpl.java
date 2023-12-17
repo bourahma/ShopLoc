@@ -27,4 +27,8 @@ public class CommerceServiceImpl implements CommerceService {
                 .stream()
                 .map(commerceDTOUtil::toCommerceDTO).toList();
     }
+
+    public CommerceDTO getCommerce (Long id) {
+        return this.commerceRepository.findByCommerceId(id);
+    }
 }

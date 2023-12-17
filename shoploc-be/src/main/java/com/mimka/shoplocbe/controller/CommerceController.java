@@ -31,6 +31,12 @@ public class CommerceController {
         return this.commerceServiceImpl.getCommerces();
     }
 
+    @GetMapping("/{commerceId}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public CommerceDTO commerce (@PathVariable("commerceId") Long commerceId) {
+        return this.commerceServiceImpl.getCommerce(commerceId);
+    }
+
     @GetMapping("/{commerceId}/products")
     @ResponseStatus(value = HttpStatus.OK)
     public List<ProductDTO> commerceProducts (@PathVariable("commerceId") Long commerceId){
