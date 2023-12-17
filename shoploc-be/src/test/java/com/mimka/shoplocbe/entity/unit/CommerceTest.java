@@ -32,10 +32,10 @@ class CommerceTest {
     void toString_ShouldReturnExpectedString() {
         Commerce commerce = new Commerce(1L, "TestCommerce", LocalTime.of(8, 0), LocalTime.of(18, 0));
 
-        assertTrue(commerce.getCommerceId()==1);
-        assertTrue(commerce.getCommerceName().equals("TestCommerce"));
-        assertTrue(commerce.getOpeningHour().equals(LocalTime.of(8, 0)));
-        assertTrue(commerce.getClosingHour().equals(LocalTime.of(18, 0)));
+        assertEquals(1, commerce.getCommerceId());
+        assertEquals("TestCommerce", commerce.getCommerceName());
+        assertEquals(commerce.getOpeningHour(), LocalTime.of(8, 0));
+        assertEquals(commerce.getClosingHour(), LocalTime.of(18, 0));
     }
 }
 

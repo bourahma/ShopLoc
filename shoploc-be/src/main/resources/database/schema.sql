@@ -7,19 +7,11 @@ DROP TABLE IF EXISTS Product CASCADE;
 DROP TABLE IF EXISTS Commerce CASCADE;
 DROP TABLE IF EXISTS Commerce_Product CASCADE;
 DROP SEQUENCE IF EXISTS utilisateur_sequence;
-DROP SEQUENCE IF EXISTS token_sequence;
 DROP SEQUENCE IF EXISTS commerce_sequence;
 DROP SEQUENCE IF EXISTS product_sequence;
 
 
 CREATE SEQUENCE utilisateur_sequence
-    INCREMENT 1
-    START 1
-    MINVALUE 1
-    MAXVALUE 9223372036854775807
-    CACHE 1;
-
-CREATE SEQUENCE token_sequence
     INCREMENT 1
     START 1
     MINVALUE 1
@@ -65,14 +57,6 @@ CREATE TABLE Utilisateurs_Roles (
     PRIMARY KEY (utilisateur_id, role_id),
     FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(utilisateur_id),
     FOREIGN KEY (role_id) REFERENCES role(role_id)
-);
-
--- Create the Role table :
-CREATE TABLE Token (
-    token_id INT DEFAULT nextval('token_sequence') PRIMARY KEY,
-    uuid VARCHAR UNIQUE,
-    utilisateur_id INT NOT NULL UNIQUE,
-    FOREIGN KEY (utilisateur_id) REFERENCES Utilisateur (utilisateur_id)
 );
 
 -- Create the Product table :

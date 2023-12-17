@@ -54,6 +54,10 @@ jobs:
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          run: | 
-            cd shoploc-be 
-            mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=glop_shoploc
+          run: |
+            cd shoploc-be
+            mvn verify
+            mvn jacoco:report # Generate Java code coverage report
+            
+            # Upload the JaCoCo report to SonarQube
+            mvn sonar:sonar -Dsonar.projectKey=bourahma_ShopLoc -Dsonar.coverage.jacoco.xmlReportPaths=**/target/site/jacoco/jacoco.xml

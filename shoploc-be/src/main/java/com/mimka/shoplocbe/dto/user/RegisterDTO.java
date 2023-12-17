@@ -4,7 +4,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,7 +12,6 @@ import org.springframework.validation.annotation.Validated;
 @Getter
 @Setter
 @Validated
-@AllArgsConstructor
 @NoArgsConstructor
 public class RegisterDTO {
 
@@ -37,7 +35,6 @@ public class RegisterDTO {
     @Email(message = "Invalid email address")
     private String email;
 
-    //@DigitsOnly(message = "Phone number must contain only digits")
     @Pattern(regexp = "^[0-9]+$", message = "Phone number must contain only digits")
     @Size(min = 10, max = 10, message = "Phone number must contain 10 characters")
     private String phoneNumber;

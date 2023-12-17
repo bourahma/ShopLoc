@@ -3,8 +3,12 @@ DROP TABLE IF EXISTS Utilisateur CASCADE;
 DROP TABLE IF EXISTS Role CASCADE;
 DROP TABLE IF EXISTS Token CASCADE;
 DROP TABLE IF EXISTS Utilisateurs_Roles CASCADE;
+DROP TABLE IF EXISTS Product CASCADE;
+DROP TABLE IF EXISTS Commerce CASCADE;
+DROP TABLE IF EXISTS Commerce_Product CASCADE;
 DROP SEQUENCE IF EXISTS utilisateur_sequence;
-DROP SEQUENCE IF EXISTS token_sequence;
+DROP SEQUENCE IF EXISTS commerce_sequence;
+DROP SEQUENCE IF EXISTS product_sequence;
 
 CREATE SEQUENCE utilisateur_sequence
     START WITH 1
@@ -13,7 +17,14 @@ CREATE SEQUENCE utilisateur_sequence
     NO MAXVALUE
     CACHE 1;
 
-CREATE SEQUENCE token_sequence
+CREATE SEQUENCE commerce_sequence
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+CREATE SEQUENCE product_sequence
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -53,4 +64,31 @@ CREATE TABLE Token (
     uuid VARCHAR UNIQUE,
     utilisateur_id INT NOT NULL UNIQUE,
     FOREIGN KEY (utilisateur_id) REFERENCES Utilisateur (utilisateur_id)
+);
+
+-- Create the Product table :
+CREATE TABLE Product (
+                         product_id INT DEFAULT nextval('product_sequence') PRIMARY KEY,
+                         product_name VARCHAR(255) NOT NULL,
+                         description TEXT,
+                         price NUMERIC(10,2) NOT NULL,
+                         quantity integer NOT NULL
+);
+
+-- Create the commerce table :
+CREATE TABLE Commerce (
+                          commerce_id INT DEFAULT nextval('commerce_sequence') PRIMARY KEY,
+                          commerce_name VARCHAR(255) NOT NULL,
+                          opening_hour time NOT NULL,
+                          closing_hour time NOT NULL
+);
+
+-- Create the Commerce_Product table :
+CREATE TABLE Commerce_Product (
+                                  commerce_id INT NOT NULL,
+                                  product_id INT NOT NULL,
+                                  quantity INT NOT NULL,
+                                  PRIMARY KEY (commerce_id, product_id),
+                                  FOREIGN KEY (commerce_id) REFERENCES commerce (commerce_id),
+                                  FOREIGN KEY (product_id) REFERENCES product (product_id)
 );
