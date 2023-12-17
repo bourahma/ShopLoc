@@ -5,20 +5,20 @@ import NewsSlider from "./NewsSlider";
 import Map from "./Map";
 
 function HomeComponent() {
-    const dummyData = require("../utils/commerçants.json");
-    const [commercants, setCommercants] = useState([]);
-    const token = localStorage.getItem("userToken");
-    const cleanedToken = token ? token.replace(/['"]+/g, '') : null;
-    console.log(cleanedToken);
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await fetchCommercants(cleanedToken);
-                setCommercants(data);
-            } catch (error) {
-                console.error("Error in HomeComponent:", error);
-            }
-        };
+  const dummyData = require("../utils/commerçants.json");
+  const [commercants, setCommercants] = useState([]);
+  const token = localStorage.getItem("userToken");
+  const cleanedToken = token ? token.replace(/['"]+/g, "") : null;
+  console.log(cleanedToken);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchCommercants(cleanedToken);
+        setCommercants(data);
+      } catch (error) {
+        console.error("Error in HomeComponent:", error);
+      }
+    };
 
         fetchData();
     }, [token]);
