@@ -3,9 +3,7 @@ package com.mimka.shoplocbe.controller.it;
 import com.mimka.shoplocbe.controller.AuthenticationController;
 import com.mimka.shoplocbe.dto.user.AuthDTO;
 import com.mimka.shoplocbe.dto.user.RegisterDTO;
-import com.mimka.shoplocbe.exception.EmailAlreadyUsedException;
-import com.mimka.shoplocbe.exception.UsernameExistsException;
-import com.mimka.shoplocbe.repository.RegistrationTokenRepository;
+import com.mimka.shoplocbe.exception.RegistrationException;
 import com.mimka.shoplocbe.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -14,13 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AuthenticationControllerIT {
+class AuthenticationControllerIT {
 
     @LocalServerPort
     private int port;
@@ -33,9 +31,6 @@ public class AuthenticationControllerIT {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private RegistrationTokenRepository registrationTokenRepository;
 
     private static RegisterDTO registerDTO;
 
@@ -85,7 +80,7 @@ public class AuthenticationControllerIT {
         authDTO.setPassword("12345678");
 
         Map<String, String> token = authenticationController.loginUserWithUsername(authDTO);
-        Assertions.assertTrue(token.get("access-token").split("\\.").length == 3);
+        Assertions.assertEquals(3, token.get("access-token").split("\\.").length);
     }
 
     @Test
@@ -94,33 +89,28 @@ public class AuthenticationControllerIT {
         authDTO.setUsername("Janne");
         authDTO.setPassword("12345678");
 
-        assertThrows(BadCredentialsException.class, () -> authenticationController.loginUserWithUsername(authDTO));
+        assertThrows(InternalAuthenticationServiceException.class, () -> authenticationController.loginUserWithUsername(authDTO));
     }
 
     @Test
     void registerUser_ShouldThrowEmailAlreadyUsedException () {
         registerDTO.setEmail("jane.smith@gmail.com");
-        assertThrows(EmailAlreadyUsedException.class, () -> authenticationController.registerUser(registerDTO));
+        assertThrows(RegistrationException.class, () -> authenticationController.registerUser(registerDTO));
     }
 
     @Test
     void registerUser_ShouldThrowUsernameAlreadyUsedException () {
         registerDTO.setEmail("janne.smith@gmail.com");
         registerDTO.setUsername("Joe");
-        assertThrows(UsernameExistsException.class, () -> authenticationController.registerUser(registerDTO));
+        assertThrows(RegistrationException.class, () -> authenticationController.registerUser(registerDTO));
     }
 
     @Test
     void registerUser_ShouldCreateUser () throws Exception {
         Assertions.assertNull(userRepository.findByUsername(registerDTO.getUsername()));
         authenticationController.registerUser(registerDTO);
-        Assertions.assertTrue(userRepository.findByUsername(registerDTO.getUsername()).getEmail().equals(registerDTO.getEmail()));
-        Assertions.assertTrue(userRepository.findByUsername(registerDTO.getUsername()).getUsername().equals(registerDTO.getUsername()));
-        Assertions.assertFalse(userRepository.findByUsername(registerDTO.getUsername()).getEnabled());
+        Assertions.assertEquals(userRepository.findByUsername(registerDTO.getUsername()).getEmail(), registerDTO.getEmail());
+        Assertions.assertEquals(userRepository.findByUsername(registerDTO.getUsername()).getUsername(), registerDTO.getUsername());
+        Assertions.assertTrue(userRepository.findByUsername(registerDTO.getUsername()).getEnabled());
     }
-
-    /*@Test
-    void registerUser_ShouldEncodePassword () {
-        Assertions.assertFalse(userRepository.findByUsername(registerDTO.getUsername()).getPassword().equals(registerDTO.getPassword()));
-    }*/
 }

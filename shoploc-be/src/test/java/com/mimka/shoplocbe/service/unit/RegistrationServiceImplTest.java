@@ -3,17 +3,13 @@ package com.mimka.shoplocbe.service.unit;
 import com.mimka.shoplocbe.dto.user.RegisterDTO;
 import com.mimka.shoplocbe.dto.user.UserDTOUtil;
 import com.mimka.shoplocbe.repository.UserRepository;
-import com.mimka.shoplocbe.service.EmailServiceImpl;
 import com.mimka.shoplocbe.service.RegistrationServiceImpl;
-import com.mimka.shoplocbe.service.RegistrationTokenServiceImpl;
 import com.mimka.shoplocbe.service.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import static org.mockito.Mockito.verify;
 
 public class RegistrationServiceImplTest {
 
@@ -25,12 +21,6 @@ public class RegistrationServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
-
-    @Mock
-    private RegistrationTokenServiceImpl registrationTokenServiceImpl;
-
-    @Mock
-    private EmailServiceImpl emailServiceImpl;
 
     @Mock
     private UserDTOUtil userDTOUtil;

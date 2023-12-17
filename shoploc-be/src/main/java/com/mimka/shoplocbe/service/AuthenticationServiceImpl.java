@@ -20,11 +20,15 @@ import java.util.stream.Collectors;
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Autowired
     private JwtEncoder jwtEncoder;
+
+    @Autowired
+    public AuthenticationServiceImpl (AuthenticationManager authenticationManager, JwtEncoder jwtEncoder) {
+        this.authenticationManager = authenticationManager;
+        this.jwtEncoder = jwtEncoder;
+    }
 
     @Override
     public Map<String, String> loginUserWithUsername (String username, String password) {

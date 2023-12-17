@@ -1,8 +1,6 @@
 package com.mimka.shoplocbe.controller;
 
-import com.mimka.shoplocbe.exception.EmailAlreadyUsedException;
-import com.mimka.shoplocbe.exception.HandleMailSendException;
-import com.mimka.shoplocbe.exception.UserPasswordException;
+import com.mimka.shoplocbe.exception.RegistrationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -16,39 +14,34 @@ import java.util.Map;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-    @ExceptionHandler(value = EmailAlreadyUsedException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public Map<String, String> authenticationFailed(EmailAlreadyUsedException exception) {
-        return Map.of("message", exception.getMessage());
-    }
+    private String pIncorrect = "Mot de passe incorrect.";
+
+    private String message = "message";
 
     @ExceptionHandler(value = BadCredentialsException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public Map<String, String> authenticationFailed(BadCredentialsException exception) {
-        return Map.of("message", exception.getMessage());
+        if (!exception.getMessage().contains("Nom d\'utilisateur incorrect.")) {
+            return Map.of(message, pIncorrect);
+        }
+        return Map.of(message, exception.getMessage());
     }
 
     @ExceptionHandler(value = AuthenticationException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public Map<String, String> authenticationFailed(AuthenticationException exception) {
-        return Map.of("message", exception.getMessage());
-    }
-
-    @ExceptionHandler(value = HandleMailSendException.class)
-    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    public Map<String, String> registrationFailed(HandleMailSendException exception) {
-        return Map.of("message", exception.getMessage());
+        return Map.of(message, exception.getMessage());
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public Map<String, String> methodArgumentValidation(MethodArgumentNotValidException exception) {
-        return Map.of("message", exception.getMessage());
+        return Map.of(message, exception.getMessage());
     }
 
-    @ExceptionHandler(value = UserPasswordException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public Map<String, String> passwordsDontMatch(UserPasswordException exception) {
-        return Map.of("message", exception.getMessage());
+    @ExceptionHandler(value = RegistrationException.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT)
+    public Map<String, String> registrationExceptionHandler(RegistrationException exception) {
+        return Map.of(message, exception.getMessage());
     }
 }

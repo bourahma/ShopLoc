@@ -3,8 +3,7 @@ package com.mimka.shoplocbe.service.unit;
 import com.mimka.shoplocbe.dto.user.RegisterDTO;
 import com.mimka.shoplocbe.dto.user.UserDTOUtil;
 import com.mimka.shoplocbe.entity.User;
-import com.mimka.shoplocbe.exception.EmailAlreadyUsedException;
-import com.mimka.shoplocbe.exception.UsernameExistsException;
+import com.mimka.shoplocbe.exception.RegistrationException;
 import com.mimka.shoplocbe.repository.RoleRepository;
 import com.mimka.shoplocbe.repository.UserRepository;
 import com.mimka.shoplocbe.service.UserServiceImpl;
@@ -19,7 +18,7 @@ import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-public class UserServiceImplTest {
+class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
@@ -54,7 +53,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void emailAndUsernameNotUsedYet_ShouldCallTheUserRepository () throws EmailAlreadyUsedException, UsernameExistsException {
+    void emailAndUsernameNotUsedYet_ShouldCallTheUserRepository () throws RegistrationException {
         RegisterDTO registerDTO = new RegisterDTO();
         registerDTO.setEmail("john.doe@gmail.com");
         registerDTO.setUsername("Joe");
@@ -66,7 +65,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void emailAndUsernameNotUsedYet_ShouldReturnTrue () throws EmailAlreadyUsedException, UsernameExistsException {
+    void emailAndUsernameNotUsedYet_ShouldReturnTrue () throws RegistrationException {
         RegisterDTO registerDTO = new RegisterDTO();
 
         when(userRepository.findByUsername("Joe")).thenReturn(null);
@@ -82,7 +81,7 @@ public class UserServiceImplTest {
 
         when(userRepository.findByEmail("john.doe@gmail.com")).thenReturn(new User());
 
-        assertThrows(EmailAlreadyUsedException.class, () -> userServiceImpl.emailAndUsernameNotUsedYet(registerDTO));
+        assertThrows(RegistrationException.class, () -> userServiceImpl.emailAndUsernameNotUsedYet(registerDTO));
     }
 
     @Test
@@ -92,11 +91,11 @@ public class UserServiceImplTest {
 
         when(userRepository.findByUsername("Joe")).thenReturn(new User());
 
-        assertThrows(UsernameExistsException.class, () -> userServiceImpl.emailAndUsernameNotUsedYet(registerDTO));
+        assertThrows(RegistrationException.class, () -> userServiceImpl.emailAndUsernameNotUsedYet(registerDTO));
     }
 
     @Test
-    void addUser_ShouldCallTheUserRepository() throws UsernameExistsException, EmailAlreadyUsedException {
+    void addUser_ShouldCallTheUserRepository() throws RegistrationException {
         RegisterDTO registerDTO = new RegisterDTO();
         User user = new User();
         when(userDTOUtil.toUser(registerDTO)).thenReturn(user);
@@ -108,17 +107,5 @@ public class UserServiceImplTest {
     void userRoles_ShouldCallTheUserRepository() {
         userServiceImpl.userRoles();
         verify(roleRepository).findByRoleId(1L);
-    }
-
-    @Test
-    void orgaRoles_ShouldCallTheUserRepository() {
-        userServiceImpl.orgaRoles();
-        verify(roleRepository).findByRoleId(2L);
-    }
-
-    @Test
-    void amdinRoles_ShouldCallTheUserRepository() {
-        userServiceImpl.amdinRoles();
-        verify(roleRepository).findAll();
     }
 }

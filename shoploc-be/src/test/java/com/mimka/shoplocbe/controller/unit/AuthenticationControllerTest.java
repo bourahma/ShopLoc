@@ -10,15 +10,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 
-public class AuthenticationControllerTest {
+class AuthenticationControllerTest {
 
     @Mock
     private AuthenticationServiceImpl authenticationServiceImpl;
@@ -56,14 +54,6 @@ public class AuthenticationControllerTest {
         assertArrayEquals(new String[]{"/register"}, postMapping.value());
     }
 
-    @Test
-    void verifyUserRegistration_ShouldBeAnnotated () throws NoSuchMethodException {
-        var verifyUserRegistrationMethod = AuthenticationController.class.getDeclaredMethod("verifyUserRegistration", String.class);
-        var getMapping = verifyUserRegistrationMethod.getAnnotation(GetMapping.class);
-        assertNotNull(verifyUserRegistrationMethod.getAnnotation(GetMapping.class));
-        assertArrayEquals(new String[]{"/verify/{uuid}"}, getMapping.value());
-    }
-
     // Controller methods should call the service.
     @Test
     void loginUserWithUsername_shouldCallTheService() {
@@ -89,12 +79,5 @@ public class AuthenticationControllerTest {
 
         authenticationController.registerUser(registerDTO);
         verify(registrationServiceImpl).register(registerDTO);
-    }
-
-    @Test
-    void verifyUserRegistration_shouldCallTheService() {
-        var uuid = "ed1994ba-0f22-4ef2-8976-9440b19675e1";
-        authenticationController.verifyUserRegistration(uuid);
-        verify(registrationServiceImpl).verify(uuid);
     }
 }
