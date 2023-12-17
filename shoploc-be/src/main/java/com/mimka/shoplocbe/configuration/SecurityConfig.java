@@ -22,6 +22,11 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 import javax.crypto.spec.SecretKeySpec;
 
@@ -51,8 +56,22 @@ public class SecurityConfig {
                 .authorizeHttpRequests(ar->ar.anyRequest().authenticated())
                 // With JWT authentication, we authenticate the user only once, and the JWT remains associated with the user until its authentication expiration date is reached.
                 .oauth2ResourceServer(oa -> oa.jwt(Customizer.withDefaults()))
+                .cors(Customizer.withDefaults())
                 .build();
     }
+
+     @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*")); // you can customize this to specific origins
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+    
 
     @Bean
     public PasswordEncoder passwordEncoder ( ) {
