@@ -1,28 +1,52 @@
-import { Card } from "flowbite-react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import openingHour from "../images/openHour.png";
+import closingHour from "../images/closeHour.png";
 
-const CommerceCard = ({commercant}) => {
-    const navigate = useNavigate();
-
-    const handleCardClick = (commercantId) => {
-        navigate(`/commercant/${commercantId}`);
+const CommerceCard = ({ commercant }) => {
+    const formatTime = (time) => {
+        const [hours, minutes] = time.split(":");
+        return `${hours}:${minutes}`;
     };
 
     return (
-        <Card
-            key={commercant.id}
-            className="max-w-sm cursor-pointer"
-            imgAlt={`commerce ${commercant.id}`}
-            imgSrc={require(`../images/${commercant.image}`)}
-            onClick={() => handleCardClick(commercant.id)}
+        <Link
+            to={`/commercant/${commercant.commerceId}`}
+            className="max-w-sm rounded border shadow-sm overflow-hidden cursor-pointer"
         >
-            <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                {commercant.nom}
-            </h5>
-            <p className="font-normal text-gray-700 dark:text-gray-400">
-                {commercant.description}
-            </p>
-        </Card>
+            <img
+                className="h-48 w-full object-cover "
+                src={commercant.imageUrl}
+                alt={commercant.imageUrl}
+            />
+            <div className="px-2 pt-4">
+                <div className="font-bold text-xl mb-2">
+                    {commercant.commerceName}
+                </div>
+            </div>
+            <div className="px-2">
+                <div className="flex items-center space-x-2 mt-1">
+                    <img
+                        src={openingHour}
+                        alt="openingHour"
+                        className="h-10 w-10"
+                    />
+                    <span className="text-gray-700 ">
+                        Ouverture: {formatTime(commercant.openingHour)}
+                    </span>
+                </div>
+                <div className="flex items-center space-x-2 mt-1">
+                    <img
+                        src={closingHour}
+                        alt="closingHour"
+                        className="h-10 w-10"
+                    />
+                    <span className="text-gray-700 ">
+                        {" "}
+                        Fermeture: {formatTime(commercant.closingHour)}
+                    </span>
+                </div>
+            </div>
+        </Link>
     );
 };
 
