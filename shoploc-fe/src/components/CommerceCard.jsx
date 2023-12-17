@@ -11,7 +11,7 @@ const CommerceCard = ({commercant}) => {
     return (
         <Card
             key={commercant.id}
-            className="max-w-sm cursor-pointer"
+            className="cursor-pointer"
             imgAlt={`commerce ${commercant.id}`}
             imgSrc={require(`../images/${commercant.image}`)}
             onClick={() => handleCardClick(commercant.id)}

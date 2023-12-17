@@ -24,7 +24,7 @@ const customUserPositionIcon = new L.Icon({
   popupAnchor: [0, -32], // Adjust the popup anchor point as needed
 });
 
-const Map = () => {
+const Map = ({height}) => {
   const [userLocation, setUserLocation] = useState(null);
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const Map = () => {
     <MapContainer
       center={position}
       zoom={12}
-      style={{ height: "400px", width: "100%" }}
+      style={{ height: height?height:"400px", width: "100%" }}
       ref={mapRef}
     >
       <TileLayer
