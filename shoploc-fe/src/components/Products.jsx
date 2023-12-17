@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import fetchProducts from "../services/fetchProducts";
-import { fetchCommerce } from "../services/fetchCommerces";
+import fetchCommercant  from "../services/fetchCommerce";
+import productSample from "../images/productSample.png";
 
 const Product = () => {
     const { commercantId } = useParams();
-    console.log(commercantId);
     const navigate = useNavigate();
     const [commerce, setCommerce] = useState(null);
+    const [searchQuery, setSearchQuery] = useState("");
     const [products, setProducts] = useState([]);
     const token = localStorage.getItem("userToken");
     const cleanedToken = token ? token.replace(/['"]+/g, "") : null;
@@ -16,7 +17,7 @@ const Product = () => {
         const fetchData = async () => {
             try {
                 // fetchCommerce
-                const commerceData = await fetchCommerce(
+                const commerceData = await fetchCommercant(
                     cleanedToken,
                     commercantId
                 );
@@ -28,25 +29,29 @@ const Product = () => {
                     commercantId
                 );
                 setProducts(commerceProducts);
-
             } catch (error) {
                 console.error("Error fetching commerce or products:", error);
             }
         };
 
         fetchData();
-    }, [commercantId]);
-    console.log(commerce);
+    }, [commercantId, cleanedToken]);
+    console.log(commerce, products);
+
     if (!commerce) {
         return <div>Commerce non trouvé</div>;
     }
+
+    const filteredProducts = products.filter((product) =>
+        product.productName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     const handleBackButtonClick = () => {
         navigate(-1); // This will navigate back to the previous page
     };
 
     return (
-        <div className="container mx-auto my-8">
+        <div className="container mx-auto my-8 px-12">
             <div className="flex items-center mb-4">
                 <button
                     type="button"
@@ -70,55 +75,70 @@ const Product = () => {
                     </div>
                 </button>
                 <img
-                    src={commerce[0].imageUrl}
-                    alt={commerce[0].commerceName}
+                    src={commerce.imageUrl}
+                    alt={commerce.commerceName}
                     className="w-16 h-16 object-cover rounded-full mr-4"
                 />
                 <div>
                     <h1 className="text-2xl font-semibold">
-                        {commerce[0].commerceName}
+                        {commerce.commerceName}
                     </h1>
+                </div>
+                <div className="px-6 flex-1">
+                    <input
+                        type="text"
+                        placeholder="Rechercher un produit..."
+                        className="p-2 border border-gray-300 rounded w-full"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
                 </div>
             </div>
             <h2 className="text-xl font-semibold mb-4">Produits</h2>
             <div className="grid md:grid-cols-4  grid-cols-1 gap-4">
-                {products.map((produit) => (
-                    <div
-                        key={produit.productId}
-                        className="border border-gray-300 rounded"
-                    >
-                        <img
-                            src={require(`../images/${produit.image}`)}
-                            alt={produit.productName}
-                            className="w-full h-52 object-contain mb-2"
-                        />
-                        <div className="p-4">
-                            <h3 className="text-lg font-semibold mb-1">
-                                {produit.productName}
-                            </h3>
-                            <p className="text-gray-600 mb-2">
-                                {produit.description}
-                            </p>
-                            <p className="text-gray-700">
-                                {produit.price.toFixed(2)} €
-                            </p>
+                {filteredProducts.length === 0 ? (
+                    <p className="md:col-span-4 text-red-500 font-bold">
+                        Aucun produit trouvé
+                    </p>
+                ) : (
+                    filteredProducts.map((produit) => (
+                        <div
+                            key={produit.productId}
+                            className="border border-gray-300 rounded"
+                        >
+                            <img
+                                src={productSample}
+                                alt={produit.productName}
+                                className="w-full h-52 object-contain mb-2"
+                            />
+                            <div className="p-4">
+                                <h3 className="text-lg font-semibold mb-1">
+                                    {produit.productName}
+                                </h3>
+                                <p className="text-gray-600">
+                                    Description : {produit.description}
+                                </p>
+                                <p className="text-gray-700">
+                                    Prix : {produit.price.toFixed(2)} €
+                                </p>
 
-                            {produit.stock > 1 ? (
-                                <p className="text-gray-700">
-                                    {produit.quantity} produits restants
-                                </p>
-                            ) : produit.quantity === 1 ? (
-                                <p className="text-gray-700">
-                                    "{produit.quantity} produit restant"
-                                </p>
-                            ) : (
-                                <p className="text-gray-700">
-                                    "Produit indisponible"
-                                </p>
-                            )}
+                                {produit.quantity > 1 ? (
+                                    <p className="text-gray-700">
+                                        {produit.quantity} produits restants
+                                    </p>
+                                ) : produit.quantity === 1 ? (
+                                    <p className="text-gray-700">
+                                        {produit.quantity} produit restant
+                                    </p>
+                                ) : (
+                                    <p className="text-red-600">
+                                        Produit indisponible
+                                    </p>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))
+                )}
             </div>
         </div>
     );

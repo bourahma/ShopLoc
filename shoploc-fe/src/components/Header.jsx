@@ -66,7 +66,7 @@ const Header = () => {
             <Navbar.Brand className="font-bold text-xl">
               Bonjour {loggedUser}
             </Navbar.Brand>
-            <Button className="bg-black" onClick={logout}>
+            <Button className="bg-shopred" onClick={logout}>
               Se déconnecter
             </Button>
           </>

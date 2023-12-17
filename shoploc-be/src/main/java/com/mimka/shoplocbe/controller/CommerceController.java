@@ -2,6 +2,7 @@ package com.mimka.shoplocbe.controller;
 
 import com.mimka.shoplocbe.dto.commerce.CommerceDTO;
 import com.mimka.shoplocbe.dto.product.ProductDTO;
+import com.mimka.shoplocbe.entity.Commerce;
 import com.mimka.shoplocbe.service.CommerceServiceImpl;
 import com.mimka.shoplocbe.service.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// @CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/commerce")
 public class CommerceController {
@@ -33,7 +34,7 @@ public class CommerceController {
 
     @GetMapping("/{commerceId}")
     @ResponseStatus(value = HttpStatus.OK)
-    public CommerceDTO commerce (@PathVariable("commerceId") Long commerceId) {
+    public Commerce commerce (@PathVariable("commerceId") Long commerceId) {
         return this.commerceServiceImpl.getCommerce(commerceId);
     }
 

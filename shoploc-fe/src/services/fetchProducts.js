@@ -15,5 +15,4 @@ const fetchProducts = async (token, commerceId) => {
         throw error;
     }
 };
-
 export default fetchProducts;

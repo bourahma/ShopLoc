@@ -262,7 +262,7 @@ const SignupForm = () => {
 
               <Button
                 type="submit"
-                className="bg-black"
+                className="bg-shopred"
                 disabled={isSubmitting}
               >
                 S'inscrire

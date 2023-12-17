@@ -15,6 +15,8 @@ function HomeComponent() {
     const token = localStorage.getItem("userToken");
     const cleanedToken = token ? token.replace(/['"]+/g, "") : null;
 
+    console.log(isOpenNow)
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -28,6 +30,13 @@ function HomeComponent() {
         fetchData();
     }, [token]);
     console.log(commercants);
+    const isOpen = (commercant) => {
+        const now = moment(); // Heure actuelle
+        const openingTime = moment(commercant.openingHour, "HH:mm:ss");
+        const closingTime = moment(commercant.closingHour, "HH:mm:ss");
+
+        return now.isBetween(openingTime, closingTime);
+    };
 
     const filteredCommercants = commercants
         .filter((commercant) =>
@@ -38,13 +47,6 @@ function HomeComponent() {
         .filter((commercant) => (!isOpenNow ? commercant : isOpen(commercant)));
     // .filter((commercant) => /* Logique pour vérifier la distance */);
 
-    const isOpen = (commercant) => {
-        const now = moment(); // Heure actuelle
-        const openingTime = moment(commercant.openingHour, "HH:mm:ss");
-        const closingTime = moment(commercant.closingHour, "HH:mm:ss");
-
-        return now.isBetween(openingTime, closingTime);
-    };
     // console.log(filteredCommercants);
     return (
         <div className="grid md:grid-cols-12 grid-cols-3 md:gap-12 gap-4 my-12 mx-auto">
@@ -77,7 +79,7 @@ function HomeComponent() {
                     </div>
 
                     {filteredCommercants.length === 0 ? (
-                        <p className="md:col-span-4 text-red-400">
+                        <p className="md:col-span-4 text-red-500 font-bold">
                             Aucun commerce trouvé
                         </p>
                     ) : (

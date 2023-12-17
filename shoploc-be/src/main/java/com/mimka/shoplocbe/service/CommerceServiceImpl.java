@@ -2,6 +2,7 @@ package com.mimka.shoplocbe.service;
 
 import com.mimka.shoplocbe.dto.commerce.CommerceDTO;
 import com.mimka.shoplocbe.dto.commerce.CommerceDTOUtil;
+import com.mimka.shoplocbe.entity.Commerce;
 import com.mimka.shoplocbe.repository.CommerceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class CommerceServiceImpl implements CommerceService {
                 .map(commerceDTOUtil::toCommerceDTO).toList();
     }
 
-    public CommerceDTO getCommerce (Long id) {
+    public Commerce getCommerce (Long id) {
         return this.commerceRepository.findByCommerceId(id);
     }
 }

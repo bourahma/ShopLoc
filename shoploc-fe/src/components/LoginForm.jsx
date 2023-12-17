@@ -117,7 +117,7 @@ const LoginForm = () => {
               </div>
               <Button
                 type="submit"
-                className="bg-black"
+                className="bg-shopred"
                 disabled={isSubmitting}
               >
                 Connexion
@@ -127,7 +127,7 @@ const LoginForm = () => {
         </Formik>
         <div className="flex max-w-md flex-col gap-4">
           Vous n'avez pas de encore compte ? &nbsp;
-          <Link to="/signup" className="text-blue-500">
+          <Link to="/signup" className="text-shopred font-bold">
             Inscrivez-vous
           </Link>
         </div>
