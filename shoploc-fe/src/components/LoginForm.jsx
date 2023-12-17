@@ -47,7 +47,7 @@ const LoginForm = () => {
 
   return (
     <>
-      {error && <Alert color="failure">{error.message || "Error"}</Alert>}
+      {error && <Alert color="failure">{error.message}</Alert>}
       <div className="flex justify-center gap-10 my-12 mx-6">
         <Formik
           initialValues={initialUser}

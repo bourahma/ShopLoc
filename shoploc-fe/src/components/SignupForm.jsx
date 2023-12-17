@@ -31,7 +31,11 @@ const SignupForm = () => {
       })
       .catch((error) => {
         console.log(error);
-        setError(error.response.data);
+        if (error.response?.data?.message) {
+          setError(error.response.data);
+        } else {
+          setError(error);
+        }
       });
   };
 
