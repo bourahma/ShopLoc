@@ -30,7 +30,7 @@ class CommerceTest {
 
     @Test
     void toString_ShouldReturnExpectedString() {
-        Commerce commerce = new Commerce(1L, "TestCommerce", LocalTime.of(8, 0), LocalTime.of(18, 0));
+        Commerce commerce = new Commerce(1L, "TestCommerce", LocalTime.of(8, 0), LocalTime.of(18, 0), "url_image");
 
         assertEquals(1, commerce.getCommerceId());
         assertEquals("TestCommerce", commerce.getCommerceName());

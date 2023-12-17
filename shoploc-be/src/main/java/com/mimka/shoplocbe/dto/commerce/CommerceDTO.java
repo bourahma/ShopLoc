@@ -21,4 +21,6 @@ public class CommerceDTO {
     private LocalTime openingHour;
 
     private LocalTime closingHour;
+
+    private String imageUrl;
 }

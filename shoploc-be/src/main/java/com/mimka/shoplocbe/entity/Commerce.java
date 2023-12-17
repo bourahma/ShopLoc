@@ -30,4 +30,7 @@ public class Commerce {
 
     @Column(name = "closing_hour", nullable = false)
     private LocalTime closingHour;
+
+    @Column(name = "image_url")
+    private String imageUrl;
 }
