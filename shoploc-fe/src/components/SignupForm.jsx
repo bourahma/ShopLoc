@@ -16,7 +16,7 @@ const SignupForm = () => {
     confirmedPassword: "",
     email: "",
     phoneNumber: "",
-    agree: false,
+    agree: true,
   };
 
   const navigate = useNavigate();
