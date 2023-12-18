@@ -3,12 +3,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import fetchProducts from "../services/fetchProducts";
 import fetchCommercant  from "../services/fetchCommerce";
 import productSample from "../images/productSample.png";
+import { useCart } from "./CartContext";
 
 const Product = () => {
     const { commercantId } = useParams();
     const navigate = useNavigate();
     const [commerce, setCommerce] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
+    const { addToCart } = useCart();
     const [products, setProducts] = useState([]);
     const token = localStorage.getItem("userToken");
     const cleanedToken = token ? token.replace(/['"]+/g, "") : null;
@@ -49,6 +51,12 @@ const Product = () => {
     const handleBackButtonClick = () => {
         navigate(-1); // This will navigate back to the previous page
     };
+
+     const handleAddToCart = (product) => {
+         addToCart(product);
+         console.log(`Product added to cart: ${product.productIdName}`);
+     };
+
 
     return (
         <div className="container mx-auto my-8 px-12">
@@ -135,6 +143,15 @@ const Product = () => {
                                         Produit indisponible
                                     </p>
                                 )}
+
+                                <button
+                                    className="bg-blue-500 mt-2 text-white px-4 py-2 rounded"
+                                    onClick={() =>
+                                        handleAddToCart(produit)
+                                    }
+                                >
+                                    Ajouter au panier
+                                </button>
                             </div>
                         </div>
                     ))

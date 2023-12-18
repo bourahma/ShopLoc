@@ -28,7 +28,7 @@ function HomeComponent() {
         };
 
         fetchData();
-    }, [token]);
+    }, [cleanedToken]);
     console.log(commercants);
     const isOpen = (commercant) => {
         const now = moment(); // Heure actuelle
