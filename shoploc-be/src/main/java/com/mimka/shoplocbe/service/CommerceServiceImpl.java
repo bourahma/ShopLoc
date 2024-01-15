@@ -29,6 +29,7 @@ public class CommerceServiceImpl implements CommerceService {
                 .map(commerceDTOUtil::toCommerceDTO).toList();
     }
 
+    @Override
     public Commerce getCommerce (Long id) {
         return this.commerceRepository.findByCommerceId(id);
     }

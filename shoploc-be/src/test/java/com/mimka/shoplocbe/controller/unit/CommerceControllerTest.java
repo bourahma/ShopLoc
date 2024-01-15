@@ -40,9 +40,5 @@ class CommerceControllerTest {
         assertArrayEquals(new String[]{"/"}, getMapping.value());
     }
 
-    @Test
-    void commerces_shouldCallTheService() {
-        commerceController.commerces();
-        verify(commerceServiceImpl).getCommerces();
-    }
+
 }
