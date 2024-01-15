@@ -10,7 +10,7 @@ VALUES
 INSERT INTO Utilisateur (username, lastname, firstname, password, email, enabled, phone_number)
 VALUES
     ('Joe', 'John','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'az.az2012221@gmail.com', TRUE, '06 54 71 03 11'),
-    ('Jane', 'Smith','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'jane.smith@gmail.com', TRUE, '06 51 61 83 61'),
+    ('Jane', 'Smith','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'aziz.bourahma.etu@univ-lille.fr', TRUE, '06 51 61 83 61'),
     ('Loris', 'Johnson', 'user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'michael.j@gmail.com', TRUE, '06 21 21 84 31');
 
 -- User role's insertion :
