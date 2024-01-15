@@ -40,7 +40,7 @@ public class CommerceController {
         try {
             this.mailService.sendWelcomeEmail(this.userService.getUserByUsername(principal.getName()));
         } catch (Exception exception) {
-            System.out.println("error");
+            System.out.println(exception.getMessage());
         }
         return this.commerceService.getCommerces();
     }
