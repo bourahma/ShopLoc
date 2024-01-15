@@ -50,7 +50,7 @@ public class MailServiceImpl implements MailService {
         helper.setText(content, true);
         helper.setTo(user.getEmail());
         helper.setSubject("Confirmation d'inscription");
-        helper.setFrom(new InternetAddress("aziz.bourahma.etu@unv-lille.fr"));
+        helper.setFrom(new InternetAddress("projet_etu_fil@univ-lille.fr"));
 
         javaMailSender.send(message);
 
