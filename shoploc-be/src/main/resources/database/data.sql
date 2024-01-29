@@ -1,24 +1,18 @@
 -- Role's insert.
 INSERT INTO Role (role_id, role_name)
 VALUES
-    (1, 'USER'),
-    (2, 'ADMIN'),
-    (3, 'ORGA');
+    (1, 'CUSTOMER'),
+    (2, 'ADMINISTRATOR'),
+    (3, 'MERCHANT');
 
 -- User's insert.
 -- Decoded password : 12345678
-INSERT INTO Utilisateur (username, lastname, firstname, password, email, enabled, phone_number)
+INSERT INTO Utilisateur (utilisateur_id, username, lastname, firstname, password, email, enabled, phone_number, role_id, subscription_date, commerce_id)
 VALUES
-    ('Joe', 'John','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'az.az2012221@gmail.com', TRUE, '06 54 71 03 11'),
-    ('Jane', 'Smith','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'aziz.bourahma.etu@univ-lille.fr', TRUE, '06 51 61 83 61'),
-    ('Loris', 'Johnson', 'user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'michael.j@gmail.com', TRUE, '06 21 21 84 31');
+    (1, 'Joe', 'John','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'az.az201221@gmail.com', TRUE, '06 54 71 03 11', 1, NULL, NULL),
+    (2, 'Jane', 'Smith','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'aziz.bourahma.etu@univ-lille.fr', TRUE, '06 51 61 83 61', 2, NULL, NULL),
+    (3, 'Loris', 'Johnson', 'user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'michael.j@gmail.com', TRUE, '06 21 21 84 31', 3, '2024-01-24', NULL);
 
--- User role's insertion :
-INSERT INTO Utilisateurs_Roles (utilisateur_id, role_id)
-VALUES
-    (1, 1),
-    (2, 2),
-    (3, 3);
 
 -- Commerce's insertion :
 INSERT INTO Commerce (commerce_id, commerce_name, opening_hour, closing_hour, image_url) VALUES
@@ -81,3 +75,11 @@ INSERT INTO Commerce_product (commerce_id, product_id, quantity) VALUES
     ((SELECT commerce_id FROM Commerce WHERE commerce_name = 'Délice du Café'),
      (SELECT product_id FROM Product WHERE product_name = 'Grains de café (250g)'), 10);
 
+-- Cart data insertion :
+INSERT INTO Cart (cart_id, cart_commerce_id, cart_customer_id) VALUES
+                                                                     (1, 2, 1),
+                                                                     (2, 3, 1);
+
+INSERT INTO Product_Cart (product_cart_id, cart_id, quantity) VALUES
+                                                                   (1, 1, 10),
+                                                                   (2, 2, 10);

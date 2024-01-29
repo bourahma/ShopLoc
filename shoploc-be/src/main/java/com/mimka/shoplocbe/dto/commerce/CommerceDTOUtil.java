@@ -1,6 +1,6 @@
 package com.mimka.shoplocbe.dto.commerce;
 
-import com.mimka.shoplocbe.entity.Commerce;
+import com.mimka.shoplocbe.entities.Commerce;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
