@@ -27,7 +27,21 @@ const LoginForm = () => {
           "userToken",
           JSON.stringify(data["access-token"])
         );
-        navigate("/home");
+        window.localStorage.setItem("userRole", JSON.stringify(data["role"]));
+        switch (data["role"]) {
+          case "ADMINISTRATOR":
+            navigate("/admin");
+            break;
+          case "CUSTOMER":
+            navigate("/home");
+            break;
+          case "MERCHANT":
+            navigate("/merchant");
+            break;
+          default:
+            navigate("/home");
+            break;
+        }
       })
       .catch((error) => {
         console.log(error);

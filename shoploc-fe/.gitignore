@@ -41,3 +41,4 @@ logs/
 .serverless/
 
 # Ignore Nest output folder
+package-lock.json
