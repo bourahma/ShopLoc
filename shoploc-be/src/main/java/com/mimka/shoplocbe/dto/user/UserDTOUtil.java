@@ -1,17 +1,15 @@
 package com.mimka.shoplocbe.dto.user;
 
-import com.mimka.shoplocbe.entity.User;
+import com.mimka.shoplocbe.entities.User;
 import com.mimka.shoplocbe.exception.RegistrationException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserDTOUtil {
 
     private ModelMapper modelMapper;
-
 
     private String differentP = "Les mots de passe sont différents.";
 
