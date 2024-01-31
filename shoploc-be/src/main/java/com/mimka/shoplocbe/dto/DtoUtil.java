@@ -1,6 +1,5 @@
 package com.mimka.shoplocbe.dto;
 
-import com.mimka.shoplocbe.dto.cart.CartDTO;
 import com.mimka.shoplocbe.dto.user.AdministratorDTO;
 import com.mimka.shoplocbe.dto.user.CustomerDTO;
 import com.mimka.shoplocbe.dto.user.MerchantDTO;
@@ -74,10 +73,6 @@ public class DtoUtil {
             throw new RegistrationException(differentP);
         }
         return true;
-    }
-
-    public CartDTO toCartDTO (Cart cart) {
-        return modelMapper.map(cart, CartDTO.class);
     }
 
 }

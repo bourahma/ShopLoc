@@ -74,12 +74,3 @@ INSERT INTO Commerce_product (commerce_id, product_id, quantity) VALUES
      (SELECT product_id FROM Product WHERE product_name = 'Croissant'), 50),
     ((SELECT commerce_id FROM Commerce WHERE commerce_name = 'Délice du Café'),
      (SELECT product_id FROM Product WHERE product_name = 'Grains de café (250g)'), 10);
-
--- Cart data insertion :
-INSERT INTO Cart (cart_id, cart_commerce_id, cart_customer_id) VALUES
-                                                                     (1, 2, 1),
-                                                                     (2, 3, 1);
-
-INSERT INTO Product_Cart (product_cart_id, cart_id, quantity) VALUES
-                                                                   (1, 1, 10),
-                                                                   (2, 2, 10);

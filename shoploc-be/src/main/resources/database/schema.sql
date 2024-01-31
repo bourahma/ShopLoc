@@ -1,13 +1,13 @@
 -- Deleting tables :
 DROP TABLE IF EXISTS Utilisateur CASCADE;
 DROP TABLE IF EXISTS Role CASCADE;
+DROP TABLE IF EXISTS Commande CASCADE;
 DROP TABLE IF EXISTS Token CASCADE;
 DROP TABLE IF EXISTS Product CASCADE;
 DROP TABLE IF EXISTS Commerce CASCADE;
 DROP TABLE IF EXISTS Commerce_Product CASCADE;
-DROP TABLE IF EXISTS Product_Cart CASCADE;
-DROP TABLE IF EXISTS Cart CASCADE;
 
+DROP SEQUENCE IF EXISTS order_sequence CASCADE;
 DROP SEQUENCE IF EXISTS utilisateur_sequence;
 DROP SEQUENCE IF EXISTS commerce_sequence;
 DROP SEQUENCE IF EXISTS product_sequence;
@@ -27,6 +27,13 @@ CREATE SEQUENCE commerce_sequence
     CACHE 1;
 
 CREATE SEQUENCE product_sequence
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+CREATE SEQUENCE order_sequence
     INCREMENT 1
     START 1
     MINVALUE 1
@@ -98,26 +105,21 @@ CREATE TABLE Token (
                             FOREIGN KEY (utilisateur_id) REFERENCES Utilisateur(utilisateur_id)
 );
 
--- Create the Cart table
-CREATE TABLE Cart (
-                    cart_id INT PRIMARY KEY,
-                    cart_commerce_id INT,
-                    cart_customer_id INT,
-
-                    UNIQUE (cart_commerce_id, cart_customer_id),
-
-                    FOREIGN KEY (cart_customer_id) REFERENCES Utilisateur (utilisateur_id),
-                    FOREIGN KEY (cart_commerce_id) REFERENCES Commerce (commerce_id)
+CREATE TABLE Commande (
+                          order_id INT DEFAULT nextval('order_sequence') PRIMARY KEY,
+                          utilisateur_id INT NOT NULL,
+                          commerce_id INT NOT NULL,
+                          order_date DATE,
+                          status VARCHAR(50) NOT NULL,
+                          FOREIGN KEY (utilisateur_id) REFERENCES Utilisateur(utilisateur_id),
+                          FOREIGN KEY (commerce_id) REFERENCES Commerce(commerce_id)
 );
 
--- Create the ProductCart table
-CREATE TABLE Product_Cart (
-                             product_cart_id INT,
-                             cart_id INT,
-                             quantity INT,
-
-                             PRIMARY KEY (cart_id, product_cart_id),
-
-                             FOREIGN KEY (cart_id) REFERENCES Cart (cart_id),
-                             FOREIGN KEY (product_cart_id) REFERENCES Product (product_id)
-);
+/*CREATE TABLE commande_product (
+                                  commande_id BIGINT NOT NULL,
+                                  product_id BIGINT NOT NULL,
+                                  quantity INT NOT NULL CHECK (quantity > 0),
+                                  PRIMARY KEY (commande_id, product_id),
+                                  FOREIGN KEY (commande_id) REFERENCES Commande(commande_id),
+                                  FOREIGN KEY (product_id) REFERENCES Product(product_id)
+);*/
