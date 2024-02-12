@@ -1,17 +1,9 @@
 package com.mimka.shoplocbe.services;
 
-import com.mimka.shoplocbe.dto.DtoUtil;
 import com.mimka.shoplocbe.dto.user.*;
 import com.mimka.shoplocbe.entities.*;
 import com.mimka.shoplocbe.exception.RegistrationException;
-import com.mimka.shoplocbe.repositories.RoleRepository;
-import com.mimka.shoplocbe.repositories.TokenRepository;
-import com.mimka.shoplocbe.repositories.UserRepository;
-import jakarta.mail.MessagingException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,8 +14,32 @@ import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
+    @Override
+    public User getUserByUsername(String username) {
+        return null;
+    }
+
+    @Override
+    public Administrator createAdministrator(AdministratorDTO administratorDTO) throws RegistrationException {
+        return null;
+    }
+
+    @Override
+    public Merchant createMerchant(MerchantDTO merchantDTO) throws RegistrationException {
+        return null;
+    }
+
+    @Override
+    public Customer createCustomer(CustomerDTO customerDTO) throws RegistrationException {
+        return null;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return null;
+    }
     
-    private UserRepository userRepository;
+   /* private UserRepository userRepository;
 
     private final CommerceService commerceService;
 
@@ -35,6 +51,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final MailServiceImpl mailService;
 
+    private final PortfolioService portfolioService;
+
+    private final PointsService pointsService;
+
     private String invalidUsernameMessage = "Nom d\'utilisateur incorrect.";
 
     private String invalidEmailMessage = "Adresse e-mail incorrecte.";
@@ -44,13 +64,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private String registrationUsernameMessage = "Le nom d'utilisateur est déjà utilisé.";
 
     @Autowired
-    public UserServiceImpl (UserRepository userRepository, CommerceService commerceService, RoleRepository roleRepository, DtoUtil dtoUtil, TokenRepository tokenRepository, MailServiceImpl mailServiceImpl) {
+    public UserServiceImpl (UserRepository userRepository, CommerceService commerceService, RoleRepository roleRepository, DtoUtil dtoUtil, TokenRepository tokenRepository, MailServiceImpl mailServiceImpl, PortfolioService portfolioService, PointsService pointsService) {
         this.userRepository = userRepository;
         this.commerceService = commerceService;
         this.roleRepository = roleRepository;
         this.dtoUtil = dtoUtil;
         this.tokenRepository = tokenRepository;
         this.mailService = mailServiceImpl;
+        this.portfolioService = portfolioService;
+        this.pointsService = pointsService;
     }
 
     @Override
@@ -138,27 +160,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             customer.setRole(this.roleRepository.findByRoleId(1L));
             // Disable the user until he confirms his registration.
             customer.setEnabled(false);
+            customer.setPoints(this.pointsService.createPoints());
+            customer.setPortfolio(this.portfolioService.createPortfolio());
             // User is saved.
             this.userRepository.save(customer);
         }
         this.sendVerificationEmail(customer);
+
         return customer;
     }
 
-    public void enableUser (String uuid) {
-        Token token = this.tokenRepository.findTokenByUuid(uuid);
-        if (token != null) {
-            User user = token.getUser();
-            user.setEnabled(true);
-            this.userRepository.save(user);
-            this.tokenRepository.delete(token);
-            try {
-                this.mailService.sendWelcomeEmail(user);
-            } catch (MessagingException e) {
-                System.out.println("Sending welcome e-mail : " + e.getMessage());
-            }
-        }
-    }
 
     public void sendVerificationEmail (User user) {
         String uuid = UUID.randomUUID().toString();
@@ -166,7 +177,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Token token = new Token();
 
         token.setUuid(uuid);
-        token.setUser(user);
+       // token.setUser(user);
 
         this.tokenRepository.save(token);
         try {
@@ -182,5 +193,5 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         } catch (MessagingException e) {
             System.out.println("Sending email verification error : " + e.getMessage());
         }
-    }
+    }*/
 }

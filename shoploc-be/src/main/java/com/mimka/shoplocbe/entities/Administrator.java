@@ -1,10 +1,13 @@
 package com.mimka.shoplocbe.entities;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@DiscriminatorValue("ADMINISTRATOR")
+@Getter
+@Setter
+@Table(name = "Administrator")
 public class Administrator extends User {
 
 }

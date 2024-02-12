@@ -1,15 +1,15 @@
-package com.mimka.shoplocbe.dto.cart;
+package com.mimka.shoplocbe.dto.order;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
-@Getter
-public class ProductCartDTO {
+public class OrderProductDTO {
 
     private Long productId;
 
@@ -18,6 +18,4 @@ public class ProductCartDTO {
     private double price;
 
     private int quantity;
-
 }
-

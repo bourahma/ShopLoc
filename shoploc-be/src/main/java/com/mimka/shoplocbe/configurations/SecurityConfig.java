@@ -1,15 +1,16 @@
 package com.mimka.shoplocbe.configurations;
 
-import com.mimka.shoplocbe.services.UserServiceImpl;
+import com.mimka.shoplocbe.services.*;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -32,14 +33,24 @@ import javax.crypto.spec.SecretKeySpec;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-    @Autowired
-    private UserServiceImpl userServiceImpl;
+    private final MerchantServiceImpl merchantServiceImpl;
+
+    private final CustomerServiceImpl customerServiceImpl;
+
+    private final AdministratorServiceImpl administratorServiceImpl;
 
     // This secret is used to generate JWT tokens & also to decode them.
     @Value("${jwt.secret}")
     private String secretKey;
+
+    public SecurityConfig(MerchantServiceImpl merchantServiceImpl, CustomerServiceImpl customerServiceImpl, AdministratorServiceImpl administratorServiceImpl) {
+        this.merchantServiceImpl = merchantServiceImpl;
+        this.customerServiceImpl = customerServiceImpl;
+        this.administratorServiceImpl = administratorServiceImpl;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity) throws Exception {
@@ -51,6 +62,7 @@ public class SecurityConfig {
                 // These requests do not need authentication.
                 .authorizeHttpRequests(requests -> requests.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console"),
                         AntPathRequestMatcher.antMatcher("/authentication/**"),
+                                AntPathRequestMatcher.antMatcher("/swagger-ui/**"),
                         AntPathRequestMatcher.antMatcher("/registration/**")).permitAll())
                 // All the others requests must be authenticated.
                 .authorizeHttpRequests(ar->ar.anyRequest().authenticated())
@@ -91,12 +103,31 @@ public class SecurityConfig {
         return NimbusJwtDecoder.withSecretKey(secretKeySpec).macAlgorithm(MacAlgorithm.HS512).build();
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager () {
+    @Bean(name = "customerAuthenticationManager")
+    @Primary
+    public AuthenticationManager authenticationCustomerManager () {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        // The UserDetailsService used to retrieve the user information for authentication.
-        daoAuthenticationProvider.setUserDetailsService(userServiceImpl);
+        // The UserDetailsService used to retrieve the customer information for authentication.
+        daoAuthenticationProvider.setUserDetailsService(customerServiceImpl);
+        return new ProviderManager(daoAuthenticationProvider);
+    }
+
+    @Bean(name = "administratorAuthenticationManager")
+    public AuthenticationManager authenticationAdministratorManager () {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        // The UserDetailsService used to retrieve the merchant information for authentication.
+        daoAuthenticationProvider.setUserDetailsService(administratorServiceImpl);
+        return new ProviderManager(daoAuthenticationProvider);
+    }
+
+    @Bean(name = "merchantAuthenticationManager")
+    public AuthenticationManager authenticationMerchantManager () {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        // The UserDetailsService used to retrieve the administrator information for authentication.
+        daoAuthenticationProvider.setUserDetailsService(merchantServiceImpl);
         return new ProviderManager(daoAuthenticationProvider);
     }
 }

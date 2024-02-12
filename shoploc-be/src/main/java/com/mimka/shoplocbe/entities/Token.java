@@ -14,6 +14,6 @@ public class Token {
     private String uuid;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "utilisateur_id")
-    private User user;
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 }

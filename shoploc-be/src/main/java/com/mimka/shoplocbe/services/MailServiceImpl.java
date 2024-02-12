@@ -1,9 +1,8 @@
 package com.mimka.shoplocbe.services;
 
 import com.mimka.shoplocbe.dto.user.MerchantDTO;
-import com.mimka.shoplocbe.entities.Merchant;
+import com.mimka.shoplocbe.entities.Customer;
 import com.mimka.shoplocbe.entities.User;
-import com.mimka.shoplocbe.services.MailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -15,7 +14,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MailServiceImpl implements MailService {
+public class MailServiceImpl {
     private final JavaMailSender javaMailSender;
 
     @Value("${be.url}")
@@ -26,7 +25,7 @@ public class MailServiceImpl implements MailService {
     }
 
     @Async
-    protected void sendWelcomeEmail(User user) throws MessagingException {
+    public void triggerWelcomeEmail(User user) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
 
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -66,7 +65,7 @@ public class MailServiceImpl implements MailService {
 
     }
     @Async
-    protected void sendAccountValidationEmail(User user, String uuid) throws MessagingException {
+    public void triggerEmailVerification(Customer user, String uuid) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
 
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -95,7 +94,7 @@ public class MailServiceImpl implements MailService {
                 """;
 
         content = content.replace("[[firstname]]", user.getFirstname());
-        content = content.replace("[[link]]", beUrl + "/authentication/customer/register/confirmation/" + uuid);
+        content = content.replace("[[link]]", beUrl + "/authentication/customer/register/" + uuid);
 
         helper.setText(content, true);
         helper.setTo(user.getEmail());
@@ -106,7 +105,7 @@ public class MailServiceImpl implements MailService {
     }
 
     @Async
-    protected void sendCredentialToMerchant (MerchantDTO merchant) throws MessagingException {
+    public void triggerCredentialsEmail (MerchantDTO merchantDTO) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
 
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -141,12 +140,12 @@ public class MailServiceImpl implements MailService {
                          
                 """;
 
-        content = content.replace("[[firstname]]", merchant.getFirstname());
-        content = content.replace("[[username]]", merchant.getUsername());
-        content = content.replace("[[password]]", merchant.getPassword());
+        content = content.replace("[[firstname]]", merchantDTO.getFirstname());
+        content = content.replace("[[username]]", merchantDTO.getUsername());
+        content = content.replace("[[password]]", merchantDTO.getPassword());
 
         helper.setText(content, true);
-        helper.setTo(merchant.getEmail());
+        helper.setTo(merchantDTO.getEmail());
         helper.setSubject("Céation de votre compte commerçant");
         helper.setFrom(new InternetAddress("projet_etu_fil@univ-lille.fr"));
 

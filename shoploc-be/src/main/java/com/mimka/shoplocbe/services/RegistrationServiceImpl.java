@@ -2,6 +2,8 @@ package com.mimka.shoplocbe.services;
 
 import com.mimka.shoplocbe.dto.DtoUtil;
 import com.mimka.shoplocbe.dto.user.*;
+import com.mimka.shoplocbe.entities.Customer;
+import com.mimka.shoplocbe.entities.FidelityCard;
 import com.mimka.shoplocbe.entities.Merchant;
 import com.mimka.shoplocbe.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,24 +13,30 @@ import org.springframework.stereotype.Service;
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
 
-    private UserServiceImpl userServiceImpl;
+    private final CustomerService customerService;
+
+    private final MerchantService merchantService;
+
+    private final AdministratorService administratorService;
+
+    private final FidelityCardService fidelityCardService;
 
     private PasswordEncoder passwordEncoder;
-
-    private UserDTOUtil userDTOUtil;
 
     private final DtoUtil dtoUtil;
 
     @Autowired
-    public RegistrationServiceImpl (UserServiceImpl userServiceImpl, UserDTOUtil userDTOUtil, PasswordEncoder passwordEncoder, DtoUtil dtoUtil) {
-        this.userServiceImpl = userServiceImpl;
-        this.userDTOUtil = userDTOUtil;
+    public RegistrationServiceImpl (CustomerService createCustomer, MerchantService merchantService, AdministratorService administratorService, FidelityCardService fidelityCardService, PasswordEncoder passwordEncoder, DtoUtil dtoUtil) {
+        this.customerService = createCustomer;
+        this.merchantService = merchantService;
+        this.administratorService = administratorService;
+        this.fidelityCardService = fidelityCardService;
         this.passwordEncoder = passwordEncoder;
         this.dtoUtil = dtoUtil;
     }
 
     @Override
-    public CustomerDTO registerCustomer(CustomerDTO customerDTO) throws RegistrationException {
+    public Customer registerCustomer(CustomerDTO customerDTO) throws RegistrationException {
         // Check passwords are valid.
         if (this.dtoUtil.checkPasswords(customerDTO.getConfirmedPassword(), customerDTO.getPassword())) {
             // Encode password.
@@ -36,8 +44,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             customerDTO.setPassword(encodedPassword);
             customerDTO.setConfirmedPassword(encodedPassword);
         }
+        FidelityCard fidelityCard = this.fidelityCardService.createFidelityCard();
         //Create customer.
-        return this.dtoUtil.toCustomerDTO(this.userServiceImpl.createCustomer(customerDTO));
+        return this.customerService.createCustomer(customerDTO, fidelityCard);
     }
 
     @Override
@@ -52,9 +61,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             merchantDTO.setConfirmedPassword(encodedPassword);
         }
         //Create merchant.
-        Merchant merchant = this.userServiceImpl.createMerchant(merchantDTO);
+        Merchant merchant = this.merchantService.createMerchant(merchantDTO);
         merchantDTO.setPassword(password);
-        this.userServiceImpl.sendCredentialsEmail(merchantDTO);
 
         return this.dtoUtil.toMerchantDTO(merchant);
     }
@@ -68,11 +76,11 @@ public class RegistrationServiceImpl implements RegistrationService {
             administratorDTO.setConfirmedPassword(encodedPassword);
         }
         //Create customer.
-        return this.dtoUtil.toAdministratorDTO(this.userServiceImpl.createAdministrator(administratorDTO));
+        return this.dtoUtil.toAdministratorDTO(this.administratorService.createAdministrator(administratorDTO));
     }
 
     @Override
-    public void confirmRegistration(String uuid) {
-        this.userServiceImpl.enableUser(uuid);
+    public Customer confirmRegistration(String uuid) {
+        return this.customerService.enableCustomer(uuid);
     }
 }

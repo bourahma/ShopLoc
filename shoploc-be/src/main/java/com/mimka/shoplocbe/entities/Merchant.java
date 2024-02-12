@@ -8,10 +8,10 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
-@DiscriminatorValue("MERCHANT")
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "Merchant")
 @Setter
 @Getter
 public class Merchant extends User {
