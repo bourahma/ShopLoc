@@ -21,8 +21,13 @@ public class OrderController {
 
     @PostMapping("/")
     @ResponseStatus(value = HttpStatus.CREATED)
-    private void createOrder (@RequestBody @Valid OrderDTO orderDTO, Principal principal) {
-        this.orderService.createOrder(principal.getName(), orderDTO);
+    private OrderDTO createOrder (@RequestBody @Valid OrderDTO orderDTO, Principal principal) {
+        return this.orderService.createOrder(principal.getName(), orderDTO);
+    }
+
+    @GetMapping("/{orderId}")
+    private OrderDTO getOrder (@PathVariable long orderId, Principal principal) {
+        return this.orderService.getOrder(principal.getName(), orderId);
     }
 
 }

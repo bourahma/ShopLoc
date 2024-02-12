@@ -2,8 +2,6 @@ package com.mimka.shoplocbe.controllers;
 
 import com.mimka.shoplocbe.dto.commerce.CommerceDTO;
 import com.mimka.shoplocbe.dto.product.ProductDTO;
-import com.mimka.shoplocbe.services.MailService;
-import com.mimka.shoplocbe.services.MailServiceImpl;
 import com.mimka.shoplocbe.entities.Commerce;
 import com.mimka.shoplocbe.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,9 @@ import java.util.List;
 public class CommerceController {
 
     private CommerceService commerceService;
+
     private ProductService productService;
+
     private final UserService userService;
 
     @Autowired

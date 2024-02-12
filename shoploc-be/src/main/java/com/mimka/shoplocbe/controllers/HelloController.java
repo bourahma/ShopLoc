@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = "*")
 @RestController
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class HelloController {
     @PreAuthorize("hasRole('SCOPE_ADMINISTRATOR')")
     @GetMapping("/admin")

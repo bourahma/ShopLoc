@@ -7,12 +7,17 @@ VALUES
 
 -- User's insert.
 -- Decoded password : 12345678
-INSERT INTO Utilisateur (utilisateur_id, username, lastname, firstname, password, email, enabled, phone_number, role_id, subscription_date, commerce_id)
+INSERT INTO Merchant (id, username, lastname, firstname, password, email, enabled, phone_number, role, subscription_date, commerce_id)
 VALUES
-    (1, 'Joe', 'John','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'az.az201221@gmail.com', TRUE, '06 54 71 03 11', 1, NULL, NULL),
-    (2, 'Jane', 'Smith','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'aziz.bourahma.etu@univ-lille.fr', TRUE, '06 51 61 83 61', 2, NULL, NULL),
     (3, 'Loris', 'Johnson', 'user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'michael.j@gmail.com', TRUE, '06 21 21 84 31', 3, '2024-01-24', NULL);
 
+INSERT INTO Customer (id, username, lastname, firstname, password, email, enabled, phone_number, role)
+VALUES
+    (1, 'Joe', 'John','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'az.az201221@gmail.com', TRUE, '06 54 71 03 11', 1);
+
+INSERT INTO Administrator (id, username, lastname, firstname, password, email, enabled, phone_number, role)
+VALUES
+    (2, 'Jane', 'Smith','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'aziz.bourahma.etu@univ-lille.fr', TRUE, '06 51 61 83 61', 1);
 
 -- Commerce's insertion :
 INSERT INTO Commerce (commerce_id, commerce_name, opening_hour, closing_hour, image_url) VALUES
@@ -74,3 +79,34 @@ INSERT INTO Commerce_product (commerce_id, product_id, quantity) VALUES
      (SELECT product_id FROM Product WHERE product_name = 'Croissant'), 50),
     ((SELECT commerce_id FROM Commerce WHERE commerce_name = 'Délice du Café'),
      (SELECT product_id FROM Product WHERE product_name = 'Grains de café (250g)'), 10);
+
+INSERT INTO Order_Status (order_status_id, label, description) VALUES
+                                                                         (1, 'Pending', 'Waiting for payment'),
+                                                                         (2, 'Approved', 'Merchant approval for the order');
+
+-- Order data insertion :
+INSERT INTO Commande (order_id, customer_id, commerce_id, order_date, order_status_id) VALUES
+                                                                                        (100, 1, 1, '2024-01-24', 1);
+
+-- OrderProduct data insertion :
+INSERT INTO Order_Product (order_product_id, order_id, quantity) VALUES
+                                                                    (1, 100, 10);
+-- FidelityCard data insertion :
+INSERT INTO Fidelity_Card (fidelity_card_id, customer_id, points, balance) VALUES
+                                                                 ('123e4567-e89b-12d3-a456-426614174000', 1, 0, 0);
+
+-- Insert PointTransaction for Joe
+INSERT INTO Point_Transaction (point_transaction_id, fidelity_card_id, transaction_date, type, amount, commerce_id) VALUES
+                                                                                            (nextval('point_transaction_sequence'),'123e4567-e89b-12d3-a456-426614174000', '2024-01-26', 'EARNED', 200.00, 1),
+                                                                                            (nextval('point_transaction_sequence'),'123e4567-e89b-12d3-a456-426614174000', '2024-01-27', 'SPENT', -150.00, 2),
+                                                                                            (nextval('point_transaction_sequence'),'123e4567-e89b-12d3-a456-426614174000', '2024-01-28', 'EARNED', 100.00, 3),
+                                                                                            (nextval('point_transaction_sequence'),'123e4567-e89b-12d3-a456-426614174000', '2024-01-29', 'EARNED', 50.00, 4),
+                                                                                            (nextval('point_transaction_sequence'),'123e4567-e89b-12d3-a456-426614174000', '2024-01-30', 'SPENT', -200.00, 5);
+
+-- Insert BalanceTransaction for Joe
+INSERT INTO Balance_Transaction (balance_transaction_id, fidelity_card_id, transaction_date, type, amount, commerce_id) VALUES
+                                                                                                   (nextval('balance_transaction_sequence'), '123e4567-e89b-12d3-a456-426614174000', '2024-01-26', 'CREDIT', 150.00, NULL),
+                                                                                                   (nextval('balance_transaction_sequence'), '123e4567-e89b-12d3-a456-426614174000', '2024-01-27', 'DEBIT', -100.00, 2),
+                                                                                                   (nextval('balance_transaction_sequence'), '123e4567-e89b-12d3-a456-426614174000', '2024-01-28', 'CREDIT', 200.00, NULL),
+                                                                                                   (nextval('balance_transaction_sequence'), '123e4567-e89b-12d3-a456-426614174000', '2024-01-29', 'DEBIT', -50.00, 4),
+                                                                                                   (nextval('balance_transaction_sequence'), '123e4567-e89b-12d3-a456-426614174000', '2024-01-30', 'CREDIT', 300.00, NULL);

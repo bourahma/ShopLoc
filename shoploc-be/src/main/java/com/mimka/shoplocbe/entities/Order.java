@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -23,8 +24,8 @@ public class Order {
     private Long orderId;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "utilisateur_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "commerce_id", nullable = false)
@@ -33,6 +34,10 @@ public class Order {
     @Column(name = "order_date", nullable = false)
     private LocalDate orderDate;
 
-    @Column(name = "status", nullable = false)
-    private String status;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<OrderProduct> orderProducts;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "commande_status_id", nullable = false)
+    private OrderStatus orderStatus;
 }
