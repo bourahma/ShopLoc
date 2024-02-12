@@ -27,10 +27,11 @@ const LoginForm = () => {
           "userToken",
           JSON.stringify(data["access-token"])
         );
+        console.log(data);
         window.localStorage.setItem("userRole", JSON.stringify(data["role"]));
         switch (data["role"]) {
           case "ADMINISTRATOR":
-            navigate("/admin");
+            navigate("/admin/home");
             break;
           case "CUSTOMER":
             navigate("/home");

@@ -12,7 +12,7 @@ import HomeComponent from "./components/HomeComponent";
 import Template from "./components/Template";
 import FirstScreen from "./components/FirstScreen";
 import Cart from "./components/Cart";
-import LoginAdminForm from "./components/LoginAdminForm";
+import AdminHomeComponent from "./components/AdminHomeComponent";
 
 function App() {
   return (
