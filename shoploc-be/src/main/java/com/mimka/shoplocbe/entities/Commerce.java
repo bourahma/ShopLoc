@@ -35,6 +35,10 @@ public class Commerce {
     private String imageUrl;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "commerce_id", referencedColumnName = "utilisateur_id")
     private User merchant;
 }

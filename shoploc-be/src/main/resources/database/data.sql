@@ -30,7 +30,7 @@ INSERT INTO Commerce (commerce_id, commerce_name, opening_hour, closing_hour, im
     (nextval('commerce_sequence'), 'Fleuriste Parfumé', '09:30:00', '17:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/roman-kraft-_oH66az_yug-unsplash.jpg'),
     (nextval('commerce_sequence'), 'Artisan du Bois', '10:00:00', '18:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/bailey-alexander-DAd_Wn6Mj78-unsplash.jpg'),
     (nextval('commerce_sequence'), 'Délice du Café', '07:00:00', '21:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/milo-miloezger-rKYRJu0n06Y-unsplash.jpg');
-
+    
 -- Product's insertion :
 INSERT INTO Product (product_id, product_name, description, price, quantity) VALUES
     (nextval('product_sequence'), 'Pain au levain', 'Délicieux pain croustillant', 3.50, 150),
