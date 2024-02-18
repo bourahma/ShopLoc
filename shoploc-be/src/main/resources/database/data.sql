@@ -11,9 +11,9 @@ INSERT INTO Merchant (id, username, lastname, firstname, password, email, enable
 VALUES
     (3, 'Loris', 'Johnson', 'user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'michael.j@gmail.com', TRUE, '06 21 21 84 31', 3, '2024-01-24', NULL);
 
-INSERT INTO Customer (id, username, lastname, firstname, password, email, enabled, phone_number, role)
+INSERT INTO Customer (id, username, lastname, firstname, password, email, enabled, phone_number, role, is_vfp_membership)
 VALUES
-    (1, 'Joe', 'John','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'az.az201221@gmail.com', TRUE, '06 54 71 03 11', 1);
+    (1, 'Joe', 'John','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'az.az201221@gmail.com', TRUE, '06 54 71 03 11', 1, TRUE);
 
 INSERT INTO Administrator (id, username, lastname, firstname, password, email, enabled, phone_number, role)
 VALUES

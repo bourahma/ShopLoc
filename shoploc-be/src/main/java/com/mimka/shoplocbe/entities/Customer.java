@@ -10,4 +10,6 @@ import lombok.Setter;
 @Table(name = "Customer")
 public class Customer extends User {
 
+    @Column(name = "is_vfp_membership")
+    private boolean isVfpMembership;
 }

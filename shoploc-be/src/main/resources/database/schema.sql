@@ -19,8 +19,14 @@ DROP TABLE IF EXISTS Benefit_History CASCADE;
 DROP TABLE IF EXISTS Gift_History CASCADE;
 DROP TABLE IF EXISTS Promotion CASCADE;
 DROP TABLE IF EXISTS VFP CASCADE;
+DROP TABLE IF EXISTS Commerce_Type CASCADE;
+DROP TABLE IF EXISTS Customer_Connection CASCADE;
+DROP TABLE IF EXISTS Viewed_Product CASCADE;
+DROP TABLE IF EXISTS VFP_History CASCADE;
+DROP TABLE IF EXISTS Address CASCADE;
 
 DROP SEQUENCE IF EXISTS order_sequence CASCADE;
+DROP SEQUENCE IF EXISTS address_sequence CASCADE;
 DROP SEQUENCE IF EXISTS utilisateur_sequence CASCADE;
 DROP SEQUENCE IF EXISTS balance_transaction_sequence CASCADE;
 DROP SEQUENCE IF EXISTS point_transaction_sequence CASCADE;
@@ -30,6 +36,21 @@ DROP SEQUENCE IF EXISTS benefit_sequence CASCADE;
 DROP SEQUENCE IF EXISTS promotion_sequence CASCADE;
 DROP SEQUENCE IF EXISTS gift_history_sequence CASCADE;
 DROP SEQUENCE IF EXISTS benefit_history_sequence CASCADE;
+DROP SEQUENCE IF EXISTS commerce_type_sequence CASCADE;
+
+CREATE SEQUENCE address_sequence
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+CREATE SEQUENCE commerce_type_sequence
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
 
 CREATE SEQUENCE gift_history_sequence
     INCREMENT 1
@@ -120,13 +141,35 @@ CREATE TABLE Product (
     discount_id INT
 );
 
+-- Create the Commerce_Type Table :
+CREATE TABLE Commerce_Type (
+    commerce_type_id INT DEFAULT nextval('commerce_type_sequence') PRIMARY KEY,
+    label VARCHAR(255) NOT NULL,
+    description time NOT NULL
+);
+
+-- Create Address Table :
+CREATE TABLE Address (
+    address_id INT DEFAULT nextval('address_sequence') PRIMARY KEY,
+    street VARCHAR(255) NOT NULL,
+    postalCode INT NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    latitude NUMERIC(4,15) NOT NULL,
+    longitude NUMERIC(4,15) NOT NULL
+);
+
 -- Create the commerce Table :
 CREATE TABLE Commerce (
     commerce_id INT DEFAULT nextval('commerce_sequence') PRIMARY KEY,
     commerce_name VARCHAR(255) NOT NULL,
     opening_hour time NOT NULL,
     closing_hour time NOT NULL,
-    image_url VARCHAR(255)
+    image_url VARCHAR(255),
+    commerce_type_id INT,
+    address_id INT,
+
+    FOREIGN KEY (commerce_type_id) REFERENCES Commerce_Type (commerce_type_id),
+    FOREIGN KEY (address_id) REFERENCES Address (address_id)
 );
 
 -- Create Customer Table :
@@ -140,8 +183,20 @@ CREATE TABLE Customer (
     enabled BOOLEAN NOT NULL,
     phone_number VARCHAR(20),
     role INT NOT NULL,
+    is_vfp_membership BOOLEAN DEFAULT false,
 
     FOREIGN KEY (role) REFERENCES Role (role_id)
+);
+
+
+-- Create Customer_Connection Table :
+CREATE TABLE Customer_Connection (
+    connection_id VARCHAR(255) PRIMARY KEY,
+    connect_time TIME,
+    disconnect_time TIME,
+    customer_id INT,
+
+    FOREIGN KEY (customer_id) REFERENCES Customer(id)
 );
 
 -- Create FidelityCard Table :
@@ -314,15 +369,24 @@ CREATE TABLE Promotion (
     FOREIGN KEY (product_id) REFERENCES Product(product_id)
 );
 
--- VFP Status Table
-CREATE TABLE VFP (
-    vfp_id VARCHAR(255) PRIMARY KEY,
+-- Create VFP_History Table
+CREATE TABLE VFP_History (
+    vfp_update_id INT DEFAULT nextval('promotion_sequence') PRIMARY KEY,
     customer_id INT UNIQUE NOT NULL,
-    enabled BOOLEAN NOT NULL DEFAULT false,
-    last_evaluation DATE NOT NULL,
+    granted_date DATE,
+    validity_date DATE,
 
     FOREIGN KEY (customer_id) REFERENCES Customer(id)
 );
+
+-- VFP Viewed_Product Table
+CREATE TABLE Viewed_Product (
+    product_id INT PRIMARY KEY,
+    view_count INT NOT NULL DEFAULT 0,
+
+    FOREIGN KEY (product_id) REFERENCES Product(product_id)
+);
+
 
 -- Function to update VFP status after each purchase
 CREATE OR REPLACE FUNCTION update_vfp_status()
@@ -332,9 +396,9 @@ RETURNS TRIGGER AS '
             WHERE customer_id = NEW.customer_id
             AND order_date >= CURRENT_DATE - INTERVAL ''15 days'') >= 10 THEN
             IF EXISTS (SELECT 1 FROM VFP_Status WHERE customer_id = NEW.customer_id) THEN
-                UPDATE VFP_Status
-                SET is_vfp = TRUE, last_evaluation = CURRENT_DATE
-                WHERE customer_id = NEW.customer_id;
+                UPDATE Customer
+                SET is_vfp_membership = TRUE
+                WHERE id = NEW.customer_id;
             ELSE
                 INSERT INTO VFP_Status (customer_id, is_vfp, last_evaluation)
                 VALUES (NEW.customer_id, TRUE, CURRENT_DATE);
