@@ -77,10 +77,10 @@ function App() {
         <Route
           path="/admin/home"
           element={
-            <PrivateRoute>
+            <>
               <Header />
               <AdminHomeComponent />
-            </PrivateRoute>
+            </>
           }
         />
       </Routes>

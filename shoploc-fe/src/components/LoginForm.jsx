@@ -16,7 +16,7 @@ const LoginForm = () => {
 
   const loginUser = (values) => {
     loginService
-      .login(values)
+      .customerLogin(values)
       .then((data) => {
         console.log(data);
         window.localStorage.setItem(

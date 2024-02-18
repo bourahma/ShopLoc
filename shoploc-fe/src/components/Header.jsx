@@ -28,7 +28,7 @@ const Header = () => {
   };
 
   return (
-    <Navbar className="bg-shopgray py-4">
+    <Navbar className="bg-shopgray py-4 flex-none">
       <Navbar.Brand as={Link} to="/home" className="md:pl-12">
         <div className="flex gap-2">
           <svg
