@@ -26,6 +26,38 @@ DROP SEQUENCE IF EXISTS balance_transaction_sequence CASCADE;
 DROP SEQUENCE IF EXISTS point_transaction_sequence CASCADE;
 DROP SEQUENCE IF EXISTS commerce_sequence CASCADE;
 DROP SEQUENCE IF EXISTS product_sequence CASCADE;
+DROP SEQUENCE IF EXISTS benefit_sequence CASCADE;
+DROP SEQUENCE IF EXISTS promotion_sequence CASCADE;
+DROP SEQUENCE IF EXISTS gift_history_sequence CASCADE;
+DROP SEQUENCE IF EXISTS benefit_history_sequence CASCADE;
+
+CREATE SEQUENCE gift_history_sequence
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+CREATE SEQUENCE benefit_history_sequence
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+CREATE SEQUENCE promotion_sequence
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+CREATE SEQUENCE benefit_sequence
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
 
 CREATE SEQUENCE utilisateur_sequence
     INCREMENT 1
@@ -237,13 +269,13 @@ CREATE TABLE Order_Product (
 
 -- Create Benefits Table :
 CREATE TABLE Benefit (
-    benefit_id INT PRIMARY KEY,
+    benefit_id INT DEFAULT nextval('benefit_sequence') PRIMARY KEY,
     description VARCHAR(255)
 );
 
 -- Create BenefitHistory Table :
 CREATE TABLE Benefit_History (
-    benefit_history_id INT PRIMARY KEY,
+    benefit_history_id INT DEFAULT nextval('benefit_history_sequence') PRIMARY KEY,
     dateAcquisition DATE,
     customer_id INT,
     benefit_id INT,
@@ -254,7 +286,7 @@ CREATE TABLE Benefit_History (
 
 -- Create GiftHistory Table :
 CREATE TABLE Gift_History (
-    gift_history_id INT PRIMARY KEY,
+    gift_history_id INT DEFAULT nextval('gift_history_sequence') PRIMARY KEY,
     purchase_date DATE,
     customer_id INT,
     product_id INT,
@@ -265,14 +297,14 @@ CREATE TABLE Gift_History (
 
 -- Create Promotion Table :
 CREATE TABLE Promotion (
-    promotion_id INT PRIMARY KEY,
-    start_date DATE,
-    end_date DATE,
-    product_id INT,
-    description VARCHAR(255),
-    type VARCHAR(255),
+    promotion_id INT DEFAULT nextval('promotion_sequence') PRIMARY KEY,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    product_id INT NULL,
+    description VARCHAR(255) NOT NULL,
+    type VARCHAR(255) NOT NULL,
 
-    -- For reduction promotion type :
+    -- For discount promotion type :
     discount_percent INT,
 
     -- For Offer promotion type :
@@ -284,7 +316,7 @@ CREATE TABLE Promotion (
 
 -- VFP Status Table
 CREATE TABLE VFP (
-    vfp_id INT PRIMARY KEY,
+    vfp_id VARCHAR(255) PRIMARY KEY,
     customer_id INT UNIQUE NOT NULL,
     enabled BOOLEAN NOT NULL DEFAULT false,
     last_evaluation DATE NOT NULL,
