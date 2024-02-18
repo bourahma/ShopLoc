@@ -40,5 +40,5 @@ public class Commerce {
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "commerce_id", referencedColumnName = "utilisateur_id")
-    private User merchant;
+    private Merchant merchant;
 }
