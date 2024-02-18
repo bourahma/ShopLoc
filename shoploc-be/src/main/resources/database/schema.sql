@@ -71,157 +71,157 @@ CREATE SEQUENCE order_sequence
 
 -- Create the Role Table :
 CREATE TABLE Role (
-                      role_id INT PRIMARY KEY,
-                      role_name VARCHAR(50) NOT NULL,
-                      role_description VARCHAR(250)
+    role_id INT PRIMARY KEY,
+    role_name VARCHAR(50) NOT NULL,
+    role_description VARCHAR(250)
 );
 
 -- Create the Product Table :
 CREATE TABLE Product (
-                         product_id INT DEFAULT nextval('product_sequence') PRIMARY KEY,
-                         product_name VARCHAR(255) NOT NULL,
-                         description TEXT,
-                         price NUMERIC(10,2) NOT NULL,
-                         quantity integer NOT NULL,
-                         reward_points_price NUMERIC(10,2),
-                         is_gift BOOLEAN NOT NULL,
-                         discount_id INT
+    product_id INT DEFAULT nextval('product_sequence') PRIMARY KEY,
+    product_name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price NUMERIC(10,2) NOT NULL,
+    quantity integer NOT NULL,
+    reward_points_price NUMERIC(10,2),
+    is_gift BOOLEAN NOT NULL,
+    discount_id INT
 );
 
 -- Create the commerce Table :
 CREATE TABLE Commerce (
-                          commerce_id INT DEFAULT nextval('commerce_sequence') PRIMARY KEY,
-                          commerce_name VARCHAR(255) NOT NULL,
-                          opening_hour time NOT NULL,
-                          closing_hour time NOT NULL,
-                          image_url VARCHAR(255)
+    commerce_id INT DEFAULT nextval('commerce_sequence') PRIMARY KEY,
+    commerce_name VARCHAR(255) NOT NULL,
+    opening_hour time NOT NULL,
+    closing_hour time NOT NULL,
+    image_url VARCHAR(255)
 );
 
 -- Create Customer Table :
 CREATE TABLE Customer (
-                             id INT DEFAULT nextval('utilisateur_sequence') PRIMARY KEY,
-                             username VARCHAR(255) UNIQUE NOT NULL,
-                             lastname VARCHAR(255) NOT NULL,
-                             firstname VARCHAR(255) NOT NULL,
-                             password VARCHAR(255) NOT NULL,
-                             email VARCHAR(255) UNIQUE NOT NULL,
-                             enabled BOOLEAN NOT NULL,
-                             phone_number VARCHAR(20),
-                             role INT NOT NULL,
+    id INT DEFAULT nextval('utilisateur_sequence') PRIMARY KEY,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    lastname VARCHAR(255) NOT NULL,
+    firstname VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    enabled BOOLEAN NOT NULL,
+    phone_number VARCHAR(20),
+    role INT NOT NULL,
 
-                             FOREIGN KEY (role) REFERENCES Role (role_id)
+    FOREIGN KEY (role) REFERENCES Role (role_id)
 );
 
 -- Create FidelityCard Table :
 CREATE TABLE Fidelity_Card (
-                               fidelity_card_id VARCHAR(50) PRIMARY KEY,
-                               customer_id INT NOT NULL,
-                               points NUMERIC(10,2) NOT NULL,
-                               balance NUMERIC(10,2) NOT NULL,
+    fidelity_card_id VARCHAR(50) PRIMARY KEY,
+    customer_id INT NOT NULL,
+    points NUMERIC(10,2) NOT NULL,
+    balance NUMERIC(10,2) NOT NULL,
 
-                               FOREIGN KEY (customer_id) REFERENCES Customer(id)
+    FOREIGN KEY (customer_id) REFERENCES Customer(id)
 );
 
 -- Create the User table :
 CREATE TABLE Merchant (
-                             id INT DEFAULT nextval('utilisateur_sequence') PRIMARY KEY,
-                             username VARCHAR(255) UNIQUE NOT NULL,
-                             lastname VARCHAR(255) NOT NULL,
-                             firstname VARCHAR(255) NOT NULL,
-                             password VARCHAR(255) NOT NULL,
-                             email VARCHAR(255) UNIQUE NOT NULL,
-                             enabled BOOLEAN NOT NULL,
-                             phone_number VARCHAR(20),
-                             role INT NOT NULL,
+    id INT DEFAULT nextval('utilisateur_sequence') PRIMARY KEY,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    lastname VARCHAR(255) NOT NULL,
+    firstname VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    enabled BOOLEAN NOT NULL,
+    phone_number VARCHAR(20),
+    role INT NOT NULL,
 
-                             -- Merchant attributes
-                             subscription_date DATE,
-                             commerce_id INT,
+    -- Merchant attributes
+    subscription_date DATE,
+    commerce_id INT,
 
-                             FOREIGN KEY (role) REFERENCES Role (role_id),
-                             FOREIGN KEY (commerce_id) REFERENCES Commerce (commerce_id)
+    FOREIGN KEY (role) REFERENCES Role (role_id),
+    FOREIGN KEY (commerce_id) REFERENCES Commerce (commerce_id)
 );
 
 -- Create Administrator table :
 CREATE TABLE Administrator (
-                          id INT DEFAULT nextval('utilisateur_sequence') PRIMARY KEY,
-                          username VARCHAR(255) UNIQUE NOT NULL,
-                          lastname VARCHAR(255) NOT NULL,
-                          firstname VARCHAR(255) NOT NULL,
-                          password VARCHAR(255) NOT NULL,
-                          email VARCHAR(255) UNIQUE NOT NULL,
-                          enabled BOOLEAN NOT NULL,
-                          phone_number VARCHAR(20),
-                          role INT NOT NULL,
+    id INT DEFAULT nextval('utilisateur_sequence') PRIMARY KEY,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    lastname VARCHAR(255) NOT NULL,
+    firstname VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    enabled BOOLEAN NOT NULL,
+    phone_number VARCHAR(20),
+    role INT NOT NULL,
 
-                          FOREIGN KEY (role) REFERENCES Role (role_id)
+    FOREIGN KEY (role) REFERENCES Role (role_id)
 );
 
 -- Create OrderStatus Table
 CREATE TABLE Order_Status (
-                                 order_status_id INT NOT NULL,
-                                 label VARCHAR(255),
-                                 description VARCHAR(250),
-                                 PRIMARY KEY (order_status_id)
+    order_status_id INT NOT NULL,
+    label VARCHAR(255),
+    description VARCHAR(250),
+    PRIMARY KEY (order_status_id)
 );
 
 -- Create Orders Table
 CREATE TABLE Orders (
-                          order_id INT DEFAULT nextval('order_sequence') PRIMARY KEY,
-                          customer_id INT NOT NULL,
-                          commerce_id INT NOT NULL,
-                          order_date DATE,
-                          order_status_id INT NOT NULL,
+    order_id INT DEFAULT nextval('order_sequence') PRIMARY KEY,
+    customer_id INT NOT NULL,
+    commerce_id INT NOT NULL,
+    order_date DATE,
+    order_status_id INT NOT NULL,
 
-                          FOREIGN KEY (customer_id) REFERENCES Customer(id),
-                          FOREIGN KEY (order_status_id) REFERENCES Order_Status (order_status_id),
-                          FOREIGN KEY (commerce_id) REFERENCES Commerce(commerce_id)
+    FOREIGN KEY (customer_id) REFERENCES Customer(id),
+    FOREIGN KEY (order_status_id) REFERENCES Order_Status (order_status_id),
+    FOREIGN KEY (commerce_id) REFERENCES Commerce(commerce_id)
 );
 
 -- Create BalanceTransaction Table
 CREATE TABLE Balance_Transaction (
-                                    balance_transaction_id INT DEFAULT nextval('balance_transaction_sequence') PRIMARY KEY,
-                                    transaction_date DATE NOT NULL,
-                                    type VARCHAR(255) NOT NULL,
-                                    amount NUMERIC(10,2) NOT NULL,
-                                    commerce_id INT,
-                                    fidelity_card_id VARCHAR(50) NOT NULL,
+    balance_transaction_id INT DEFAULT nextval('balance_transaction_sequence') PRIMARY KEY,
+    transaction_date DATE NOT NULL,
+    type VARCHAR(255) NOT NULL,
+    amount NUMERIC(10,2) NOT NULL,
+    commerce_id INT,
+    fidelity_card_id VARCHAR(50) NOT NULL,
 
-                                    FOREIGN KEY (commerce_id) REFERENCES Commerce (commerce_id),
-                                    FOREIGN KEY (fidelity_card_id) REFERENCES Fidelity_Card (fidelity_card_id)
+    FOREIGN KEY (commerce_id) REFERENCES Commerce (commerce_id),
+    FOREIGN KEY (fidelity_card_id) REFERENCES Fidelity_Card (fidelity_card_id)
 );
 
 -- Create PointTransaction Table
 CREATE TABLE Point_Transaction (
-                                    point_transaction_id INT DEFAULT nextval('point_transaction_sequence') PRIMARY KEY,
-                                    fidelity_card_id VARCHAR(50) NOT NULL,
-                                    transaction_date DATE NOT NULL,
-                                    type VARCHAR(255) NOT NULL,
-                                    amount NUMERIC(10,2) NOT NULL,
-                                    commerce_id INT NOT NULL,
+    point_transaction_id INT DEFAULT nextval('point_transaction_sequence') PRIMARY KEY,
+    fidelity_card_id VARCHAR(50) NOT NULL,
+    transaction_date DATE NOT NULL,
+    type VARCHAR(255) NOT NULL,
+    amount NUMERIC(10,2) NOT NULL,
+    commerce_id INT NOT NULL,
 
-                                    FOREIGN KEY (fidelity_card_id) REFERENCES Fidelity_Card (fidelity_card_id),
-                                    FOREIGN KEY (commerce_id) REFERENCES Commerce (commerce_id)
+    FOREIGN KEY (fidelity_card_id) REFERENCES Fidelity_Card (fidelity_card_id),
+    FOREIGN KEY (commerce_id) REFERENCES Commerce (commerce_id)
 );
 
 -- Create the CommerceProduct table :
 CREATE TABLE Commerce_Product (
-                                  commerce_id INT NOT NULL,
-                                  product_id INT NOT NULL,
-                                  quantity INT NOT NULL,
+    commerce_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
 
-                                  PRIMARY KEY (commerce_id, product_id),
+    PRIMARY KEY (commerce_id, product_id),
 
-                                  FOREIGN KEY (commerce_id) REFERENCES Commerce (commerce_id),
-                                  FOREIGN KEY (product_id) REFERENCES Product (product_id)
+    FOREIGN KEY (commerce_id) REFERENCES Commerce (commerce_id),
+    FOREIGN KEY (product_id) REFERENCES Product (product_id)
 );
 
 -- Create the Token table :
 CREATE TABLE Token (
-                            uuid VARCHAR(255) PRIMARY KEY,
-                            customer_id INT,
+    uuid VARCHAR(255) PRIMARY KEY,
+    customer_id INT,
 
-                            FOREIGN KEY (customer_id) REFERENCES Customer(id)
+    FOREIGN KEY (customer_id) REFERENCES Customer(id)
 );
 
 -- Create OrderProduct Table :
