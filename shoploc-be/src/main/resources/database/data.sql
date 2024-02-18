@@ -30,25 +30,25 @@ INSERT INTO Commerce (commerce_id, commerce_name, opening_hour, closing_hour, im
     (nextval('commerce_sequence'), 'Fleuriste Parfumé', '09:30:00', '17:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/roman-kraft-_oH66az_yug-unsplash.jpg'),
     (nextval('commerce_sequence'), 'Artisan du Bois', '10:00:00', '18:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/bailey-alexander-DAd_Wn6Mj78-unsplash.jpg'),
     (nextval('commerce_sequence'), 'Délice du Café', '07:00:00', '21:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/milo-miloezger-rKYRJu0n06Y-unsplash.jpg');
-
+    
 -- Product's insertion :
-INSERT INTO Product (product_id, product_name, description, price, quantity) VALUES
-    (nextval('product_sequence'), 'Pain au levain', 'Délicieux pain croustillant', 3.50, 150),
-    (nextval('product_sequence'), 'Croissant aux amandes', 'Feuilleté et garni d''amandes', 2.75, 100),
-    (nextval('product_sequence'), 'Tarte aux fruits', 'Tarte aux fruits de saison', 12.99, 20),
-    (nextval('product_sequence'), 'Baguette traditionnelle', 'Baguette française classique', 1.99, 200),
-    (nextval('product_sequence'), 'Éclair au chocolat', 'Éclair garni de crème pâtissière au chocolat', 4.50, 50),
+INSERT INTO Product (product_id, product_name, description, price, quantity, reward_points_price, is_gift, discount_id) VALUES
+    (nextval('product_sequence'), 'Pain au levain', 'Délicieux pain croustillant', 3.50, 150, 3, TRUE, 1),
+    (nextval('product_sequence'), 'Croissant aux amandes', 'Feuilleté et garni d''amandes', 2.75, 100, 2, TRUE, 1),
+    (nextval('product_sequence'), 'Tarte aux fruits', 'Tarte aux fruits de saison', 12.99, 20, 12, TRUE, 1),
+    (nextval('product_sequence'), 'Baguette traditionnelle', 'Baguette française classique', 1.99, 200, 1, TRUE, 1),
+    (nextval('product_sequence'), 'Éclair au chocolat', 'Éclair garni de crème pâtissière au chocolat', 4.50, 50, 4, TRUE, 1),
     --
-    (nextval('product_sequence'), 'Bouquet de Roses', 'Un assortiment de roses', 19.99, 50),
-    (nextval('product_sequence'), 'Lys en Pot', 'Lys blanc dans un pot élégant', 24.99, 30),
+    (nextval('product_sequence'), 'Bouquet de Roses', 'Un assortiment de roses', 19.99, 50, 19, TRUE, 1),
+    (nextval('product_sequence'), 'Lys en Pot', 'Lys blanc dans un pot élégant', 24.99, 30, 24, TRUE, 1),
 
-    (nextval('product_sequence'), 'Bougeoir en Bois', 'Bougeoir fait à la main en bois', 29.99, 40),
-    (nextval('product_sequence'), 'Plateau en Bois', 'Plateau élégant pour servir', 39.99, 25),
+    (nextval('product_sequence'), 'Bougeoir en Bois', 'Bougeoir fait à la main en bois', 29.99, 40, 20, TRUE, 1),
+    (nextval('product_sequence'), 'Plateau en Bois', 'Plateau élégant pour servir', 39.99, 25, 30, TRUE, 1),
 
-    (nextval('product_sequence'), 'Espresso', 'Café fort et concentré', 2.50, 100),
-    (nextval('product_sequence'), 'Cappuccino', 'Espresso avec du lait mousseux', 3.50, 80),
-    (nextval('product_sequence'), 'Croissant', 'Pâtisserie feuilletée et beurrée', 1.99, 150),
-    (nextval('product_sequence'), 'Grains de café (250g)', 'Grains de café premium pour la préparation à la maison', 12.99, 50);
+    (nextval('product_sequence'), 'Espresso', 'Café fort et concentré', 2.50, 100, 2, TRUE, 1),
+    (nextval('product_sequence'), 'Cappuccino', 'Espresso avec du lait mousseux', 3.50, 80, 3, TRUE, 1),
+    (nextval('product_sequence'), 'Croissant', 'Pâtisserie feuilletée et beurrée', 1.99, 150, 1, TRUE, 1),
+    (nextval('product_sequence'), 'Grains de café (250g)', 'Grains de café premium pour la préparation à la maison', 12.99, 50, 11, TRUE, 1);
 
 
 
@@ -85,7 +85,7 @@ INSERT INTO Order_Status (order_status_id, label, description) VALUES
                                                                          (2, 'Approved', 'Merchant approval for the order');
 
 -- Order data insertion :
-INSERT INTO Commande (order_id, customer_id, commerce_id, order_date, order_status_id) VALUES
+INSERT INTO Orders (order_id, customer_id, commerce_id, order_date, order_status_id) VALUES
                                                                                         (100, 1, 1, '2024-01-24', 1);
 
 -- OrderProduct data insertion :

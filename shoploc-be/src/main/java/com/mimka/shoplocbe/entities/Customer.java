@@ -10,5 +10,4 @@ import lombok.Setter;
 @Table(name = "Customer")
 public class Customer extends User {
 
-
 }

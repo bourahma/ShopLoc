@@ -9,4 +9,5 @@ public interface MerchantService {
     Merchant getMerchantByUsername (String username);
 
     Merchant createMerchant(MerchantDTO merchantDTO) throws RegistrationException;
+    
 }

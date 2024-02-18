@@ -26,11 +26,20 @@ public class Product {
     @Column(name = "description", columnDefinition = "text")
     private String description;
 
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
+
     @Column(name = "price", nullable = false)
     private double price;
 
-    @Column(name = "quantity", nullable = false)
-    private Integer quantity;
+    @Column(name = "reward_points_price", nullable = false)
+    private double rewardPointsPrice;
+
+    @Column(name = "is_gift", nullable = false)
+    private boolean isGift;
+
+    @Column(name = "discount_id")
+    private Long discountId;
 
     @Override
     public String toString() {
