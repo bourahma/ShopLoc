@@ -17,7 +17,7 @@ public class Product {
     @Id
     @Column(name = "product_id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_sequence")
-    @SequenceGenerator(name = "product_sequence", sequenceName = "product_seq", allocationSize = 1, initialValue = 1)
+    @SequenceGenerator(name = "product_sequence", sequenceName = "product_seq", allocationSize = 1, initialValue = 20)
     private Long productId;
 
     @Column(name = "product_name", nullable = false)
@@ -40,6 +40,9 @@ public class Product {
 
     @Column(name = "discount_id")
     private Long discountId;
+
+    @Column(name = "view")
+    private Long view;
 
     @Override
     public String toString() {

@@ -129,18 +129,6 @@ CREATE TABLE Role (
     role_description VARCHAR(250)
 );
 
--- Create the Product Table :
-CREATE TABLE Product (
-    product_id INT DEFAULT nextval('product_sequence') PRIMARY KEY,
-    product_name VARCHAR(255) NOT NULL,
-    description TEXT,
-    price NUMERIC(10,2) NOT NULL,
-    quantity integer NOT NULL,
-    reward_points_price NUMERIC(10,2),
-    is_gift BOOLEAN NOT NULL,
-    discount_id INT
-);
-
 -- Create the Commerce_Type Table :
 CREATE TABLE Commerce_Type (
     commerce_type_id INT DEFAULT nextval('commerce_type_sequence') PRIMARY KEY,
@@ -152,10 +140,10 @@ CREATE TABLE Commerce_Type (
 CREATE TABLE Address (
     address_id INT DEFAULT nextval('address_sequence') PRIMARY KEY,
     street VARCHAR(255) NOT NULL,
-    postalCode INT NOT NULL,
+    postal_code INT NOT NULL,
     city VARCHAR(255) NOT NULL,
-    latitude NUMERIC(4,15) NOT NULL,
-    longitude NUMERIC(4,15) NOT NULL
+    latitude NUMERIC NOT NULL,
+    longitude NUMERIC NOT NULL
 );
 
 -- Create the commerce Table :
@@ -170,6 +158,22 @@ CREATE TABLE Commerce (
 
     FOREIGN KEY (commerce_type_id) REFERENCES Commerce_Type (commerce_type_id),
     FOREIGN KEY (address_id) REFERENCES Address (address_id)
+);
+
+-- Create the Product Table :
+CREATE TABLE Product (
+                         product_id INT DEFAULT nextval('product_sequence') PRIMARY KEY,
+                         product_name VARCHAR(255) NOT NULL,
+                         description TEXT,
+                         price NUMERIC(10,2) NOT NULL,
+                         quantity integer NOT NULL,
+                         reward_points_price NUMERIC(10,2),
+                         is_gift BOOLEAN NOT NULL,
+                         discount_id INT,
+                         commerce_id INT,
+                         view INT,
+
+                         FOREIGN KEY (commerce_id) REFERENCES Commerce(commerce_id)
 );
 
 -- Create Customer Table :
@@ -291,18 +295,6 @@ CREATE TABLE Point_Transaction (
     FOREIGN KEY (commerce_id) REFERENCES Commerce (commerce_id)
 );
 
--- Create the CommerceProduct table :
-CREATE TABLE Commerce_Product (
-    commerce_id INT NOT NULL,
-    product_id INT NOT NULL,
-    quantity INT NOT NULL,
-
-    PRIMARY KEY (commerce_id, product_id),
-
-    FOREIGN KEY (commerce_id) REFERENCES Commerce (commerce_id),
-    FOREIGN KEY (product_id) REFERENCES Product (product_id)
-);
-
 -- Create the Token table :
 CREATE TABLE Token (
     uuid VARCHAR(255) PRIMARY KEY,
@@ -378,15 +370,6 @@ CREATE TABLE VFP_History (
 
     FOREIGN KEY (customer_id) REFERENCES Customer(id)
 );
-
--- VFP Viewed_Product Table
-CREATE TABLE Viewed_Product (
-    product_id INT PRIMARY KEY,
-    view_count INT NOT NULL DEFAULT 0,
-
-    FOREIGN KEY (product_id) REFERENCES Product(product_id)
-);
-
 
 -- Function to update VFP status after each purchase
 CREATE OR REPLACE FUNCTION update_vfp_status()

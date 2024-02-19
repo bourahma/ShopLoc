@@ -32,53 +32,24 @@ INSERT INTO Commerce (commerce_id, commerce_name, opening_hour, closing_hour, im
     (nextval('commerce_sequence'), 'Délice du Café', '07:00:00', '21:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/milo-miloezger-rKYRJu0n06Y-unsplash.jpg');
     
 -- Product's insertion :
-INSERT INTO Product (product_id, product_name, description, price, quantity, reward_points_price, is_gift, discount_id) VALUES
-    (nextval('product_sequence'), 'Pain au levain', 'Délicieux pain croustillant', 3.50, 150, 3, TRUE, 1),
-    (nextval('product_sequence'), 'Croissant aux amandes', 'Feuilleté et garni d''amandes', 2.75, 100, 2, TRUE, 1),
-    (nextval('product_sequence'), 'Tarte aux fruits', 'Tarte aux fruits de saison', 12.99, 20, 12, TRUE, 1),
-    (nextval('product_sequence'), 'Baguette traditionnelle', 'Baguette française classique', 1.99, 200, 1, TRUE, 1),
-    (nextval('product_sequence'), 'Éclair au chocolat', 'Éclair garni de crème pâtissière au chocolat', 4.50, 50, 4, TRUE, 1),
+INSERT INTO Product (product_id, product_name, description, price, quantity, reward_points_price, is_gift, discount_id, commerce_id, view) VALUES
+    (nextval('product_sequence'), 'Pain au levain', 'Délicieux pain croustillant', 3.50, 150, 3, TRUE, 1, 1, 12),
+    (nextval('product_sequence'), 'Croissant aux amandes', 'Feuilleté et garni d''amandes', 2.75, 100, 2, TRUE, 2, 8,45),
+    (nextval('product_sequence'), 'Tarte aux fruits', 'Tarte aux fruits de saison', 12.99, 20, 12, TRUE, 1, 5,15),
+    (nextval('product_sequence'), 'Baguette traditionnelle', 'Baguette française classique', 1.99, 200, 1, TRUE, 1, 1,12),
+    (nextval('product_sequence'), 'Éclair au chocolat', 'Éclair garni de crème pâtissière au chocolat', 4.50, 50, 4, TRUE, 1, 5,35),
     --
-    (nextval('product_sequence'), 'Bouquet de Roses', 'Un assortiment de roses', 19.99, 50, 19, TRUE, 1),
-    (nextval('product_sequence'), 'Lys en Pot', 'Lys blanc dans un pot élégant', 24.99, 30, 24, TRUE, 1),
+    (nextval('product_sequence'), 'Bouquet de Roses', 'Un assortiment de roses', 19.99, 50, 19, TRUE, 1, 6,56),
+    (nextval('product_sequence'), 'Lys en Pot', 'Lys blanc dans un pot élégant', 24.99, 30, 24, TRUE, 1, 6,78),
 
-    (nextval('product_sequence'), 'Bougeoir en Bois', 'Bougeoir fait à la main en bois', 29.99, 40, 20, TRUE, 1),
-    (nextval('product_sequence'), 'Plateau en Bois', 'Plateau élégant pour servir', 39.99, 25, 30, TRUE, 1),
+    (nextval('product_sequence'), 'Bougeoir en Bois', 'Bougeoir fait à la main en bois', 29.99, 40, 20, TRUE, 1, 4,89),
+    (nextval('product_sequence'), 'Plateau en Bois', 'Plateau élégant pour servir', 39.99, 25, 30, TRUE, 1, 7,78),
 
-    (nextval('product_sequence'), 'Espresso', 'Café fort et concentré', 2.50, 100, 2, TRUE, 1),
-    (nextval('product_sequence'), 'Cappuccino', 'Espresso avec du lait mousseux', 3.50, 80, 3, TRUE, 1),
-    (nextval('product_sequence'), 'Croissant', 'Pâtisserie feuilletée et beurrée', 1.99, 150, 1, TRUE, 1),
-    (nextval('product_sequence'), 'Grains de café (250g)', 'Grains de café premium pour la préparation à la maison', 12.99, 50, 11, TRUE, 1);
+    (nextval('product_sequence'), 'Espresso', 'Café fort et concentré', 2.50, 100, 2, TRUE, 1, 2,78),
+    (nextval('product_sequence'), 'Cappuccino', 'Espresso avec du lait mousseux', 3.50, 80, 3, TRUE, 1, 2,9),
+    (nextval('product_sequence'), 'Croissant', 'Pâtisserie feuilletée et beurrée', 1.99, 150, 1, TRUE, 1, 5,86),
+    (nextval('product_sequence'), 'Grains de café (250g)', 'Grains de café premium pour la préparation à la maison', 12.99, 50, 11, TRUE, 1, 8,12);
 
-
-
-
--- Commerce_Product data insertion :
-INSERT INTO Commerce_product (commerce_id, product_id, quantity) VALUES
-    (1, 1, 10),
-    (2, 2, 20),
-    (3, 3, 15),
-    (4, 4, 25),
-    (5, 5, 30),
-
-    ((SELECT commerce_id FROM Commerce WHERE commerce_name = 'Fleuriste Parfumé'),
-     (SELECT product_id FROM Product WHERE product_name = 'Bouquet de Roses'), 15),
-    ((SELECT commerce_id FROM Commerce WHERE commerce_name = 'Fleuriste Parfumé'),
-     (SELECT product_id FROM Product WHERE product_name = 'Lys en Pot'), 10),
-
-    ((SELECT commerce_id FROM Commerce WHERE commerce_name = 'Artisan du Bois'),
-     (SELECT product_id FROM Product WHERE product_name = 'Bougeoir en Bois'), 20),
-    ((SELECT commerce_id FROM Commerce WHERE commerce_name = 'Artisan du Bois'),
-     (SELECT product_id FROM Product WHERE product_name = 'Plateau en Bois'), 15),
-
-    ((SELECT commerce_id FROM Commerce WHERE commerce_name = 'Délice du Café'),
-     (SELECT product_id FROM Product WHERE product_name = 'Espresso'), 30),
-    ((SELECT commerce_id FROM Commerce WHERE commerce_name = 'Délice du Café'),
-     (SELECT product_id FROM Product WHERE product_name = 'Cappuccino'), 20),
-    ((SELECT commerce_id FROM Commerce WHERE commerce_name = 'Délice du Café'),
-     (SELECT product_id FROM Product WHERE product_name = 'Croissant'), 50),
-    ((SELECT commerce_id FROM Commerce WHERE commerce_name = 'Délice du Café'),
-     (SELECT product_id FROM Product WHERE product_name = 'Grains de café (250g)'), 10);
 
 INSERT INTO Order_Status (order_status_id, label, description) VALUES
                                                                          (1, 'Pending', 'Waiting for payment'),

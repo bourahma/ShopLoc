@@ -1,14 +1,13 @@
 package com.mimka.shoplocbe.controllers;
 
+import com.mimka.shoplocbe.api.map.MapAPI;
 import com.mimka.shoplocbe.dto.commerce.CommerceDTO;
 import com.mimka.shoplocbe.dto.product.ProductDTO;
-import com.mimka.shoplocbe.entities.Commerce;
-import com.mimka.shoplocbe.services.*;
+import com.mimka.shoplocbe.facades.CommerceFacade;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -16,34 +15,50 @@ import java.util.List;
 @RequestMapping("/commerce")
 public class CommerceController {
 
-    private CommerceService commerceService;
-
-    private ProductService productService;
-
-    private final UserService userService;
+    private final CommerceFacade commerceFacade;
 
     @Autowired
-    public CommerceController(UserServiceImpl userServiceImpl, CommerceServiceImpl commerceServiceImpl, ProductServiceImpl productServiceImpl) {
-        this.commerceService = commerceServiceImpl;
-        this.productService = productServiceImpl;
-        this.userService = userServiceImpl;
+    public CommerceController(CommerceFacade commerceFacade) {
+        this.commerceFacade = commerceFacade;
     }
 
     @GetMapping("/")
-    @ResponseStatus(value = HttpStatus.OK)
-    public List<CommerceDTO> commerces (Principal principal) {
-        return this.commerceService.getCommerces();
+    public List<CommerceDTO> commerces ( ) {
+        return this.commerceFacade.getCommerces();
+    }
+
+    @GetMapping("/type/{commerceType}")
+    public List<CommerceDTO> getCommercesByType (@PathVariable String commerceType) {
+        return this.commerceFacade.getCommerceByTypes(commerceType);
     }
 
     @GetMapping("/{commerceId}")
-    @ResponseStatus(value = HttpStatus.OK)
-    public Commerce commerce (@PathVariable("commerceId") Long commerceId) {
-        return this.commerceService.getCommerce(commerceId);
+    public CommerceDTO getCommerce (@PathVariable("commerceId") Long commerceId) {
+        return this.commerceFacade.getCommerce(commerceId);
+    }
+
+    @PostMapping("/{commerceId}")
+    public CommerceDTO addProduct (@PathVariable("commerceId") Long commerceId, @RequestBody @Valid ProductDTO productDTO) {
+        return this.commerceFacade.addProduct(commerceId, productDTO);
     }
 
     @GetMapping("/{commerceId}/products")
-    @ResponseStatus(value = HttpStatus.OK)
     public List<ProductDTO> commerceProducts (@PathVariable("commerceId") Long commerceId){
-        return productService.getProductsByCommerce(commerceId);
+        return this.commerceFacade.getCommerceProducts(commerceId);
+    }
+
+    @PutMapping("/{commerceId}")
+    public CommerceDTO updateCommerce (@RequestBody @Valid CommerceDTO commerceDTO){
+        return this.commerceFacade.updateCommerce(commerceDTO);
+    }
+
+    @PostMapping("/")
+    public CommerceDTO addCommerce (@RequestBody @Valid CommerceDTO commerceDTO){
+        return this.commerceFacade.addCommerce(commerceDTO);
+    }
+
+    @DeleteMapping("/{commerceId}")
+    public void deleteCommerce (@PathVariable("commerceId") Long commerceId){
+        this.commerceFacade.deleteCommerce(commerceId);
     }
 }
