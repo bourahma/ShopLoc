@@ -30,6 +30,7 @@ public abstract class ControllerIT {
     @Autowired
     protected MockMvc mockMvc;
 
+    @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
             "postgres:15-alpine"
     );
