@@ -13,7 +13,7 @@ jobs:
           image: postgres:15-alpine
           env:
             POSTGRES_DB: shoploc-db
-            POSTGRES_USER: shoplocP
+            POSTGRES_USER: shoplocU
             POSTGRES_PASSWORD: shoplocP
           ports:
             - 5432:5432
