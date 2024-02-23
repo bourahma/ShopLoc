@@ -1,6 +1,7 @@
 package com.mimka.shoplocbe.controllerIT;
 
 import com.jayway.jsonpath.JsonPath;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +30,19 @@ public abstract class ControllerIT {
     @Autowired
     protected MockMvc mockMvc;
 
-    @Container
-    private PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>("postgres:latest")
-            .withDatabaseName("shoploc")
-            .withUsername("shoplocU")
-            .withPassword("shoplocP");
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
+            "postgres:15-alpine"
+    );
+
+    @BeforeAll
+    static void beforeAll() {
+        postgres.start();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        postgres.stop();
+    }
 
     private String authenticateUser (String username, String password, String userType) throws Exception {
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/authentication/" + userType + "/login")
