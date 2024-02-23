@@ -1,5 +1,6 @@
 package com.mimka.shoplocbe.controllers;
 
+import com.mimka.shoplocbe.exception.CommerceNotFoundException;
 import com.mimka.shoplocbe.exception.RegistrationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -33,15 +34,24 @@ public class ControllerAdvice {
         return Map.of(message, exception.getMessage());
     }
 
-    @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public Map<String, String> methodArgumentValidation(MethodArgumentNotValidException exception) {
-        return Map.of(message, exception.getMessage());
-    }
-
     @ExceptionHandler(value = RegistrationException.class)
     @ResponseStatus(value = HttpStatus.CONFLICT)
     public Map<String, String> registrationExceptionHandler(RegistrationException exception) {
         return Map.of(message, exception.getMessage());
+    }
+
+    @ExceptionHandler(value = CommerceNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public Map<String, String> CommerceNotFoundExceptionHandler(CommerceNotFoundException exception) {
+        return Map.of(message, exception.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleValidationException(MethodArgumentNotValidException ex) {
+        return Map.of(message, ex.getBindingResult().getAllErrors().stream()
+                .map(error -> error.getDefaultMessage())
+                .findFirst()
+                .orElse("Validation failed"));
     }
 }

@@ -5,7 +5,7 @@ import com.mimka.shoplocbe.dto.order.OrderDTOUtil;
 import com.mimka.shoplocbe.entities.Customer;
 import com.mimka.shoplocbe.entities.Order;
 import com.mimka.shoplocbe.entities.QRCodePayment;
-import com.mimka.shoplocbe.exception.CommerceException;
+import com.mimka.shoplocbe.exception.CommerceNotFoundException;
 import com.mimka.shoplocbe.services.CustomerService;
 import com.mimka.shoplocbe.services.OrderService;
 import com.mimka.shoplocbe.services.QRCodePaymentService;
@@ -35,7 +35,7 @@ public class OrderFacadeImpl implements OrderFacade {
     }
 
     @Override
-    public OrderDTO createOrder(String customerUsername, OrderDTO orderDTO) throws CommerceException {
+    public OrderDTO createOrder(String customerUsername, OrderDTO orderDTO) throws CommerceNotFoundException {
         Customer customer = this.customerService.getCustomerByUsername(customerUsername);
         Order order = this.orderService.createOrder(customer, orderDTO);
 

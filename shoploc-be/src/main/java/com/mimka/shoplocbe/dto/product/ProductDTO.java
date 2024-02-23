@@ -38,6 +38,5 @@ public class ProductDTO {
 
     private Long discountId;
 
-    @NotNull(message = "La vue est requise")
     private Long view;
 }

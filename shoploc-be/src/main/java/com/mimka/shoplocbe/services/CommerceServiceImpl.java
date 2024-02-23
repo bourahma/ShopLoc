@@ -5,7 +5,7 @@ import com.mimka.shoplocbe.dto.commerce.CommerceDTOUtil;
 import com.mimka.shoplocbe.entities.Address;
 import com.mimka.shoplocbe.entities.Commerce;
 import com.mimka.shoplocbe.entities.Product;
-import com.mimka.shoplocbe.exception.CommerceException;
+import com.mimka.shoplocbe.exception.CommerceNotFoundException;
 import com.mimka.shoplocbe.repositories.CommerceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,8 +31,8 @@ public class CommerceServiceImpl implements CommerceService {
     }
 
     @Override
-    public Commerce getCommerce (Long id) throws CommerceException {
-        Commerce commerce = this.commerceRepository.findById(id).orElseThrow(() -> new CommerceException("Commerce not found for ID : " + id));
+    public Commerce getCommerce (Long id) throws CommerceNotFoundException {
+        Commerce commerce = this.commerceRepository.findById(id).orElseThrow(() -> new CommerceNotFoundException("Commerce not found for ID : " + id));
 
         return this.commerceRepository.findByCommerceId(id);
     }
@@ -45,7 +45,7 @@ public class CommerceServiceImpl implements CommerceService {
     }
 
     @Override
-    public Commerce addProduct(Product product, Long commerceId) throws CommerceException {
+    public Commerce addProduct(Product product, Long commerceId) throws CommerceNotFoundException {
         Commerce commerce = this.getCommerce(commerceId);
         commerce.getProducts().add(product);
 
@@ -60,7 +60,7 @@ public class CommerceServiceImpl implements CommerceService {
     }
 
     @Override
-    public Commerce updateCommerce(CommerceDTO commerceDTO) throws CommerceException {
+    public Commerce updateCommerce(CommerceDTO commerceDTO) throws CommerceNotFoundException {
         Commerce commerce = this.getCommerce(commerceDTO.getCommerceId());
 
         Commerce commerce1 = this.commerceDTOUtil.toCommerce(commerceDTO);

@@ -1,7 +1,7 @@
 package com.mimka.shoplocbe.controllers;
 
 import com.mimka.shoplocbe.dto.order.OrderDTO;
-import com.mimka.shoplocbe.exception.CommerceException;
+import com.mimka.shoplocbe.exception.CommerceNotFoundException;
 import com.mimka.shoplocbe.facades.OrderFacade;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,7 @@ public class OrderController {
     }
 
     @PostMapping("/")
-    private OrderDTO createOrder (@RequestBody @Valid OrderDTO orderDTO, Principal principal) throws CommerceException {
+    private OrderDTO createOrder (@RequestBody @Valid OrderDTO orderDTO, Principal principal) throws CommerceNotFoundException {
         return this.orderFacade.createOrder(principal.getName(), orderDTO);
     }
 

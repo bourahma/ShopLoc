@@ -4,7 +4,7 @@ import com.mimka.shoplocbe.dto.order.OrderDTO;
 import com.mimka.shoplocbe.dto.order.OrderDTOUtil;
 import com.mimka.shoplocbe.dto.order.OrderProductDTO;
 import com.mimka.shoplocbe.entities.*;
-import com.mimka.shoplocbe.exception.CommerceException;
+import com.mimka.shoplocbe.exception.CommerceNotFoundException;
 import com.mimka.shoplocbe.repositories.OrderRepository;
 import com.mimka.shoplocbe.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order createOrder(Customer customer, OrderDTO orderDTO) throws CommerceException {
+    public Order createOrder(Customer customer, OrderDTO orderDTO) throws CommerceNotFoundException {
         Order order = new Order();
         order.setCustomer(customer);
         order.setCommerce(this.commerceService.getCommerce(orderDTO.getCommerceId()));

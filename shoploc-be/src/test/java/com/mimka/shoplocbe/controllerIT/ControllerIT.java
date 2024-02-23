@@ -1,5 +1,6 @@
 package com.mimka.shoplocbe.controllerIT;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -30,20 +31,13 @@ public abstract class ControllerIT {
     @Autowired
     protected MockMvc mockMvc;
 
+    @Autowired
+    protected ObjectMapper objectMapper;
+
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
             "postgres:15-alpine"
     );
-
-    @BeforeAll
-    static void beforeAll() {
-        postgres.start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        postgres.stop();
-    }
 
     private String authenticateUser (String username, String password, String userType) throws Exception {
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/authentication/" + userType + "/login")
@@ -61,8 +55,15 @@ public abstract class ControllerIT {
 
     @BeforeAll
     public void setup() throws Exception {
+        postgres.start();
+
         customerJWTToken = authenticateUser("Joe", "12345678", "customer");
         merchantJWTToken = authenticateUser("Loris", "12345678", "merchant");
         administratorJWTToken = authenticateUser("Jane", "12345678", "administrator");
+    }
+
+    @AfterAll
+    static void afterAll() {
+        postgres.stop();
     }
 }

@@ -8,7 +8,7 @@ import com.mimka.shoplocbe.dto.product.ProductDTO;
 import com.mimka.shoplocbe.dto.product.ProductDTOUtil;
 import com.mimka.shoplocbe.entities.Commerce;
 import com.mimka.shoplocbe.entities.Product;
-import com.mimka.shoplocbe.exception.CommerceException;
+import com.mimka.shoplocbe.exception.CommerceNotFoundException;
 import com.mimka.shoplocbe.services.CommerceService;
 import com.mimka.shoplocbe.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class CommerceFacadeImpl implements CommerceFacade {
     }
 
     @Override
-    public CommerceDTO getCommerce(Long commerceId) throws CommerceException {
+    public CommerceDTO getCommerce(Long commerceId) throws CommerceNotFoundException {
         Commerce commerce = this.commerceService.getCommerce(commerceId);
 
         return this.commerceDTOUtil.toCommerceDTO(commerce);
@@ -57,7 +57,7 @@ public class CommerceFacadeImpl implements CommerceFacade {
     }
 
     @Override
-    public List<ProductDTO> getCommerceProducts(Long commerceId) throws CommerceException {
+    public List<ProductDTO> getCommerceProducts(Long commerceId) throws CommerceNotFoundException {
         Commerce commerce = this.commerceService.getCommerce(commerceId);
         List<Product> products = commerce.getProducts();
 
@@ -67,7 +67,7 @@ public class CommerceFacadeImpl implements CommerceFacade {
     }
 
     @Override
-    public CommerceDTO addProduct(Long commerceId, ProductDTO productDTO) throws CommerceException {
+    public CommerceDTO addProduct(Long commerceId, ProductDTO productDTO) throws CommerceNotFoundException {
         Product product = this.productService.createProduct(productDTO);
         Commerce commerce = this.commerceService.addProduct(product, commerceId);
 
@@ -98,11 +98,11 @@ public class CommerceFacadeImpl implements CommerceFacade {
     }
 
     @Override
-    public CommerceDTO updateCommerce(CommerceDTO commerceDTO) {
+    public CommerceDTO updateCommerce(CommerceDTO commerceDTO) throws CommerceNotFoundException {
         AddressDTO addressDTO = this.mapAPI.getCoordinates(commerceDTO.getAddressDTO());
         commerceDTO.setAddressDTO(addressDTO);
 
-        Commerce commerce = this.commerceService.createCommerce(commerceDTO);
+        Commerce commerce = this.commerceService.updateCommerce(commerceDTO);
 
         return this.commerceDTOUtil.toCommerceDTO(commerce);
     }
