@@ -3,6 +3,7 @@ package com.mimka.shoplocbe.services;
 import com.mimka.shoplocbe.dto.product.ProductDTO;
 import com.mimka.shoplocbe.dto.product.ProductDTOUtil;
 import com.mimka.shoplocbe.entities.Product;
+import com.mimka.shoplocbe.exception.ProductException;
 import com.mimka.shoplocbe.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,8 +29,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product getProduct(Long productId) {
-        return this.productRepository.findById(productId).get();
+    public Product getProduct(Long productId) throws ProductException {
+        Product product = this.productRepository.findById(productId)
+                .orElseThrow(() -> new ProductException("Product not found for ID : " + productId));
+        return product;
     }
 
     @Override
@@ -39,8 +42,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateProduct(ProductDTO productDTO) {
-        Product product = this.productRepository.findById(productDTO.getProductId()).get();
+    public Product updateProduct(ProductDTO productDTO) throws ProductException {
+        Product product = this.getProduct(productDTO.getProductId());
 
         product.setProductName(productDTO.getProductName());
         product.setDescription(productDTO.getDescription());
@@ -60,8 +63,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void viewProduct(Long productId) {
-        Product product = this.productRepository.findById(productId).get();
+    public void viewProduct(Long productId) throws ProductException {
+        Product product = this.getProduct(productId);
         product.setView(product.getView() + 1);
         this.productRepository.save(product);
     }

@@ -24,6 +24,7 @@ DROP TABLE IF EXISTS Customer_Connection CASCADE;
 DROP TABLE IF EXISTS Viewed_Product CASCADE;
 DROP TABLE IF EXISTS VFP_History CASCADE;
 DROP TABLE IF EXISTS Address CASCADE;
+DROP TABLE IF EXISTS QR_Code_Payment CASCADE;
 
 DROP SEQUENCE IF EXISTS order_sequence CASCADE;
 DROP SEQUENCE IF EXISTS address_sequence CASCADE;
@@ -162,18 +163,25 @@ CREATE TABLE Commerce (
 
 -- Create the Product Table :
 CREATE TABLE Product (
-                         product_id INT DEFAULT nextval('product_sequence') PRIMARY KEY,
-                         product_name VARCHAR(255) NOT NULL,
-                         description TEXT,
-                         price NUMERIC(10,2) NOT NULL,
-                         quantity integer NOT NULL,
-                         reward_points_price NUMERIC(10,2),
-                         is_gift BOOLEAN NOT NULL,
-                         discount_id INT,
-                         commerce_id INT,
-                         view INT,
+    product_id INT DEFAULT nextval('product_sequence') PRIMARY KEY,
+    product_name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price NUMERIC(10,2) NOT NULL,
+    quantity integer NOT NULL,
+    reward_points_price NUMERIC(10,2),
+    is_gift BOOLEAN NOT NULL,
+    discount_id INT,
+    commerce_id INT,
+    view INT,
 
-                         FOREIGN KEY (commerce_id) REFERENCES Commerce(commerce_id)
+    FOREIGN KEY (commerce_id) REFERENCES Commerce(commerce_id)
+);
+
+-- Create FidelityCard Table :
+CREATE TABLE Fidelity_Card (
+    fidelity_card_id VARCHAR(50) PRIMARY KEY,
+    points NUMERIC(10,2) NOT NULL,
+    balance NUMERIC(10,2) NOT NULL
 );
 
 -- Create Customer Table :
@@ -188,7 +196,9 @@ CREATE TABLE Customer (
     phone_number VARCHAR(20),
     role INT NOT NULL,
     is_vfp_membership BOOLEAN DEFAULT false,
+    fidelity_card_id VARCHAR(255),
 
+    FOREIGN KEY (fidelity_card_id) REFERENCES Fidelity_Card (fidelity_card_id),
     FOREIGN KEY (role) REFERENCES Role (role_id)
 );
 
@@ -199,16 +209,6 @@ CREATE TABLE Customer_Connection (
     connect_time TIME,
     disconnect_time TIME,
     customer_id INT,
-
-    FOREIGN KEY (customer_id) REFERENCES Customer(id)
-);
-
--- Create FidelityCard Table :
-CREATE TABLE Fidelity_Card (
-    fidelity_card_id VARCHAR(50) PRIMARY KEY,
-    customer_id INT NOT NULL,
-    points NUMERIC(10,2) NOT NULL,
-    balance NUMERIC(10,2) NOT NULL,
 
     FOREIGN KEY (customer_id) REFERENCES Customer(id)
 );
@@ -262,10 +262,9 @@ CREATE TABLE Orders (
     customer_id INT NOT NULL,
     commerce_id INT NOT NULL,
     order_date DATE,
-    order_status_id INT NOT NULL,
+    order_status VARCHAR(250),
 
     FOREIGN KEY (customer_id) REFERENCES Customer(id),
-    FOREIGN KEY (order_status_id) REFERENCES Order_Status (order_status_id),
     FOREIGN KEY (commerce_id) REFERENCES Commerce(commerce_id)
 );
 
@@ -369,6 +368,17 @@ CREATE TABLE VFP_History (
     validity_date DATE,
 
     FOREIGN KEY (customer_id) REFERENCES Customer(id)
+);
+
+-- Create QR_Code_Payment Table
+CREATE TABLE QR_Code_Payment (
+    qr_code_payment_id VARCHAR(255) PRIMARY KEY,
+    customer_id INT,
+    order_id INT,
+    duration TIME,
+
+    FOREIGN KEY (customer_id) REFERENCES Customer(id),
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id)
 );
 
 -- Function to update VFP status after each purchase

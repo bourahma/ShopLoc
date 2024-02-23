@@ -5,6 +5,7 @@ import com.mimka.shoplocbe.dto.commerce.CommerceDTOUtil;
 import com.mimka.shoplocbe.entities.Address;
 import com.mimka.shoplocbe.entities.Commerce;
 import com.mimka.shoplocbe.entities.Product;
+import com.mimka.shoplocbe.exception.CommerceException;
 import com.mimka.shoplocbe.repositories.CommerceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,9 @@ public class CommerceServiceImpl implements CommerceService {
     }
 
     @Override
-    public Commerce getCommerce (Long id) {
+    public Commerce getCommerce (Long id) throws CommerceException {
+        Commerce commerce = this.commerceRepository.findById(id).orElseThrow(() -> new CommerceException("Commerce not found for ID : " + id));
+
         return this.commerceRepository.findByCommerceId(id);
     }
 
@@ -42,9 +45,10 @@ public class CommerceServiceImpl implements CommerceService {
     }
 
     @Override
-    public Commerce addProduct(Product product, Long commerceId) {
-        Commerce commerce = this.commerceRepository.findByCommerceId(commerceId);
+    public Commerce addProduct(Product product, Long commerceId) throws CommerceException {
+        Commerce commerce = this.getCommerce(commerceId);
         commerce.getProducts().add(product);
+
         this.commerceRepository.save(commerce);
 
         return commerce;
@@ -56,8 +60,8 @@ public class CommerceServiceImpl implements CommerceService {
     }
 
     @Override
-    public Commerce updateCommerce(CommerceDTO commerceDTO) {
-        Commerce commerce = this.commerceRepository.findByCommerceId(commerceDTO.getCommerceId());
+    public Commerce updateCommerce(CommerceDTO commerceDTO) throws CommerceException {
+        Commerce commerce = this.getCommerce(commerceDTO.getCommerceId());
 
         Commerce commerce1 = this.commerceDTOUtil.toCommerce(commerceDTO);
 
@@ -74,7 +78,6 @@ public class CommerceServiceImpl implements CommerceService {
 
         commerce.setAddress(address);
 
-        // TODO : updates the cords.
         this.commerceRepository.save(commerce1);
 
         return commerce;

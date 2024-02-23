@@ -20,10 +20,6 @@ public class FidelityCard {
     @Column(name = "fidelity_card_id")
     private String fidelityCardId;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
-    private Customer customer;
-
     @Column(name = "balance")
     private double balance;
 

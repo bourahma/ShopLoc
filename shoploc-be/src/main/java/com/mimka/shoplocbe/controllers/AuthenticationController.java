@@ -27,7 +27,7 @@ public class AuthenticationController {
 
     @PostMapping("/customer/login")
     public Map<String, String> loginCustomerWithUsername (@RequestBody @Valid AuthDTO authDTO) {
-        log.info("Customer authentication attempt from : {}", authDTO.getUsername());
+        log.info("Customer authentication attempt from : {}", authDTO.getUsername() + " " + authDTO.getPassword());
         return this.authenticationService.loginCustomerWithUsername(authDTO.getUsername(), authDTO.getPassword());
     }
 

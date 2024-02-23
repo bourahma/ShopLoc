@@ -3,6 +3,7 @@ package com.mimka.shoplocbe.controllers;
 import com.mimka.shoplocbe.api.map.MapAPI;
 import com.mimka.shoplocbe.dto.commerce.CommerceDTO;
 import com.mimka.shoplocbe.dto.product.ProductDTO;
+import com.mimka.shoplocbe.exception.CommerceException;
 import com.mimka.shoplocbe.facades.CommerceFacade;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,17 +34,18 @@ public class CommerceController {
     }
 
     @GetMapping("/{commerceId}")
-    public CommerceDTO getCommerce (@PathVariable("commerceId") Long commerceId) {
+    public CommerceDTO getCommerce (@PathVariable("commerceId") Long commerceId) throws CommerceException {
+        System.out.println(commerceId);
         return this.commerceFacade.getCommerce(commerceId);
     }
 
     @PostMapping("/{commerceId}")
-    public CommerceDTO addProduct (@PathVariable("commerceId") Long commerceId, @RequestBody @Valid ProductDTO productDTO) {
+    public CommerceDTO addProduct (@PathVariable("commerceId") Long commerceId, @RequestBody @Valid ProductDTO productDTO) throws CommerceException {
         return this.commerceFacade.addProduct(commerceId, productDTO);
     }
 
     @GetMapping("/{commerceId}/products")
-    public List<ProductDTO> commerceProducts (@PathVariable("commerceId") Long commerceId){
+    public List<ProductDTO> commerceProducts (@PathVariable("commerceId") Long commerceId) throws CommerceException {
         return this.commerceFacade.getCommerceProducts(commerceId);
     }
 

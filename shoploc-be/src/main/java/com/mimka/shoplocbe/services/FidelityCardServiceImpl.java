@@ -41,11 +41,6 @@ public class FidelityCardServiceImpl implements FidelityCardService {
     }
 
     @Override
-    public FidelityCard getFidelityCard(Customer customer) {
-        return this.fidelityCardRepository.findByCustomer(customer);
-    }
-
-    @Override
     public void earnPoints(String fidelityCardId, long commerceId, double amount) {
         FidelityCard fidelityCard = this.fidelityCardRepository.findById(fidelityCardId).get();
         fidelityCard.setPoints(fidelityCard.getPoints() + amount);

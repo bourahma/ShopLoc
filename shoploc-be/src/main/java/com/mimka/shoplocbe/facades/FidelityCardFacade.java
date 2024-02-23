@@ -31,7 +31,7 @@ public class FidelityCardFacade {
 
     public FidelityCardDTO getCustomerFidelityCard (Principal principal) {
         Customer customer = this.customerService.getCustomerByUsername(principal.getName()); // TODO : Si le customer n'existe lever une erruer et la gérer.
-        FidelityCard fidelityCard = this.fidelityCardService.getFidelityCard(customer);
+        FidelityCard fidelityCard = customer.getFidelityCard();
 
         return this.fidelityCardDotUtil.fidelityCardDTO(fidelityCard);
     }

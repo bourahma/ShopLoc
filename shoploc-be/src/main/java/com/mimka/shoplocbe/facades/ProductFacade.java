@@ -1,16 +1,17 @@
 package com.mimka.shoplocbe.facades;
 
 import com.mimka.shoplocbe.dto.product.ProductDTO;
+import com.mimka.shoplocbe.exception.ProductException;
 
 import java.util.List;
 
 public interface ProductFacade {
 
-    ProductDTO getProduct (Long productId);
+    ProductDTO getProduct (Long productId) throws ProductException;
 
     void deleteProduct (Long productId);
 
-    ProductDTO updateProduct (ProductDTO productDTO);
+    ProductDTO updateProduct (ProductDTO productDTO) throws ProductException;
 
-    void viewProduct(Long productId);
+    void viewProduct(Long productId) throws ProductException;
 }

@@ -9,8 +9,6 @@ public interface FidelityCardService {
 
     FidelityCard createFidelityCard ();
 
-    FidelityCard getFidelityCard (Customer customer);
-
     void earnPoints(String fidelityCardId, long commerceId, double amount);
 
 

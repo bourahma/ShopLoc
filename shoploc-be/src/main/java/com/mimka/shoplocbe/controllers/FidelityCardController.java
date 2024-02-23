@@ -6,8 +6,6 @@ import com.mimka.shoplocbe.dto.fidelityCard.FidelityCardDTO;
 import com.mimka.shoplocbe.dto.fidelityCard.PointTransactionDTO;
 import com.mimka.shoplocbe.facades.FidelityCardFacade;
 import jakarta.validation.Valid;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -22,12 +20,12 @@ public class FidelityCardController {
     public FidelityCardController(FidelityCardFacade fidelityCardFacade) {
         this.fidelityCardFacade = fidelityCardFacade;
     }
-    @PreAuthorize("hasRole('SCOPE_CUSTOMER')")
+
     @GetMapping(value = "/")
     public FidelityCardDTO getCustomerFidelityCard (Principal principal) {
         return this.fidelityCardFacade.getCustomerFidelityCard(principal);
     }
-    @PreAuthorize("hasRole('SCOPE_MERCHANT')")
+
     @PostMapping(value = "/credit")
     public FidelityCardDTO creditFidelityCardBalance (@RequestBody @Valid CreditBalanceDTO creditBalanceDTO) {
         return this.fidelityCardFacade.creditFidelityCardBalance(creditBalanceDTO);
