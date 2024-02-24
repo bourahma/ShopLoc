@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -42,7 +43,12 @@ public class FidelityCardServiceImpl implements FidelityCardService {
 
     @Override
     public void earnPoints(String fidelityCardId, long commerceId, double amount) {
-        FidelityCard fidelityCard = this.fidelityCardRepository.findById(fidelityCardId).get();
+        Optional<FidelityCard> optionalFidelityCard = this.fidelityCardRepository.findById(fidelityCardId);
+        FidelityCard fidelityCard = null;
+        if (optionalFidelityCard.isPresent()) {
+            fidelityCard = optionalFidelityCard.get();
+        }
+
         fidelityCard.setPoints(fidelityCard.getPoints() + amount);
 
         createPointTransaction(fidelityCard, commerceId, amount, TransactionType.EARNED);
@@ -51,7 +57,11 @@ public class FidelityCardServiceImpl implements FidelityCardService {
 
     @Override
     public void spendPoints(String fidelityCardId, long commerceId, double amount) {
-        FidelityCard fidelityCard = this.fidelityCardRepository.findById(fidelityCardId).get();
+        Optional<FidelityCard> optionalFidelityCard = this.fidelityCardRepository.findById(fidelityCardId);
+        FidelityCard fidelityCard = null;
+        if (optionalFidelityCard.isPresent()) {
+            fidelityCard = optionalFidelityCard.get();
+        }
 
         if (fidelityCard.getPoints() >= amount) {
             fidelityCard.setPoints(fidelityCard.getPoints() - amount);
