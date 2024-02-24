@@ -38,7 +38,7 @@ jobs:
         - name: Run Tests
           run: |
             cd shoploc-be
-            mvn test
+            mvn verify
 
         # CI Sonar
         - uses: actions/checkout@v3

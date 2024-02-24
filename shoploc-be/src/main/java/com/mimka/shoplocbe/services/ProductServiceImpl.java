@@ -52,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(productDTO.getPrice());
         product.setRewardPointsPrice(productDTO.getRewardPointsPrice());
         product.setQuantity(productDTO.getQuantity());
-        product.setGift(productDTO.getIsGift());
+        product.setGift(productDTO.isGift());
 
         return this.productRepository.save(product);
     }

@@ -1,6 +1,6 @@
 -- FidelityCard data insertion :
 INSERT INTO Fidelity_Card (fidelity_card_id, points, balance) VALUES
-    ('123e4567-e89b-12d3-a456-426614174000', 100, 100);
+    ('123e4567-e89b-12d3-a456-426614174000', 54.50, 49.50);
 
 -- Role's insert.
 INSERT INTO Role (role_id, role_name)
@@ -32,24 +32,26 @@ INSERT INTO Address (address_id, street, postal_code, city, latitude, longitude)
     (5, '23 Rue de Paris', 59000, 'Lille', 50.6300, 3.0556),
     (6, '18 Rue des Ponts de Comines', 59000, 'Lille', 50.6389, 3.0600),
     (7, '30 Rue de la Barre', 59000, 'Lille', 50.6378, 3.0572),
-    (8, '10 Rue de Béthune', 59000, 'Lille', 50.6294, 3.0639);
+    (8, '10 Rue de Béthune', 59000, 'Lille', 50.6294, 3.0639),
+    (9, 'NULL', 59000, 'NULL', 0.0, 0.0);
 
 
 -- Commerce's insertion :
-INSERT INTO Commerce (commerce_id, commerce_name, opening_hour, closing_hour, image_url, address_id) VALUES
-    (1, 'Boulangerie du Coin', '08:00:00', '18:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/mae-mu-_h-2jrL9cMU-unsplash.jpg', 1),
-    (2, 'Le Petit Café', '09:00:00', '20:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/iulia-topan-rI4ccCl8VwQ-unsplash.jpg', 2),
-    (3, 'Pizzeria Bella Napoli', '10:00:00', '17:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/pablo-pacheco-D3Mag4BKqns-unsplash.jpg', 3),
-    (4, 'Magasin Magique', '07:30:00', '16:30:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/brooke-lark-Uto4sJ8e_5k-unsplash.jpg', 4),
-    (5, 'Café des Artistes', '11:00:00', '19:30:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/oscar-nord-6rgwUHMokWU-unsplash.jpg', 5),
+INSERT INTO Commerce (commerce_id, commerce_name, opening_hour, closing_hour, image_url, address_id, disabled) VALUES
+    (1, 'Boulangerie du Coin', '08:00:00', '18:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/mae-mu-_h-2jrL9cMU-unsplash.jpg', 1, FALSE),
+    (2, 'Le Petit Café', '09:00:00', '20:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/iulia-topan-rI4ccCl8VwQ-unsplash.jpg', 2, FALSE),
+    (3, 'Pizzeria Bella Napoli', '10:00:00', '17:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/pablo-pacheco-D3Mag4BKqns-unsplash.jpg', 3, FALSE),
+    (4, 'Magasin Magique', '07:30:00', '16:30:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/brooke-lark-Uto4sJ8e_5k-unsplash.jpg', 4, FALSE),
+    (5, 'Café des Artistes', '11:00:00', '19:30:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/oscar-nord-6rgwUHMokWU-unsplash.jpg', 5, FALSE),
     --
-    (6, 'Fleuriste Parfumé', '09:30:00', '17:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/roman-kraft-_oH66az_yug-unsplash.jpg', 6),
-    (7, 'Artisan du Bois', '10:00:00', '18:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/bailey-alexander-DAd_Wn6Mj78-unsplash.jpg', 7),
-    (8, 'Délice du Café', '07:00:00', '21:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/milo-miloezger-rKYRJu0n06Y-unsplash.jpg', 8);
+    (6, 'Fleuriste Parfumé', '09:30:00', '17:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/roman-kraft-_oH66az_yug-unsplash.jpg', 6, FALSE),
+    (7, 'Artisan du Bois', '10:00:00', '18:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/bailey-alexander-DAd_Wn6Mj78-unsplash.jpg', 7, FALSE),
+    (8, 'Délice du Café', '07:00:00', '21:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/milo-miloezger-rKYRJu0n06Y-unsplash.jpg', 8, FALSE),
+    (9, 'NULL', '07:00:00', '21:00:00', 'NULL', 9, TRUE);
     
 -- Product's insertion :
 INSERT INTO Product (product_id, product_name, description, price, quantity, reward_points_price, is_gift, discount_id, commerce_id, view) VALUES
-    (1, 'Pain au levain', 'Délicieux pain croustillant', 3.50, 150, 3, TRUE, 1, 1, 12),
+    (1, 'Pain au levain', 'Délicieux pain croustillant', 3.50, 150, 3, TRUE, 0, 1, 12),
     (2, 'Croissant aux amandes', 'Feuilleté et garni d''amandes', 2.75, 100, 2, TRUE, 2, 8,45),
     (3, 'Tarte aux fruits', 'Tarte aux fruits de saison', 12.99, 20, 12, TRUE, 1, 5,15),
     (4, 'Baguette traditionnelle', 'Baguette française classique', 1.99, 200, 1, TRUE, 1, 1,12),
@@ -81,16 +83,16 @@ INSERT INTO Order_Product (order_product_id, order_id, quantity) VALUES
 
 -- Insert PointTransaction for Joe
 INSERT INTO Point_Transaction (point_transaction_id, fidelity_card_id, transaction_date, type, amount, commerce_id) VALUES
-                                                                                            (nextval('point_transaction_sequence'),'123e4567-e89b-12d3-a456-426614174000', '2024-01-26', 'EARNED', 200.00, 1),
-                                                                                            (nextval('point_transaction_sequence'),'123e4567-e89b-12d3-a456-426614174000', '2024-01-27', 'SPENT', -150.00, 2),
-                                                                                            (nextval('point_transaction_sequence'),'123e4567-e89b-12d3-a456-426614174000', '2024-01-28', 'EARNED', 100.00, 3),
-                                                                                            (nextval('point_transaction_sequence'),'123e4567-e89b-12d3-a456-426614174000', '2024-01-29', 'EARNED', 50.00, 4),
-                                                                                            (nextval('point_transaction_sequence'),'123e4567-e89b-12d3-a456-426614174000', '2024-01-30', 'SPENT', -200.00, 5);
+                                                                                            (nextval('point_transaction_sequence'),'123e4567-e89b-12d3-a456-426614174000', '2024-01-26', 'EARNED', 20.00, 1),
+                                                                                            (nextval('point_transaction_sequence'),'123e4567-e89b-12d3-a456-426614174000', '2024-01-27', 'SPENT', -15.50, 2),
+                                                                                            (nextval('point_transaction_sequence'),'123e4567-e89b-12d3-a456-426614174000', '2024-01-28', 'EARNED', 18.00, 3),
+                                                                                            (nextval('point_transaction_sequence'),'123e4567-e89b-12d3-a456-426614174000', '2024-01-29', 'EARNED', 52.00, 4),
+                                                                                            (nextval('point_transaction_sequence'),'123e4567-e89b-12d3-a456-426614174000', '2024-01-30', 'SPENT', -20.00, 5);
 
 -- Insert BalanceTransaction for Joe
 INSERT INTO Balance_Transaction (balance_transaction_id, fidelity_card_id, transaction_date, type, amount, commerce_id) VALUES
-                                                                                                   (nextval('balance_transaction_sequence'), '123e4567-e89b-12d3-a456-426614174000', '2024-01-26', 'CREDIT', 150.00, NULL),
-                                                                                                   (nextval('balance_transaction_sequence'), '123e4567-e89b-12d3-a456-426614174000', '2024-01-27', 'DEBIT', -100.00, 2),
-                                                                                                   (nextval('balance_transaction_sequence'), '123e4567-e89b-12d3-a456-426614174000', '2024-01-28', 'CREDIT', 200.00, NULL),
-                                                                                                   (nextval('balance_transaction_sequence'), '123e4567-e89b-12d3-a456-426614174000', '2024-01-29', 'DEBIT', -50.00, 4),
-                                                                                                   (nextval('balance_transaction_sequence'), '123e4567-e89b-12d3-a456-426614174000', '2024-01-30', 'CREDIT', 300.00, NULL);
+                                                                                                   (nextval('balance_transaction_sequence'), '123e4567-e89b-12d3-a456-426614174000', '2024-01-26', 'CREDIT', 15.00, NULL),
+                                                                                                   (nextval('balance_transaction_sequence'), '123e4567-e89b-12d3-a456-426614174000', '2024-01-27', 'DEBIT', -10.00, 2),
+                                                                                                   (nextval('balance_transaction_sequence'), '123e4567-e89b-12d3-a456-426614174000', '2024-01-28', 'CREDIT', 20.00, NULL),
+                                                                                                   (nextval('balance_transaction_sequence'), '123e4567-e89b-12d3-a456-426614174000', '2024-01-29', 'DEBIT', -5.50, 4),
+                                                                                                   (nextval('balance_transaction_sequence'), '123e4567-e89b-12d3-a456-426614174000', '2024-01-30', 'CREDIT', 30.00, NULL);

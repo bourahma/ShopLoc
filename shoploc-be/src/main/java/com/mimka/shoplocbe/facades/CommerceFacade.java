@@ -20,7 +20,7 @@ public interface CommerceFacade {
 
     List<CommerceDTO> getCommerceByTypes (String commerceType);
 
-    void deleteCommerce (Long commerceId);
+    void disableCommerce (Long commerceId);
 
     CommerceDTO updateCommerce (CommerceDTO commerceDTO) throws CommerceNotFoundException;
 }

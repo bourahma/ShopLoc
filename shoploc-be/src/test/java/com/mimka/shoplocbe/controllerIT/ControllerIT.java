@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -24,10 +23,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @AutoConfigureMockMvc
 public abstract class ControllerIT {
 
-    protected String customerJWTToken;
-    protected String merchantJWTToken;
-    protected String administratorJWTToken;
-
     @Autowired
     protected MockMvc mockMvc;
 
@@ -39,27 +34,9 @@ public abstract class ControllerIT {
             "postgres:15-alpine"
     );
 
-    private String authenticateUser (String username, String password, String userType) throws Exception {
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/authentication/" + userType + "/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\": \"" + username + "\", \"password\": \"" + password + "\"}"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.access-token").exists())
-                .andReturn();
-
-        String jsonResponse = result.getResponse().getContentAsString();
-        String accessToken = JsonPath.read(jsonResponse, "$.access-token");
-
-        return accessToken;
-    }
-
     @BeforeAll
     public void setup() throws Exception {
         postgres.start();
-
-        customerJWTToken = authenticateUser("Joe", "12345678", "customer");
-        merchantJWTToken = authenticateUser("Loris", "12345678", "merchant");
-        administratorJWTToken = authenticateUser("Jane", "12345678", "administrator");
     }
 
     @AfterAll

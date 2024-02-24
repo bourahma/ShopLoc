@@ -44,7 +44,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
     @Override
     public OrderDTO settleOrder (String customerUsername, Long orderId, boolean usingPoints) {
-        double total = this.orderService.getOrderTotalPrice(orderId);
+        double total = this.orderService.getOrderTotalPrice(orderId, usingPoints);
         Order order = null;
         if (this.customerService.orderSettled(customerUsername, total, usingPoints)) {
             order = this.orderService.payOrder(orderId);

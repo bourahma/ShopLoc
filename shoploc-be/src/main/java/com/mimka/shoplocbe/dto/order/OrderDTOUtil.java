@@ -41,6 +41,7 @@ public class OrderDTOUtil {
                         orderProduct.getProduct().getProductId(),
                         orderProduct.getProduct().getProductName(),
                         orderProduct.getProduct().getPrice(),
+                        orderProduct.getProduct().getRewardPointsPrice(),
                         orderProduct.getQuantity()))
                 .collect(Collectors.toSet());
     };

@@ -27,19 +27,23 @@ public class CommerceServiceImpl implements CommerceService {
 
     @Override
     public List<Commerce> getCommerces () {
-        return this.commerceRepository.findAll();
+        return this.commerceRepository.findByDisabled(false);
     }
 
     @Override
     public Commerce getCommerce (Long id) throws CommerceNotFoundException {
-        Commerce commerce = this.commerceRepository.findById(id).orElseThrow(() -> new CommerceNotFoundException("Commerce not found for ID : " + id));
+        Commerce commerce = this.commerceRepository.findByCommerceIdAndDisabled(id, false);
+        if (commerce == null) {
+            throw new CommerceNotFoundException("Commerce not found for ID : " + id);
+        }
 
-        return this.commerceRepository.findByCommerceId(id);
+        return commerce;
     }
 
     @Override
     public Commerce createCommerce(CommerceDTO commerceDTO) {
         Commerce commerce = this.commerceDTOUtil.toCommerce(commerceDTO);
+        commerce.setDisabled(false);
 
         return this.commerceRepository.save(commerce);
     }
@@ -47,6 +51,7 @@ public class CommerceServiceImpl implements CommerceService {
     @Override
     public Commerce addProduct(Product product, Long commerceId) throws CommerceNotFoundException {
         Commerce commerce = this.getCommerce(commerceId);
+        product.setCommerce(commerce);
         commerce.getProducts().add(product);
 
         this.commerceRepository.save(commerce);
@@ -55,8 +60,10 @@ public class CommerceServiceImpl implements CommerceService {
     }
 
     @Override
-    public void deleteCommerce(Long commerceId) {
-        this.commerceRepository.deleteById(commerceId);
+    public void disableCommerce(Long commerceId) {
+        Commerce commerce = this.commerceRepository.findByCommerceIdAndDisabled(commerceId, false);
+        commerce.setDisabled(true);
+        this.commerceRepository.save(commerce);
     }
 
     @Override

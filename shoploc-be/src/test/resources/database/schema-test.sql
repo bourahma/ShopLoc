@@ -156,6 +156,7 @@ CREATE TABLE Commerce (
                           image_url VARCHAR(255),
                           commerce_type_id INT,
                           address_id INT,
+                          disabled BOOLEAN NOT NULL,
 
                           FOREIGN KEY (commerce_type_id) REFERENCES Commerce_Type (commerce_type_id),
                           FOREIGN KEY (address_id) REFERENCES Address (address_id)
@@ -173,6 +174,7 @@ CREATE TABLE Product (
                          discount_id INT,
                          commerce_id INT,
                          view INT,
+                         image_url VARCHAR(255),
 
                          FOREIGN KEY (commerce_id) REFERENCES Commerce(commerce_id)
 );

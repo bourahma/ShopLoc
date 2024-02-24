@@ -1,5 +1,8 @@
 package com.mimka.shoplocbe.dto.order;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +17,10 @@ import java.util.Set;
 @NoArgsConstructor
 public class OrderDTO {
 
+    private Long orderId;
+
+    @NotNull
+    @Positive(message = "L'id du commerce est requis et doit être un nombre positif.")
     private long commerceId;
 
     private String commerceName;
@@ -22,5 +29,7 @@ public class OrderDTO {
 
     private String status;
 
+    @Valid
+    @NotNull(message = "Un produit est requis pour effectuer une commande.")
     private Set<OrderProductDTO> products;
 }

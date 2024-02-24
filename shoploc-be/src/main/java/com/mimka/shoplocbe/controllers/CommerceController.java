@@ -57,12 +57,14 @@ public class CommerceController {
 
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    public CommerceDTO addCommerce (@RequestBody @Valid CommerceDTO commerceDTO) {
+    public CommerceDTO createCommerce (@RequestBody @Valid CommerceDTO commerceDTO) {
         return this.commerceFacade.addCommerce(commerceDTO);
     }
 
     @DeleteMapping("/{commerceId}")
-    public void deleteCommerce (@PathVariable("commerceId") Long commerceId) {
-        this.commerceFacade.deleteCommerce(commerceId);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void disableCommerce (@PathVariable("commerceId") Long commerceId) {
+        this.commerceFacade.disableCommerce(commerceId);
     }
+    // TODO : RF - Commerce is disabled, not deleted.
 }

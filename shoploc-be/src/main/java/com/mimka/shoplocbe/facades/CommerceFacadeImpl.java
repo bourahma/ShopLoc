@@ -10,10 +10,12 @@ import com.mimka.shoplocbe.entities.Commerce;
 import com.mimka.shoplocbe.entities.Product;
 import com.mimka.shoplocbe.exception.CommerceNotFoundException;
 import com.mimka.shoplocbe.services.CommerceService;
+import com.mimka.shoplocbe.services.ImageService;
 import com.mimka.shoplocbe.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.List;
 
 @Component
@@ -23,6 +25,8 @@ public class CommerceFacadeImpl implements CommerceFacade {
 
     private final ProductService productService;
 
+    private final ImageService imageService;
+
     private final MapAPI mapAPI;
 
     private final CommerceDTOUtil commerceDTOUtil;
@@ -31,9 +35,10 @@ public class CommerceFacadeImpl implements CommerceFacade {
 
 
     @Autowired
-    public CommerceFacadeImpl(CommerceService commerceService, ProductService productService, MapAPI mapAPI, CommerceDTOUtil commerceDTOUtil, ProductDTOUtil productDTOUtil) {
+    public CommerceFacadeImpl(CommerceService commerceService, ProductService productService, ImageService imageService, MapAPI mapAPI, CommerceDTOUtil commerceDTOUtil, ProductDTOUtil productDTOUtil) {
         this.commerceService = commerceService;
         this.productService = productService;
+        this.imageService = imageService;
         this.mapAPI = mapAPI;
         this.commerceDTOUtil = commerceDTOUtil;
         this.productDTOUtil = productDTOUtil;
@@ -52,6 +57,28 @@ public class CommerceFacadeImpl implements CommerceFacade {
         commerceDTO.setAddressDTO(addressDTO);
 
         Commerce commerce = this.commerceService.createCommerce(commerceDTO);
+        String imageUrl = "URL:/commerce-image";
+        try {
+            imageUrl = this.imageService.uploadImage(commerceDTO.getMultipartFile());
+        } catch (Exception e) {
+            System.out.println("Error");
+        }
+        commerce.setImageUrl(imageUrl);
+
+        return this.commerceDTOUtil.toCommerceDTO(commerce);
+    }
+
+    @Override
+    public CommerceDTO addProduct(Long commerceId, ProductDTO productDTO) throws CommerceNotFoundException {
+        Product product = this.productService.createProduct(productDTO);
+        String imageUrl = "URL:/product-image";
+        try {
+            imageUrl = this.imageService.uploadImage(productDTO.getMultipartFile());
+        } catch (Exception e) {
+            System.out.println("Error"); // TODO : create amazon S3
+        }
+        product.setImageUrl(imageUrl);
+        Commerce commerce = this.commerceService.addProduct(product, commerceId);
 
         return this.commerceDTOUtil.toCommerceDTO(commerce);
     }
@@ -64,14 +91,6 @@ public class CommerceFacadeImpl implements CommerceFacade {
         return products
                 .stream()
                 .map(productDTOUtil::toProductDTO).toList();
-    }
-
-    @Override
-    public CommerceDTO addProduct(Long commerceId, ProductDTO productDTO) throws CommerceNotFoundException {
-        Product product = this.productService.createProduct(productDTO);
-        Commerce commerce = this.commerceService.addProduct(product, commerceId);
-
-        return this.commerceDTOUtil.toCommerceDTO(commerce);
     }
 
     @Override
@@ -93,8 +112,8 @@ public class CommerceFacadeImpl implements CommerceFacade {
     }
 
     @Override
-    public void deleteCommerce(Long commerceId) {
-        this.commerceService.deleteCommerce(commerceId);
+    public void disableCommerce(Long commerceId) {
+        this.commerceService.disableCommerce(commerceId);
     }
 
     @Override

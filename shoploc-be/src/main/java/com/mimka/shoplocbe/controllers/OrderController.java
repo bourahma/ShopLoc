@@ -36,7 +36,7 @@ public class OrderController {
     }
 
     @GetMapping("/qr-code-uuid/{orderId}")
-    private Map<String,String> getQrCodeSettlePoints (@PathVariable long orderId, Principal principal) {
+    private Map<String,String> getQrCodeSettle (@PathVariable long orderId, Principal principal) {
         return this.orderFacade.generateQrCode(orderId, principal);
     }
 

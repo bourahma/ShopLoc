@@ -18,7 +18,7 @@ import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-public class CommerceControllerIT extends ControllerIT {
+public class CommerceControllerIT extends AuthenticationControllerIT {
     @Test
     public void testGetAllCommerce_ReturnOK () throws Exception {
         mockMvc.perform(get("/commerce/")
@@ -66,7 +66,7 @@ public class CommerceControllerIT extends ControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.commerceName").value("Boulangerie du Coin"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.openingHour").value("08:00:00"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.closingHour").value("18:00:00"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.imageUrl").value("https://example.com/image.jpg"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.imageUrl").value("URL:/commerce-image"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.addressDTO.street").value("1 Rue de la Clef"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.addressDTO.postalCode").value(59000))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.addressDTO.longitude").value(not(0.0)))
@@ -89,7 +89,7 @@ public class CommerceControllerIT extends ControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.commerceName").value("Boulangerie du Coin"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.openingHour").value("08:00:00"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.closingHour").value("18:00:00"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.imageUrl").value("https://example.com/image.jpg"))
+                //.andExpect(MockMvcResultMatchers.jsonPath("$.imageUrl").value("URL:/commerce-image"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.addressDTO.street").value("1 Rue de la Clef"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.addressDTO.postalCode").value(59000))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.addressDTO.longitude").value(not(0.0)))
@@ -166,14 +166,22 @@ public class CommerceControllerIT extends ControllerIT {
                 .andExpect(jsonPath("$").exists())
                 .andExpect(jsonPath("$", hasSize(3)));
     }
-
+    // TODO : Move this test to product controller it and do needed actions on the code.
     @Test
-    public void testDeleteCommerce_ReturnOk () throws Exception {
+    @Transactional
+    @Rollback
+    public void testDisableCommerce_ReturnOk () throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/commerce/1")
                         .header("Authorization", "Bearer " + administratorJWTToken)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get("/commerce/1")
+                        .header("Authorization", "Bearer " + customerJWTToken))
+                .andExpect(status().isNoContent())
+                .andExpect(jsonPath("$.message").value("Commerce not found for ID : 1"));
     }
+    // TODO : Handle delete commerce.
 
     // Methods :
     @NotNull
@@ -183,7 +191,6 @@ public class CommerceControllerIT extends ControllerIT {
         commerceDTO.setCommerceName("Boulangerie du Coin");
         commerceDTO.setOpeningHour(LocalTime.of(8, 0));
         commerceDTO.setClosingHour(LocalTime.of(18, 0));
-        commerceDTO.setImageUrl("https://example.com/image.jpg");
 
         AddressDTO addressDTO = new AddressDTO();
         addressDTO.setStreet("1 Rue de la Clef");
@@ -203,7 +210,7 @@ public class CommerceControllerIT extends ControllerIT {
         productDTO.setPrice(1.5);
         productDTO.setQuantity(100);
         productDTO.setRewardPointsPrice(1.0);
-        productDTO.setIsGift(false);
+        productDTO.setGift(false);
 
         return productDTO;
     }

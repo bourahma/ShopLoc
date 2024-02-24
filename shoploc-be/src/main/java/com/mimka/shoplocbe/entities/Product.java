@@ -44,6 +44,13 @@ public class Product {
     @Column(name = "view")
     private Long view;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    @ManyToOne
+    @JoinColumn(name = "commerce_id", referencedColumnName = "commerce_id")
+    private Commerce commerce;
+
     @Override
     public String toString() {
         return "Product{" +

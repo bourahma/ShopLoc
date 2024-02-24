@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -34,9 +35,11 @@ public class ProductDTO {
     private double rewardPointsPrice;
 
     @NotNull(message = "Le statut de cadeau est requis")
-    private Boolean isGift;
+    private boolean isGift;
+
+    private Long commerceId;
 
     private Long discountId;
 
-    private Long view;
+    private MultipartFile multipartFile;
 }

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalTime;
 @Getter
@@ -27,10 +28,12 @@ public class CommerceDTO {
     @NotNull(message = "L'heure de fermeture est requise")
     private LocalTime closingHour;
 
-    @NotBlank(message = "L'URL de l'image est requise")
     private String imageUrl;
+
+    private MultipartFile multipartFile;
+
+    private boolean disabled;
 
     @NotNull(message = "Les informations d'adresse sont requises")
     private AddressDTO addressDTO;
-
 }

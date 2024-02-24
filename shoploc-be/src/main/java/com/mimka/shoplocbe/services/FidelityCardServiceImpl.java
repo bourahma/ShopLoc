@@ -65,7 +65,7 @@ public class FidelityCardServiceImpl implements FidelityCardService {
 
     private void createPointTransaction(FidelityCard fidelityCard, long commerceId, double amount, TransactionType type) {
         PointTransaction transaction = new PointTransaction();
-        transaction.setCommerce(this.commerceRepository.findByCommerceId(commerceId));
+        transaction.setCommerce(this.commerceRepository.findByCommerceIdAndDisabled(commerceId, false));
         transaction.setTransactionDate(LocalDateTime.now());
         transaction.setType(type);
         transaction.setAmount(amount);
@@ -134,7 +134,7 @@ public class FidelityCardServiceImpl implements FidelityCardService {
         transaction.setAmount(amount);
 
         if (commerceId != 0) {
-            Commerce commerce = this.commerceRepository.findByCommerceId(commerceId);
+            Commerce commerce = this.commerceRepository.findByCommerceIdAndDisabled(commerceId, false);
             transaction.setCommerce(commerce);
         }
 

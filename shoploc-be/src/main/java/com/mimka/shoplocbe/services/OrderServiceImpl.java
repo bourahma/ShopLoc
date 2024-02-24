@@ -68,8 +68,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public double getOrderTotalPrice(Long orderId) {
-        return this.getOrderTotal(orderId, false);
+    public double getOrderTotalPrice(Long orderId, boolean usingPoints) {
+        return this.getOrderTotal(orderId, usingPoints);
     }
 
     @Override

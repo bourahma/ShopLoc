@@ -35,13 +35,12 @@ public class Commerce {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Column(name = "disabled")
+    private boolean disabled;
+
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "address_id")
     private Address address;
-
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "commerce_id", referencedColumnName = "utilisateur_id")
-    private Merchant merchant;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "commerce_id", referencedColumnName = "commerce_id")

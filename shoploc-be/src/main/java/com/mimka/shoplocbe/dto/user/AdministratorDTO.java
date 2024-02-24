@@ -1,5 +1,6 @@
 package com.mimka.shoplocbe.dto.user;
 
+import com.mimka.shoplocbe.entities.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,4 +25,5 @@ public class AdministratorDTO {
 
     private LocalDate subscriptionDate;
 
+    private Role role;
 }

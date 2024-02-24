@@ -11,7 +11,7 @@ public interface OrderService {
 
     Order payOrder (Long orderId);
 
-    double getOrderTotalPrice (Long orderId);
+    double getOrderTotalPrice (Long orderId, boolean usingPoints);
 
     double getOrderTotalPointsPrice(Long orderId);
 

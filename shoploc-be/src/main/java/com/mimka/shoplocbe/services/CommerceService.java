@@ -17,7 +17,7 @@ public interface CommerceService {
 
     Commerce addProduct (Product product, Long commerceId) throws CommerceNotFoundException;
 
-    void deleteCommerce (Long commerceId);
+    void disableCommerce (Long commerceId);
 
     Commerce updateCommerce (CommerceDTO commerceDTO) throws CommerceNotFoundException;
 }
