@@ -1,7 +1,6 @@
 package com.mimka.shoplocbe.controllers;
 
 import com.mimka.shoplocbe.dto.product.ProductDTO;
-import com.mimka.shoplocbe.entities.Product;
 import com.mimka.shoplocbe.exception.ProductException;
 import com.mimka.shoplocbe.facades.ProductFacade;
 import jakarta.validation.Valid;

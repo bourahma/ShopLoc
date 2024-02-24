@@ -3,8 +3,6 @@ package com.mimka.shoplocbe.facades;
 import com.mimka.shoplocbe.dto.product.ProductDTO;
 import com.mimka.shoplocbe.exception.ProductException;
 
-import java.util.List;
-
 public interface ProductFacade {
 
     ProductDTO getProduct (Long productId) throws ProductException;

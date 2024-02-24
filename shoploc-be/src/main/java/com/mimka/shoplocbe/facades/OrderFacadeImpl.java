@@ -62,8 +62,8 @@ public class OrderFacadeImpl implements OrderFacade {
     }
 
     @Override
-    public Map<String,String> settleOrderUsingPointsQRCode(String QRCodeUUID) {
-        QRCodePayment qrCodePayment = this.qrCodePaymentService.getQRCodePayment(QRCodeUUID);
+    public Map<String,String> settleOrderUsingPointsQRCode(String qRCodeUUID) {
+        QRCodePayment qrCodePayment = this.qrCodePaymentService.getQRCodePayment(qRCodeUUID);
         Order order = qrCodePayment.getOrder();
         Customer customer = qrCodePayment.getCustomer();
         this.settleOrder(customer.getUsername(), order.getOrderId(), true);
@@ -73,8 +73,8 @@ public class OrderFacadeImpl implements OrderFacade {
     }
 
     @Override
-    public Map<String,String> settleOrderUsingBalanceQRCode(String QRCodeUUID) {
-        QRCodePayment qrCodePayment = this.qrCodePaymentService.getQRCodePayment(QRCodeUUID);
+    public Map<String,String> settleOrderUsingBalanceQRCode(String qRCodeUUID) {
+        QRCodePayment qrCodePayment = this.qrCodePaymentService.getQRCodePayment(qRCodeUUID);
         Order order = qrCodePayment.getOrder();
         Customer customer = qrCodePayment.getCustomer();
         this.settleOrder(customer.getUsername(), order.getOrderId(), false);

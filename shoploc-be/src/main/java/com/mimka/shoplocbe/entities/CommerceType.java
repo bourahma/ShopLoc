@@ -2,7 +2,7 @@ package com.mimka.shoplocbe.entities;
 
 import jakarta.persistence.*;
 
-public class Commerce_type {
+public class CommerceType {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "commerce_type_sequence")
     private Long id;

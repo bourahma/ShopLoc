@@ -1,6 +1,5 @@
 package com.mimka.shoplocbe.dto.product;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

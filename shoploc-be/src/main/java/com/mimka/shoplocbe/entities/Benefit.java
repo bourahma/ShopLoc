@@ -15,7 +15,7 @@ public class Benefit {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "benefit_sequence")
     @SequenceGenerator(name = "benefit_sequence", sequenceName = "benefit_seq", allocationSize = 1, initialValue = 1)
-    private Long benefit_id;
+    private Long benefitId;
 
     @Column(name = "type", nullable = false)
     private String type;

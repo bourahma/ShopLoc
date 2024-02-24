@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PointTransactionRepository extends JpaRepository<PointTransaction, Long > {
-    //List<PointTransaction> findByCustomerAndType(User customer, TransactionType transactionType);
+
 }

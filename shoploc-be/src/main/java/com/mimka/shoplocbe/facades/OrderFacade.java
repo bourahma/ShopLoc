@@ -15,7 +15,7 @@ public interface OrderFacade {
 
     Map<String,String> generateQrCode (long orderId, Principal principal);
 
-    Map<String,String> settleOrderUsingPointsQRCode (String QRCodeUUID);
+    Map<String,String> settleOrderUsingPointsQRCode (String qRCodeUUID);
 
-    Map<String,String> settleOrderUsingBalanceQRCode (String QRCodeUUID);
+    Map<String,String> settleOrderUsingBalanceQRCode (String qRCodeUUID);
 }

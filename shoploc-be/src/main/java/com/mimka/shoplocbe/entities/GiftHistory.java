@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
-public class Gift_history {
+public class GiftHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gift_history_sequence")

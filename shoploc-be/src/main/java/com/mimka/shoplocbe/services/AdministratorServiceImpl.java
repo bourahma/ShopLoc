@@ -26,15 +26,12 @@ public class AdministratorServiceImpl implements AdministratorService, UserDetai
 
     private final RoleRepository roleRepository;
 
-    private final MailServiceImpl mailService;
-
     private final DtoUtil dtoUtil;
 
     @Autowired
-    public AdministratorServiceImpl(AdministratorRepository administratorRepository, RoleRepository roleRepository, MailServiceImpl mailService, DtoUtil dtoUtil) {
+    public AdministratorServiceImpl(AdministratorRepository administratorRepository, RoleRepository roleRepository, DtoUtil dtoUtil) {
         this.administratorRepository = administratorRepository;
         this.roleRepository = roleRepository;
-        this.mailService = mailService;
         this.dtoUtil = dtoUtil;
     }
 
