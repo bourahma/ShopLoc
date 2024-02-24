@@ -86,7 +86,7 @@ INSERT INTO Point_Transaction (point_transaction_id, fidelity_card_id, transacti
                                                                                                                         (nextval('point_transaction_sequence'),'123e4567-e89b-12d3-a456-426614174000', '2024-01-26', 'EARNED', 20.00, 1),
                                                                                                                         (nextval('point_transaction_sequence'),'123e4567-e89b-12d3-a456-426614174000', '2024-01-27', 'SPENT', -15.50, 2),
                                                                                                                         (nextval('point_transaction_sequence'),'123e4567-e89b-12d3-a456-426614174000', '2024-01-28', 'EARNED', 18.00, 3),
-                                                                                                                        (nextval('point_transaction_sequence'),'123e4567-e89b-12d3-a456-426614174000', '2024-01-29', 'EARNED', 52.00, 4),
+                                                                                                                        (nextval('point_transaction_sequence'),'123e4567-e89b-12d3-a456-426614174000', '2024-01-29', 'EARNED', 50.00, 4),
                                                                                                                         (nextval('point_transaction_sequence'),'123e4567-e89b-12d3-a456-426614174000', '2024-01-30', 'SPENT', -20.00, 5);
 
 -- Insert BalanceTransaction for Joe
