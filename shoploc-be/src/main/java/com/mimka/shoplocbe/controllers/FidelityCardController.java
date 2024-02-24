@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.Set;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "${allowed.origin}")
 @RestController
 @RequestMapping("/fidelity-card")
 public class FidelityCardController {

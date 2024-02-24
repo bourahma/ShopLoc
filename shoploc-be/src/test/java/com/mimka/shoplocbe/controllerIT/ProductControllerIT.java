@@ -11,10 +11,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ProductControllerIT extends AuthenticationControllerIT {
+class ProductControllerIT extends AuthenticationControllerIT {
 
     @Test
-    public void testGetProduct_ReturnOK () throws Exception {
+    void testGetProduct_ReturnOK () throws Exception {
         mockMvc.perform(get("/product/detail/1")
                         .header("Authorization", "Bearer " + customerJWTToken)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -33,7 +33,7 @@ public class ProductControllerIT extends AuthenticationControllerIT {
     @Test
     @Transactional
     @Rollback
-    public void testUpdateProduct_ReturnOK () throws Exception {
+    void testUpdateProduct_ReturnOK () throws Exception {
         ProductDTO productDTO = this.getProductDTO();
 
         mockMvc.perform(put("/product/")
@@ -53,7 +53,7 @@ public class ProductControllerIT extends AuthenticationControllerIT {
     }
 
     @Test
-    public void testDeleteProduct_ReturnNoContent () throws Exception {
+    void testDeleteProduct_ReturnNoContent () throws Exception {
         mockMvc.perform(delete("/product/1")
                         .header("Authorization", "Bearer " + customerJWTToken)
                         .contentType(MediaType.APPLICATION_JSON))

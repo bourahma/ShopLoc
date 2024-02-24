@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "${allowed.origin}")
 @RestController
 @RequestMapping("/authentication")
 @Validated
