@@ -121,8 +121,44 @@ public class CommerceControllerIT extends AuthenticationControllerIT {
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Le nom du commerce est requis"));
     }
-    // TODO : Test add with invalid commerce dto fields.
 
+    @Test
+    public void testCreateCommerce_WithInvalidOpeningHour_ReturnBadRequest () throws Exception {
+        CommerceDTO commerceDTO = this.getCommerceDTO();
+        commerceDTO.setOpeningHour(null);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/commerce/")
+                        .header("Authorization", "Bearer " + administratorJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(commerceDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("L'heure d'ouverture est requise"));
+    }
+    @Test
+    public void testCreateCommerce_WithInvalidclosingHour_ReturnBadRequest () throws Exception {
+        CommerceDTO commerceDTO = this.getCommerceDTO();
+        commerceDTO.setClosingHour(null);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/commerce/")
+                        .header("Authorization", "Bearer " + administratorJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(commerceDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("L'heure de fermeture est requise"));
+    }
+
+    @Test
+    public void testCreateCommerce_WithInvalidaddressDTO_ReturnBadRequest () throws Exception {
+        CommerceDTO commerceDTO = this.getCommerceDTO();
+        commerceDTO.setAddressDTO(null);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/commerce/")
+                        .header("Authorization", "Bearer " + administratorJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(commerceDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Les informations d'adresse sont requises"));
+    }
     @Test
     public void testGetCommerceById_WhenIdDoesNotExist_ReturnsNoContent () throws Exception {
         mockMvc.perform(get("/commerce/100")
@@ -166,7 +202,7 @@ public class CommerceControllerIT extends AuthenticationControllerIT {
                 .andExpect(jsonPath("$").exists())
                 .andExpect(jsonPath("$", hasSize(3)));
     }
-    // TODO : Move this test to product controller it and do needed actions on the code.
+
     @Test
     @Transactional
     @Rollback
@@ -181,7 +217,6 @@ public class CommerceControllerIT extends AuthenticationControllerIT {
                 .andExpect(status().isNoContent())
                 .andExpect(jsonPath("$.message").value("Commerce not found for ID : 1"));
     }
-    // TODO : Handle delete commerce.
 
     // Methods :
     @NotNull
