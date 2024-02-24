@@ -122,7 +122,7 @@ class CommerceControllerIT extends AuthenticationControllerIT {
 
 
     @Test
-    public void testCreateCommerce_WithInvalidOpeningHour_ReturnBadRequest () throws Exception {
+    void testCreateCommerce_WithInvalidOpeningHour_ReturnBadRequest () throws Exception {
         CommerceDTO commerceDTO = this.getCommerceDTO();
         commerceDTO.setOpeningHour(null);
 
@@ -134,7 +134,7 @@ class CommerceControllerIT extends AuthenticationControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("L'heure d'ouverture est requise"));
     }
     @Test
-    public void testCreateCommerce_WithInvalidclosingHour_ReturnBadRequest () throws Exception {
+    void testCreateCommerce_WithInvalidclosingHour_ReturnBadRequest () throws Exception {
         CommerceDTO commerceDTO = this.getCommerceDTO();
         commerceDTO.setClosingHour(null);
 
@@ -147,7 +147,7 @@ class CommerceControllerIT extends AuthenticationControllerIT {
     }
 
     @Test
-    public void testCreateCommerce_WithInvalidaddressDTO_ReturnBadRequest () throws Exception {
+    void testCreateCommerce_WithInvalidaddressDTO_ReturnBadRequest () throws Exception {
         CommerceDTO commerceDTO = this.getCommerceDTO();
         commerceDTO.setAddressDTO(null);
 
@@ -160,7 +160,7 @@ class CommerceControllerIT extends AuthenticationControllerIT {
     }
 
     @Test
-    public void testCreateCommerce_WithInvalidaddressDTOstreet_ReturnBadRequest () throws Exception {
+    void testCreateCommerce_WithInvalidaddressDTOstreet_ReturnBadRequest () throws Exception {
         CommerceDTO commerceDTO = this.getCommerceDTO();
         commerceDTO.getAddressDTO().setStreet(null);
 
@@ -173,7 +173,7 @@ class CommerceControllerIT extends AuthenticationControllerIT {
     }
 
     @Test
-    public void testCreateCommerce_WithInvalidaddressDTOcity_ReturnBadRequest () throws Exception {
+    void testCreateCommerce_WithInvalidaddressDTOcity_ReturnBadRequest () throws Exception {
         CommerceDTO commerceDTO = this.getCommerceDTO();
         commerceDTO.getAddressDTO().setCity(null);
 
