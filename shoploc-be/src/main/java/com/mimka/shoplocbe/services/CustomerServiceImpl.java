@@ -4,6 +4,7 @@ import com.mimka.shoplocbe.dto.DtoUtil;
 import com.mimka.shoplocbe.dto.user.CustomerDTO;
 import com.mimka.shoplocbe.entities.*;
 import com.mimka.shoplocbe.exception.RegistrationException;
+import com.mimka.shoplocbe.exception.RegistrationTokenInvalidException;
 import com.mimka.shoplocbe.repositories.CustomerRepository;
 import com.mimka.shoplocbe.repositories.FidelityCardRepository;
 import com.mimka.shoplocbe.repositories.RoleRepository;
@@ -91,8 +92,11 @@ public class CustomerServiceImpl implements CustomerService, UserDetailsService 
         return customer;
     }
 
-    public Customer enableCustomer (String uuid) {
+    public Customer enableCustomer (String uuid) throws RegistrationTokenInvalidException {
         Token token = this.tokenRepository.findTokenByUuid(uuid);
+        if (token == null) {
+            throw new RegistrationTokenInvalidException("Le token founi n'est pas valide");
+        }
         Customer customer = token.getCustomer();
 
         customer.setEnabled(true);

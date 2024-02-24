@@ -5,6 +5,7 @@ import com.mimka.shoplocbe.entities.Customer;
 import com.mimka.shoplocbe.entities.FidelityCard;
 import com.mimka.shoplocbe.entities.Token;
 import com.mimka.shoplocbe.exception.RegistrationException;
+import com.mimka.shoplocbe.exception.RegistrationTokenInvalidException;
 import com.mimka.shoplocbe.services.*;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class CustomerFacade {
         return customer;
     }
 
-    public void confirmCustomerRegistration(String uuid) {
+    public void confirmCustomerRegistration(String uuid) throws RegistrationTokenInvalidException {
         Customer customer = this.customerService.enableCustomer(uuid);
 
         try {

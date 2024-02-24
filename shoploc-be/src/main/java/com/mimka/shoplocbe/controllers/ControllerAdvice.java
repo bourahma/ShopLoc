@@ -2,6 +2,7 @@ package com.mimka.shoplocbe.controllers;
 
 import com.mimka.shoplocbe.exception.CommerceNotFoundException;
 import com.mimka.shoplocbe.exception.RegistrationException;
+import com.mimka.shoplocbe.exception.RegistrationTokenInvalidException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -53,5 +54,11 @@ public class ControllerAdvice {
                 .map(error -> error.getDefaultMessage())
                 .findFirst()
                 .orElse("Validation failed"));
+    }
+
+    @ExceptionHandler(value = RegistrationTokenInvalidException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public Map<String, String> registrationTokenInvalidExceptionHandler(RegistrationTokenInvalidException exception) {
+        return Map.of(message, exception.getMessage());
     }
 }

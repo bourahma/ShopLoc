@@ -4,6 +4,7 @@ import com.mimka.shoplocbe.dto.user.CustomerDTO;
 import com.mimka.shoplocbe.entities.Customer;
 import com.mimka.shoplocbe.entities.FidelityCard;
 import com.mimka.shoplocbe.exception.RegistrationException;
+import com.mimka.shoplocbe.exception.RegistrationTokenInvalidException;
 
 public interface CustomerService {
 
@@ -11,7 +12,7 @@ public interface CustomerService {
 
     Customer createCustomer(CustomerDTO customerDTO, FidelityCard fidelityCard) throws RegistrationException;
 
-    Customer enableCustomer (String uuid);
+    Customer enableCustomer (String uuid) throws RegistrationTokenInvalidException, RegistrationTokenInvalidException;
 
     boolean orderSettled (double total);
 
