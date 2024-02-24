@@ -12,7 +12,74 @@ env:
   IP_FE_ADDRESS: ${{ secrets.IP_FE_ADDRESS }}
 
 jobs:
-  build:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: shoploc-db
+          POSTGRES_USER: shoplocU
+          POSTGRES_PASSWORD: shoplocP
+        ports:
+          - 5430:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      # CI  Tests
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: Clean project
+        run: |
+          cd shoploc-be
+          mvn clean
+
+      - name: Run Tests
+        run: |
+          cd shoploc-be
+          mvn verify
+
+      # CI Sonar
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'zulu' # Alternative distribution options are available.
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Build and analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          cd shoploc-be
+          mvn verify
+          mvn jacoco:report # Generate Java code coverage report
+
+          # Upload the JaCoCo report to SonarQube
+          mvn sonar:sonar -Dsonar.projectKey=bourahma_ShopLoc -Dsonar.coverage.jacoco.xmlReportPaths=**/target/site/jacoco/jacoco.xml
+  build-images:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
