@@ -1,5 +1,6 @@
 package com.mimka.shoplocbe.dto.commerce;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -34,6 +35,7 @@ public class CommerceDTO {
 
     private boolean disabled;
 
+    @Valid
     @NotNull(message = "Les informations d'adresse sont requises")
     private AddressDTO addressDTO;
 }

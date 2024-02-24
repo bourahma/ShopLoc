@@ -162,6 +162,31 @@ class CommerceControllerIT extends AuthenticationControllerIT {
     }
 
     @Test
+    public void testCreateCommerce_WithInvalidaddressDTOstreet_ReturnBadRequest () throws Exception {
+        CommerceDTO commerceDTO = this.getCommerceDTO();
+        commerceDTO.getAddressDTO().setStreet(null);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/commerce/")
+                        .header("Authorization", "Bearer " + administratorJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(commerceDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Le nom de la rue est requis"));
+    }
+
+    @Test
+    public void testCreateCommerce_WithInvalidaddressDTOcity_ReturnBadRequest () throws Exception {
+        CommerceDTO commerceDTO = this.getCommerceDTO();
+        commerceDTO.getAddressDTO().setCity(null);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/commerce/")
+                        .header("Authorization", "Bearer " + administratorJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(commerceDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("La ville est requise"));
+    }
+    @Test
     void testGetCommerceById_WhenIdDoesNotExist_ReturnsNoContent () throws Exception {
         mockMvc.perform(get("/commerce/100")
                         .header("Authorization", "Bearer " + customerJWTToken))

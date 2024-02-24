@@ -11,7 +11,6 @@ public class AddressDTO {
     @NotBlank(message = "Le nom de la rue est requis")
     private String street;
 
-    @NotBlank(message = "Le code postal est requis")
     private int postalCode;
 
     @NotBlank(message = "La ville est requise")
