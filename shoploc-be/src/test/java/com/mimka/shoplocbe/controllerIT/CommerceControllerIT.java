@@ -96,8 +96,6 @@ class CommerceControllerIT extends AuthenticationControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.addressDTO.latitude").value(not(0.0)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.addressDTO.city").value("Lille"));
     }
-    // TODO : Test update with invalid commerce dto fields.
-
 
     @Test
     void testUpdateCommerce_WhenInvalidCommerce_ReturnNoContent () throws Exception {
