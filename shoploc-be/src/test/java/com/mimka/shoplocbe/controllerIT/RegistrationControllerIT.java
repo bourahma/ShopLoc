@@ -8,7 +8,10 @@ import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -50,6 +53,46 @@ class RegistrationControllerIT  extends  ControllerIT {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.role").exists())
                 .andExpect(jsonPath("$.username").value("Aziz"));
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    void testValidateRegister_WithInvalidUuidDoNotEnableCustomer_ReturnCreated () throws Exception {
+        mockMvc.perform(post("/authentication/customer/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(getCustomerDTO())))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/authentication/customer/register/123e4567-e89b-12d3-a456-426614174000")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(getCustomerDTO())))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/authentication/customer/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\": \"" + "Mohammed" + "\", \"password\": \"" + "12345678" + "\"}"))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    void testValidateRegister_WithValidUuidDoEnableCustomer_ReturnCreated () throws Exception {
+        mockMvc.perform(post("/authentication/customer/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(getCustomerDTO())))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/authentication/customer/register/123e4567-a456-426614174000-e89b-12d3")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(getCustomerDTO())))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/authentication/customer/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\": \"" + "Mohammed" + "\", \"password\": \"" + "12345678" + "\"}"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     // Methods

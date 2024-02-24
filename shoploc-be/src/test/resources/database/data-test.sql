@@ -1,6 +1,8 @@
 -- FidelityCard data insertion :
 INSERT INTO Fidelity_Card (fidelity_card_id, points, balance) VALUES
-    ('123e4567-e89b-12d3-a456-426614174000', 54.50, 49.50);
+                                                                  ('123e4567-e89b-12d3-a456-426614174000', 54.50, 49.50),
+                                                                  ('723a4867-e89b-16l3-a858-856918174111', 84.00, 19.50);
+
 
 -- Role's insert.
 INSERT INTO Role (role_id, role_name)
@@ -17,7 +19,12 @@ VALUES
 
 INSERT INTO Customer (id, username, lastname, firstname, password, email, enabled, phone_number, role, is_vfp_membership, fidelity_card_id)
 VALUES
-    (1, 'Joe', 'John','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'az.az201221@gmail.com', TRUE, '06 54 71 03 11', 1, TRUE, '123e4567-e89b-12d3-a456-426614174000');
+    (1, 'Joe', 'John','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'az.az201221@gmail.com', TRUE, '06 54 71 03 11', 1, TRUE, '123e4567-e89b-12d3-a456-426614174000'),
+    (2, 'Mohammed', 'El Khir','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'mohammed@gmail.com', FALSE, '06 54 71 03 11', 1, FALSE, '723a4867-e89b-16l3-a858-856918174111');
+
+-- Create the Token table :
+INSERT INTO Token (uuid, customer_id) VALUES
+                                          ('123e4567-a456-426614174000-e89b-12d3', 2);
 
 INSERT INTO Administrator (id, username, lastname, firstname, password, email, enabled, phone_number, role)
 VALUES
