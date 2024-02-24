@@ -18,9 +18,9 @@ import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-public class CommerceControllerIT extends AuthenticationControllerIT {
+class CommerceControllerIT extends AuthenticationControllerIT {
     @Test
-    public void testGetAllCommerce_ReturnOK () throws Exception {
+    void testGetAllCommerce_ReturnOK () throws Exception {
         mockMvc.perform(get("/commerce/")
                         .header("Authorization", "Bearer " + customerJWTToken)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -38,7 +38,7 @@ public class CommerceControllerIT extends AuthenticationControllerIT {
     }
 
     @Test
-    public void testGetCommerceById_ReturnOk () throws Exception {
+    void testGetCommerceById_ReturnOk () throws Exception {
         mockMvc.perform(get("/commerce/1")
                         .header("Authorization", "Bearer " + customerJWTToken)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -54,7 +54,7 @@ public class CommerceControllerIT extends AuthenticationControllerIT {
     @Test
     @Transactional
     @Rollback
-    public void testCreateCommerce_WhenAllFieldsFormAreValid_ReturnCreated () throws Exception {
+    void testCreateCommerce_WhenAllFieldsFormAreValid_ReturnCreated () throws Exception {
         CommerceDTO commerceDTO = this.getCommerceDTO();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/commerce/")
@@ -77,7 +77,7 @@ public class CommerceControllerIT extends AuthenticationControllerIT {
     @Test
     @Transactional
     @Rollback
-    public void testUpdateCommerce_WhenAllFieldsFormAreValid_ReturnOk () throws Exception {
+    void testUpdateCommerce_WhenAllFieldsFormAreValid_ReturnOk () throws Exception {
         CommerceDTO commerceDTO = this.getCommerceDTO();
 
         mockMvc.perform(MockMvcRequestBuilders.put("/commerce/1")
@@ -100,7 +100,7 @@ public class CommerceControllerIT extends AuthenticationControllerIT {
 
 
     @Test
-    public void testUpdateCommerce_WhenInvalidCommerce_ReturnNoContent () throws Exception {
+    void testUpdateCommerce_WhenInvalidCommerce_ReturnNoContent () throws Exception {
         CommerceDTO commerceDTO = this.getCommerceDTO();
         mockMvc.perform(MockMvcRequestBuilders.put("/commerce/100")
                         .header("Authorization", "Bearer " + administratorJWTToken)
@@ -110,7 +110,7 @@ public class CommerceControllerIT extends AuthenticationControllerIT {
     }
 
     @Test
-    public void testCreateCommerce_WithBlankCommerceName_ReturnBadRequest () throws Exception {
+    void testCreateCommerce_WithBlankCommerceName_ReturnBadRequest () throws Exception {
         CommerceDTO commerceDTO = this.getCommerceDTO();
         commerceDTO.setCommerceName(" ");
 
@@ -124,7 +124,7 @@ public class CommerceControllerIT extends AuthenticationControllerIT {
     // TODO : Test add with invalid commerce dto fields.
 
     @Test
-    public void testGetCommerceById_WhenIdDoesNotExist_ReturnsNoContent () throws Exception {
+    void testGetCommerceById_WhenIdDoesNotExist_ReturnsNoContent () throws Exception {
         mockMvc.perform(get("/commerce/100")
                         .header("Authorization", "Bearer " + customerJWTToken))
                 .andExpect(status().isNoContent())
@@ -132,7 +132,7 @@ public class CommerceControllerIT extends AuthenticationControllerIT {
     }
 
     @Test
-    public void testGetCommerceProducts_WhenIdCommerceDoNotExist_ReturnsNoContent () throws Exception {
+    void testGetCommerceProducts_WhenIdCommerceDoNotExist_ReturnsNoContent () throws Exception {
         mockMvc.perform(get("/commerce/100/products")
                         .header("Authorization", "Bearer " + customerJWTToken))
                 .andExpect(status().isNoContent())
@@ -140,7 +140,7 @@ public class CommerceControllerIT extends AuthenticationControllerIT {
     }
 
     @Test
-    public void testGetCommerceProducts_WhenIdCommerceDoExist_ReturnOk () throws Exception {
+    void testGetCommerceProducts_WhenIdCommerceDoExist_ReturnOk () throws Exception {
         mockMvc.perform(get("/commerce/1/products")
                         .header("Authorization", "Bearer " + customerJWTToken))
                 .andExpect(status().isOk())
@@ -151,7 +151,7 @@ public class CommerceControllerIT extends AuthenticationControllerIT {
     @Test
     @Transactional
     @Rollback
-    public void testAddProduct_WhenIdCommerceDoExist_ReturnCreated () throws Exception {
+    void testAddProduct_WhenIdCommerceDoExist_ReturnCreated () throws Exception {
         ProductDTO productDTO = this.getProductDTO();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/commerce/1")
@@ -170,7 +170,7 @@ public class CommerceControllerIT extends AuthenticationControllerIT {
     @Test
     @Transactional
     @Rollback
-    public void testDisableCommerce_ReturnOk () throws Exception {
+    void testDisableCommerce_ReturnOk () throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/commerce/1")
                         .header("Authorization", "Bearer " + administratorJWTToken)
                         .contentType(MediaType.APPLICATION_JSON))

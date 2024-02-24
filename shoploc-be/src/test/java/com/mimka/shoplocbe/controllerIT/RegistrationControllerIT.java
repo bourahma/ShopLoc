@@ -13,12 +13,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class RegistrationControllerIT  extends  ControllerIT {
+class RegistrationControllerIT  extends  ControllerIT {
 
     @Test
     @Transactional
     @Rollback
-    public void testRegisterCustomer_WithValidDTO_ReturnCreated () throws Exception {
+    void testRegisterCustomer_WithValidDTO_ReturnCreated () throws Exception {
         mockMvc.perform(post("/authentication/customer/register")
                         .contentType(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -31,7 +31,7 @@ public class RegistrationControllerIT  extends  ControllerIT {
     @Test
     @Transactional
     @Rollback
-    public void testRegisterMerchant_WithValidDTO_ReturnCreated () throws Exception {
+    void testRegisterMerchant_WithValidDTO_ReturnCreated () throws Exception {
         mockMvc.perform(post("/authentication/merchant/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(getMerchantDTO())))
@@ -43,7 +43,7 @@ public class RegistrationControllerIT  extends  ControllerIT {
     @Test
     @Transactional
     @Rollback
-    public void testRegisterAdministrator_WithValidDTO_ReturnCreated () throws Exception {
+    void testRegisterAdministrator_WithValidDTO_ReturnCreated () throws Exception {
         mockMvc.perform(post("/authentication/administrator/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(getAdministratorDTO())))

@@ -19,12 +19,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class OrderControllerIT extends AuthenticationControllerIT {
+class OrderControllerIT extends AuthenticationControllerIT {
 
     @Test
     @Transactional
     @Rollback
-    public void testCreateOrder_WithValidOrderFields_ReturnOK () throws Exception {
+    void testCreateOrder_WithValidOrderFields_ReturnOK () throws Exception {
         mockMvc.perform(post("/order/")
                         .header("Authorization", "Bearer " + customerJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -39,7 +39,7 @@ public class OrderControllerIT extends AuthenticationControllerIT {
     }
 
     @Test
-    public void testCreateOrder_WithEmptyOrderDto_ReturnBadRequest () throws Exception {
+    void testCreateOrder_WithEmptyOrderDto_ReturnBadRequest () throws Exception {
         OrderDTO orderDTO = new OrderDTO();
 
         mockMvc.perform(post("/order/")
@@ -52,7 +52,7 @@ public class OrderControllerIT extends AuthenticationControllerIT {
     @Test
     @Transactional
     @Rollback
-    public void testCreateOrder_FidelityCardPointsAndBalanceNotDebited_ReturnsOk () throws Exception {
+    void testCreateOrder_FidelityCardPointsAndBalanceNotDebited_ReturnsOk () throws Exception {
         mockMvc.perform(get("/fidelity-card/")
                         .header("Authorization", "Bearer " + customerJWTToken)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -75,7 +75,7 @@ public class OrderControllerIT extends AuthenticationControllerIT {
     }
 
     @Test
-    public void testCreateOrder_WithInvalidCommerceId_ReturnBadRequest () throws Exception {
+    void testCreateOrder_WithInvalidCommerceId_ReturnBadRequest () throws Exception {
         mockMvc.perform(post("/order/")
                         .header("Authorization", "Bearer " + customerJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -85,7 +85,7 @@ public class OrderControllerIT extends AuthenticationControllerIT {
     }
 
     @Test
-    public void testCreateOrder_WithInvalidProductId_ReturnBadRequest () throws Exception {
+    void testCreateOrder_WithInvalidProductId_ReturnBadRequest () throws Exception {
         mockMvc.perform(post("/order/")
                         .header("Authorization", "Bearer " + customerJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -96,7 +96,7 @@ public class OrderControllerIT extends AuthenticationControllerIT {
     }
 
     @Test
-    public void testCreateOrder_WithInvalidProductQuantity_ReturnBadRequest () throws Exception {
+    void testCreateOrder_WithInvalidProductQuantity_ReturnBadRequest () throws Exception {
         mockMvc.perform(post("/order/")
                         .header("Authorization", "Bearer " + customerJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -106,7 +106,7 @@ public class OrderControllerIT extends AuthenticationControllerIT {
     }
 
     @Test
-    public void testCreateOrder_WithEmptyProducts_ReturnBadRequest () throws Exception {
+    void testCreateOrder_WithEmptyProducts_ReturnBadRequest () throws Exception {
         mockMvc.perform(post("/order/")
                         .header("Authorization", "Bearer " + customerJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -118,7 +118,7 @@ public class OrderControllerIT extends AuthenticationControllerIT {
     @Test
     @Transactional
     @Rollback
-    public void testSettleOrderUsingBalance_ReturnOk () throws Exception {
+    void testSettleOrderUsingBalance_ReturnOk () throws Exception {
         // Check balance before.
         mockMvc.perform(get("/fidelity-card/")
                         .header("Authorization", "Bearer " + customerJWTToken)
@@ -151,7 +151,7 @@ public class OrderControllerIT extends AuthenticationControllerIT {
     @Test
     @Transactional
     @Rollback
-    public void testSettleOrderUsingPoints_ReturnOk () throws Exception {
+    void testSettleOrderUsingPoints_ReturnOk () throws Exception {
         // Check balance before.
         mockMvc.perform(get("/fidelity-card/")
                         .header("Authorization", "Bearer " + customerJWTToken)
@@ -184,7 +184,7 @@ public class OrderControllerIT extends AuthenticationControllerIT {
     @Test
     @Transactional
     @Rollback
-    public void testGetQrCodeSettle_ReturnOk () throws Exception {
+    void testGetQrCodeSettle_ReturnOk () throws Exception {
         Integer orderId = JsonPath.read(mockMvc.perform(post("/order/")
                         .header("Authorization", "Bearer " + customerJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -203,7 +203,7 @@ public class OrderControllerIT extends AuthenticationControllerIT {
     @Test
     @Transactional
     @Rollback
-    public void testSettleOrderUsingBalanceQRCode_ReturnOk () throws Exception {
+    void testSettleOrderUsingBalanceQRCode_ReturnOk () throws Exception {
         Integer orderId = JsonPath.read(mockMvc.perform(post("/order/")
                         .header("Authorization", "Bearer " + customerJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -233,7 +233,7 @@ public class OrderControllerIT extends AuthenticationControllerIT {
     @Test
     @Transactional
     @Rollback
-    public void testSettleOrderUsingPointsQRCode_ReturnOk () throws Exception {
+    void testSettleOrderUsingPointsQRCode_ReturnOk () throws Exception {
         Integer orderId = JsonPath.read(mockMvc.perform(post("/order/")
                         .header("Authorization", "Bearer " + customerJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)

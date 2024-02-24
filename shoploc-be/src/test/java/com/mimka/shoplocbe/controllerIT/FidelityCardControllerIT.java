@@ -12,9 +12,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class FidelityCardControllerIT extends AuthenticationControllerIT {
+class FidelityCardControllerIT extends AuthenticationControllerIT {
     @Test
-    public void testGetCustomerFidelityCard_ReturnOK () throws Exception {
+    void testGetCustomerFidelityCard_ReturnOK () throws Exception {
         mockMvc.perform(get("/fidelity-card/")
                         .header("Authorization", "Bearer " + customerJWTToken)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -26,7 +26,7 @@ public class FidelityCardControllerIT extends AuthenticationControllerIT {
     }
 
     @Test
-    public void testCreditCustomerFidelityCard_ReturnOK () throws Exception {
+    void testCreditCustomerFidelityCard_ReturnOK () throws Exception {
         CreditBalanceDTO creditBalanceDTO = this.getCreditBalanceDTO();
 
         mockMvc.perform(post("/fidelity-card/credit")
@@ -41,7 +41,7 @@ public class FidelityCardControllerIT extends AuthenticationControllerIT {
     }
 
     @Test
-    public void testGetCreditedTransactionsHistory_ReturnOK () throws Exception {
+    void testGetCreditedTransactionsHistory_ReturnOK () throws Exception {
         mockMvc.perform(get("/fidelity-card/history-balance/credits/123e4567-e89b-12d3-a456-426614174000")
                         .header("Authorization", "Bearer " + customerJWTToken))
                 .andExpect(status().isOk())
