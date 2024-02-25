@@ -8,8 +8,6 @@ import java.util.List;
 
 public interface ProductService {
 
-    List<Product> getProductsByCommerce(Long commerceId);
-
     Product getProduct (Long productId) throws ProductException;
 
     Product createProduct (ProductDTO productDTO);

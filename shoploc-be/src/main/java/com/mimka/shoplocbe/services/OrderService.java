@@ -13,7 +13,7 @@ public interface OrderService {
 
     double getOrderTotalPrice (Long orderId, boolean usingPoints);
 
-    double getOrderTotalPointsPrice(Long orderId);
-
     Order getOrder(String principal, long orderId);
+
+    Order getOrder(long orderId);
 }

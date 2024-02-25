@@ -1,11 +1,14 @@
 package com.mimka.shoplocbe.services;
 
 import com.mimka.shoplocbe.entities.*;
+import com.mimka.shoplocbe.exception.InsufficientFundsException;
+import com.mimka.shoplocbe.exception.InvalidCreditAmountException;
 import com.mimka.shoplocbe.repositories.BalanceTransactionRepository;
 import com.mimka.shoplocbe.repositories.CommerceRepository;
 import com.mimka.shoplocbe.repositories.FidelityCardRepository;
 import com.mimka.shoplocbe.repositories.PointTransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,6 +25,10 @@ public class FidelityCardServiceImpl implements FidelityCardService {
     private final BalanceTransactionRepository balanceTransactionRepository;
     private final CommerceRepository commerceRepository;
     private final FidelityCardRepository fidelityCardRepository;
+
+    private double maxAmountCreditValueAllowed = 50.00;
+
+    private double minAmountCreditValueAllowed = 1.0;
 
     @Autowired
     public FidelityCardServiceImpl(PointTransactionRepository pointTransactionRepository, BalanceTransactionRepository balanceTransactionRepository, CommerceRepository commerceRepository, FidelityCardRepository fidelityCardRepository) {
@@ -44,32 +51,26 @@ public class FidelityCardServiceImpl implements FidelityCardService {
     @Override
     public void earnPoints(String fidelityCardId, long commerceId, double amount) {
         Optional<FidelityCard> optionalFidelityCard = this.fidelityCardRepository.findById(fidelityCardId);
-        FidelityCard fidelityCard = null;
         if (optionalFidelityCard.isPresent()) {
-            fidelityCard = optionalFidelityCard.get();
+            FidelityCard fidelityCard = optionalFidelityCard.get();
+            fidelityCard.setPoints(fidelityCard.getPoints() + amount);
+            createPointTransaction(fidelityCard, commerceId, amount, TransactionType.EARNED);
+            this.fidelityCardRepository.save(fidelityCard);
         }
-
-        fidelityCard.setPoints(fidelityCard.getPoints() + amount);
-
-        createPointTransaction(fidelityCard, commerceId, amount, TransactionType.EARNED);
-        this.fidelityCardRepository.save(fidelityCard);
     }
 
     @Override
-    public void spendPoints(String fidelityCardId, long commerceId, double amount) {
+    public void spendPoints(String fidelityCardId, long commerceId, double amount) throws InsufficientFundsException {
         Optional<FidelityCard> optionalFidelityCard = this.fidelityCardRepository.findById(fidelityCardId);
-        FidelityCard fidelityCard = null;
         if (optionalFidelityCard.isPresent()) {
-            fidelityCard = optionalFidelityCard.get();
-        }
-
-        if (fidelityCard.getPoints() >= amount) {
-            fidelityCard.setPoints(fidelityCard.getPoints() - amount);
-
-            createPointTransaction(fidelityCard, commerceId, amount, TransactionType.SPENT);
-            this.fidelityCardRepository.save(fidelityCard);
-        } else {
-            throw new IllegalArgumentException("Le montant du débit dépasse le solde des points.");
+            FidelityCard fidelityCard = optionalFidelityCard.get();
+            if (fidelityCard.getPoints() >= amount) {
+                fidelityCard.setPoints(fidelityCard.getPoints() - amount);
+                createPointTransaction(fidelityCard, commerceId, amount, TransactionType.SPENT);
+                this.fidelityCardRepository.save(fidelityCard);
+            } else {
+                throw new InsufficientFundsException("Le solde de points sur votre carte fidélité est insuffisant pour effectuer cette transaction.");
+            }
         }
     }
 
@@ -108,30 +109,31 @@ public class FidelityCardServiceImpl implements FidelityCardService {
 
 
     @Override
-    public FidelityCard creditFidelityCardBalance(String fidelityCardId, double amount) {
+    public FidelityCard creditFidelityCardBalance(String fidelityCardId, double amount) throws InvalidCreditAmountException {
+        if (amount < this.minAmountCreditValueAllowed || amount > this.maxAmountCreditValueAllowed) {
+            throw new InvalidCreditAmountException("le montant de crédit doit être compris entre 1€ et 50€.");
+        }
         FidelityCard fidelityCard = this.fidelityCardRepository.findById(fidelityCardId).get();
-
         createBalanceTransaction(fidelityCard, 0, amount, TransactionType.CREDIT);
 
         return this.fidelityCardRepository.save(fidelityCard);
     }
 
     @Override
-    public void debitFidelityCardBalance(String fidelityCardId,long commerceId, double amount) {
-        FidelityCard fidelityCard = this.fidelityCardRepository.findById(fidelityCardId).get();
-
-        if (fidelityCard.getBalance() >= amount) {
-            createBalanceTransaction(fidelityCard, commerceId, amount, TransactionType.DEBIT);
-
-            this.fidelityCardRepository.save(fidelityCard);
-        } else {
-            throw new IllegalArgumentException("Le montant du débit dépasse le solde du compte fidélité.");
+    public void debitFidelityCardBalance(String fidelityCardId,long commerceId, double amount) throws InsufficientFundsException {
+        Optional<FidelityCard> optionalFidelityCard = this.fidelityCardRepository.findById(fidelityCardId);
+        if (optionalFidelityCard.isPresent()) {
+            FidelityCard fidelityCard = optionalFidelityCard.get();
+            if (fidelityCard.getBalance() >= amount) {
+                createBalanceTransaction(fidelityCard, commerceId, amount, TransactionType.DEBIT);
+                this.fidelityCardRepository.save(fidelityCard);
+            } else {
+                throw new InsufficientFundsException("Le solde sur votre carte fidélité est insuffisant pour effectuer cette transaction.");
+            }
         }
     }
 
-
     private void createBalanceTransaction(FidelityCard fidelityCard, long commerceId, double amount, TransactionType type) {
-
         double newBalance = type == TransactionType.CREDIT ?
                 fidelityCard.getBalance() + amount :
                 fidelityCard.getBalance() - amount;

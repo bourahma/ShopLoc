@@ -8,8 +8,6 @@ import com.mimka.shoplocbe.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -21,11 +19,6 @@ public class ProductServiceImpl implements ProductService {
     public ProductServiceImpl(ProductRepository productRepository, ProductDTOUtil productDTOUtil) {
         this.productRepository = productRepository;
         this.productDTOUtil = productDTOUtil;
-    }
-
-    @Override
-    public List<Product> getProductsByCommerce(Long commerceId) {
-        return null;
     }
 
     @Override

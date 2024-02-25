@@ -38,4 +38,8 @@ public class CommerceDTO {
     @Valid
     @NotNull(message = "Les informations d'adresse sont requises")
     private AddressDTO addressDTO;
+
+    @Valid
+    @NotNull(message = "Le type du commerce est requis")
+    private CommerceTypeDTO commerceType;
 }

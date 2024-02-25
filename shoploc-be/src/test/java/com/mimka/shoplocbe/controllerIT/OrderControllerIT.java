@@ -11,6 +11,7 @@ import org.springframework.test.annotation.Rollback;
 
 import java.time.LocalDate;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.matchesPattern;
@@ -184,6 +185,87 @@ class OrderControllerIT extends AuthenticationControllerIT {
     @Test
     @Transactional
     @Rollback
+    void testSettleOrderUsingPoints_WhenTotalOrderIsUpperToCustomerPoints_ReturnBadRequest () throws Exception {
+        OrderDTO orderDTO = this.getOrderDTO();
+        orderDTO.setProducts(orderDTO.getProducts().stream()
+                .map(product -> {
+                    product.setQuantity(100);
+                    return product;
+                })
+                .collect(Collectors.toSet()));
+
+        // Check balance before.
+        mockMvc.perform(get("/fidelity-card/")
+                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.points").value(54.50));
+
+        // Create an order.
+        Integer orderId = JsonPath.read(mockMvc.perform(post("/order/")
+                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(orderDTO)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString(), "$.orderId");
+
+        // Settle the order using balance
+        mockMvc.perform(get("/order/settle/using-points/" + orderId)
+                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
+        //Verify that points are not debited.
+        mockMvc.perform(get("/fidelity-card/")
+                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.points").value(54.50));
+    }
+    @Test
+    @Transactional
+    @Rollback
+    void testSettleOrderUsingPoints_WhenTotalOrderTotalIsUpperToCustomerBalance_ReturnBadRequest () throws Exception {
+        OrderDTO orderDTO = this.getOrderDTO();
+        orderDTO.setProducts(orderDTO.getProducts().stream()
+                .map(product -> {
+                    product.setQuantity(100);
+                    return product;
+                })
+                .collect(Collectors.toSet()));
+
+        // Check balance before.
+        mockMvc.perform(get("/fidelity-card/")
+                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.points").value(54.50));
+
+        // Create an order.
+        Integer orderId = JsonPath.read(mockMvc.perform(post("/order/")
+                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(orderDTO)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString(), "$.orderId");
+
+        // Settle the order using balance
+        mockMvc.perform(get("/order/settle/using-balance/" + orderId)
+                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
+        //Verify that points is not debited.
+        mockMvc.perform(get("/fidelity-card/")
+                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.balance").value(49.5));
+    }
+
+    @Test
+    @Transactional
+    @Rollback
     void testGetQrCodeSettle_ReturnOk () throws Exception {
         Integer orderId = JsonPath.read(mockMvc.perform(post("/order/")
                         .header("Authorization", "Bearer " + customerJWTToken)
@@ -252,7 +334,7 @@ class OrderControllerIT extends AuthenticationControllerIT {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        //Verify that points are debited.
+        //Verify that balance is not debited.
         mockMvc.perform(get("/fidelity-card/")
                         .header("Authorization", "Bearer " + customerJWTToken)
                         .contentType(MediaType.APPLICATION_JSON))

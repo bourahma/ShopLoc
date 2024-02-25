@@ -4,6 +4,7 @@ import com.mimka.shoplocbe.dto.fidelityCard.BalanceTransactionDTO;
 import com.mimka.shoplocbe.dto.fidelityCard.CreditBalanceDTO;
 import com.mimka.shoplocbe.dto.fidelityCard.FidelityCardDTO;
 import com.mimka.shoplocbe.dto.fidelityCard.PointTransactionDTO;
+import com.mimka.shoplocbe.exception.InvalidCreditAmountException;
 import com.mimka.shoplocbe.facades.FidelityCardFacade;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class FidelityCardController {
     }
 
     @PostMapping(value = "/credit")
-    public FidelityCardDTO creditFidelityCardBalance (@RequestBody @Valid CreditBalanceDTO creditBalanceDTO) {
+    public FidelityCardDTO creditFidelityCardBalance (@RequestBody @Valid CreditBalanceDTO creditBalanceDTO) throws InvalidCreditAmountException {
         return this.fidelityCardFacade.creditFidelityCardBalance(creditBalanceDTO);
     }
 

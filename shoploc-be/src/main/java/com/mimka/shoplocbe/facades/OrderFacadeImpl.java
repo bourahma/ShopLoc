@@ -3,10 +3,13 @@ package com.mimka.shoplocbe.facades;
 import com.mimka.shoplocbe.dto.order.OrderDTO;
 import com.mimka.shoplocbe.dto.order.OrderDTOUtil;
 import com.mimka.shoplocbe.entities.Customer;
+import com.mimka.shoplocbe.entities.FidelityCard;
 import com.mimka.shoplocbe.entities.Order;
 import com.mimka.shoplocbe.entities.QRCodePayment;
 import com.mimka.shoplocbe.exception.CommerceNotFoundException;
+import com.mimka.shoplocbe.exception.InsufficientFundsException;
 import com.mimka.shoplocbe.services.CustomerService;
+import com.mimka.shoplocbe.services.FidelityCardService;
 import com.mimka.shoplocbe.services.OrderService;
 import com.mimka.shoplocbe.services.QRCodePaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +27,16 @@ public class OrderFacadeImpl implements OrderFacade {
 
     private final QRCodePaymentService qrCodePaymentService;
 
+    private final FidelityCardService fidelityCardService;
+
     private final OrderDTOUtil orderDTOUtil;
 
     @Autowired
-    public OrderFacadeImpl(OrderService orderService, CustomerService customerService, QRCodePaymentService qrCodePaymentService, OrderDTOUtil orderDTOUtil) {
+    public OrderFacadeImpl(OrderService orderService, CustomerService customerService, QRCodePaymentService qrCodePaymentService, FidelityCardService fidelityCardService, OrderDTOUtil orderDTOUtil) {
         this.orderService = orderService;
         this.customerService = customerService;
         this.qrCodePaymentService = qrCodePaymentService;
+        this.fidelityCardService = fidelityCardService;
         this.orderDTOUtil = orderDTOUtil;
     }
 
@@ -43,12 +49,16 @@ public class OrderFacadeImpl implements OrderFacade {
     }
 
     @Override
-    public OrderDTO settleOrder (String customerUsername, Long orderId, boolean usingPoints) {
+    public OrderDTO settleOrder (String customerUsername, Long orderId, boolean usingPoints) throws InsufficientFundsException {
         double total = this.orderService.getOrderTotalPrice(orderId, usingPoints);
-        Order order = null;
-        if (this.customerService.orderSettled(customerUsername, total, usingPoints)) {
-            order = this.orderService.payOrder(orderId);
-        }
+        Customer customer = this.customerService.getCustomerByUsername(customerUsername);
+        FidelityCard fidelityCard = customer.getFidelityCard();
+
+        this.fidelityCardService.spendPoints(fidelityCard.getFidelityCardId(), this.orderService.getOrder(orderId).getCommerce().getCommerceId(), total);
+        this.fidelityCardService.debitFidelityCardBalance(fidelityCard.getFidelityCardId(), this.orderService.getOrder(orderId).getCommerce().getCommerceId(), total);
+
+        Order order = this.orderService.payOrder(orderId);
+
         return this.orderDTOUtil.toOrderDTO(order);
     }
 
@@ -62,24 +72,25 @@ public class OrderFacadeImpl implements OrderFacade {
     }
 
     @Override
-    public Map<String,String> settleOrderUsingPointsQRCode(String qRCodeUUID) {
+    public Map<String,String> settleOrderUsingPointsQRCode(String qRCodeUUID) throws InsufficientFundsException {
         QRCodePayment qrCodePayment = this.qrCodePaymentService.getQRCodePayment(qRCodeUUID);
         Order order = qrCodePayment.getOrder();
         Customer customer = qrCodePayment.getCustomer();
         this.settleOrder(customer.getUsername(), order.getOrderId(), true);
         this.qrCodePaymentService.deleteQRCodePayment(qrCodePayment.getQRCodePaymentId());
 
-        return Map.of("paymentMessage", "Payment with points successfully completed.");
+        return Map.of("message", "Le paiement avec points a été effectué avec succès.");
+
     }
 
     @Override
-    public Map<String,String> settleOrderUsingBalanceQRCode(String qRCodeUUID) {
+    public Map<String,String> settleOrderUsingBalanceQRCode(String qRCodeUUID) throws InsufficientFundsException {
         QRCodePayment qrCodePayment = this.qrCodePaymentService.getQRCodePayment(qRCodeUUID);
         Order order = qrCodePayment.getOrder();
         Customer customer = qrCodePayment.getCustomer();
         this.settleOrder(customer.getUsername(), order.getOrderId(), false);
         this.qrCodePaymentService.deleteQRCodePayment(qrCodePayment.getQRCodePaymentId());
 
-        return Map.of("paymentMessage", "Payment successfully completed.");
+        return Map.of("message", "Paiement effectué avec succès.");
     }
 }

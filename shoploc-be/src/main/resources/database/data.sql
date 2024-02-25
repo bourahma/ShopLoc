@@ -42,20 +42,37 @@ INSERT INTO Address (address_id, street, postal_code, city, latitude, longitude)
                                                                                      (8, '10 Rue de Béthune', 59000, 'Lille', 50.6294, 3.0639),
                                                                                      (9, 'NULL', 59000, 'NULL', 0.0, 0.0);
 
+-- CommerceType's insertion :
+INSERT INTO Commerce_Type (commerce_type_id, label, description) VALUES
+                                                                     (1, 'Boulangerie', 'Commerce spécialisé dans la vente de produits de boulangerie, tels que du pain, des viennoiseries et des pâtisseries.'),
+                                                                     (2, 'Épicerie', 'Commerce de détail où l''on trouve divers produits alimentaires et parfois des produits ménagers et d''hygiène.'),
+                                                                     (3, 'Boucherie', 'Commerce spécialisé dans la vente de viande et de produits carnés.'),
+                                                                     (4, 'Pâtisserie', 'Commerce spécialisé dans la vente de gâteaux, desserts et sucreries.'),
+                                                                     (5, 'Magasin de jouets', 'Commerce spécialisé dans la vente de jouets et de jeux pour enfants.'),
+                                                                     (6, 'Pharmacie', 'Commerce spécialisé dans la vente de médicaments et de produits de santé.'),
+                                                                     (7, 'Librairie', 'Commerce spécialisé dans la vente de livres et de produits culturels.'),
+                                                                     (8, 'Fleuriste', 'Commerce spécialisé dans la vente de fleurs et de plantes.'),
+                                                                     (9, 'Quincaillerie', 'Commerce spécialisé dans la vente d''outils, de matériaux de construction et d''articles de bricolage.'),
+                                                                     (10, 'Boutique de vêtements', 'Commerce spécialisé dans la vente de vêtements, chaussures et accessoires.'),
+                                                                     (11, 'Magasin de meubles', 'Commerce spécialisé dans la vente de mobilier et d''articles d''ameublement.'),
+                                                                     (12, 'Caviste', 'Commerce spécialisé dans la vente de vins, spiritueux et produits liés à la dégustation.'),
+                                                                     (13, 'Parfumerie', 'Commerce spécialisé dans la vente de parfums et de produits de beauté.'),
+                                                                     (14, 'Cafétéria', 'Commerce proposant une variété de boissons, de snacks et de repas rapides.'),
+                                                                     (15, 'Restaurant gastronomique', 'Restaurant offrant une cuisine de haute qualité, souvent créative et raffinée, avec un service attentif.'),
+                                                                     (16, 'Pizzeria', 'Commerce spécialisé dans la préparation et la vente de pizzas, généralement cuites au four.');
+
 
 -- Commerce's insertion :
-INSERT INTO Commerce (commerce_id, commerce_name, opening_hour, closing_hour, image_url, address_id, disabled) VALUES
-                                                                                                                   (1, 'Boulangerie du Coin', '08:00:00', '18:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/mae-mu-_h-2jrL9cMU-unsplash.jpg', 1, FALSE),
-                                                                                                                   (2, 'Le Petit Café', '09:00:00', '20:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/iulia-topan-rI4ccCl8VwQ-unsplash.jpg', 2, FALSE),
-                                                                                                                   (3, 'Pizzeria Bella Napoli', '10:00:00', '17:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/pablo-pacheco-D3Mag4BKqns-unsplash.jpg', 3, FALSE),
-                                                                                                                   (4, 'Magasin Magique', '07:30:00', '16:30:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/brooke-lark-Uto4sJ8e_5k-unsplash.jpg', 4, FALSE),
-                                                                                                                   (5, 'Café des Artistes', '11:00:00', '19:30:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/oscar-nord-6rgwUHMokWU-unsplash.jpg', 5, FALSE),
-                                                                                                                   --
-                                                                                                                   (6, 'Fleuriste Parfumé', '09:30:00', '17:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/roman-kraft-_oH66az_yug-unsplash.jpg', 6, FALSE),
-                                                                                                                   (7, 'Artisan du Bois', '10:00:00', '18:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/bailey-alexander-DAd_Wn6Mj78-unsplash.jpg', 7, FALSE),
-                                                                                                                   (8, 'Délice du Café', '07:00:00', '21:00:00', 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/milo-miloezger-rKYRJu0n06Y-unsplash.jpg', 8, FALSE),
-                                                                                                                   (9, 'NULL', '07:00:00', '21:00:00', 'NULL', 9, TRUE);
-
+INSERT INTO Commerce (commerce_id, commerce_name, opening_hour, closing_hour, commerce_type_id, image_url, address_id, disabled) VALUES
+                                                                                                                                     (1, 'Boulangerie du Coin', '08:00:00', '18:00:00', 1, 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/mae-mu-_h-2jrL9cMU-unsplash.jpg', 1, FALSE),
+                                                                                                                                     (2, 'Le Petit Café', '09:00:00', '20:00:00', 14, 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/iulia-topan-rI4ccCl8VwQ-unsplash.jpg', 2, FALSE),
+                                                                                                                                     (3, 'Pizzeria Bella Napoli', '10:00:00', '17:00:00', 16, 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/pablo-pacheco-D3Mag4BKqns-unsplash.jpg', 3, FALSE),
+                                                                                                                                     (4, 'Magasin Magique', '07:30:00', '16:30:00', 11, 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/brooke-lark-Uto4sJ8e_5k-unsplash.jpg', 4, FALSE),
+                                                                                                                                     (5, 'Café des Artistes', '11:00:00', '19:30:00', 14, 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/oscar-nord-6rgwUHMokWU-unsplash.jpg', 5, FALSE),
+                                                                                                                                     (6, 'Fleuriste Parfumé', '09:30:00', '17:00:00', 8, 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/roman-kraft-_oH66az_yug-unsplash.jpg', 6, FALSE),
+                                                                                                                                     (7, 'Artisan du Bois', '10:00:00', '18:00:00', 11, 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/bailey-alexander-DAd_Wn6Mj78-unsplash.jpg', 7, FALSE),
+                                                                                                                                     (8, 'Délice du Café', '07:00:00', '21:00:00', 14, 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/milo-miloezger-rKYRJu0n06Y-unsplash.jpg', 8, FALSE),
+                                                                                                                                     (9, 'NULL', '07:00:00', '21:00:00', 15, 'NULL', 9, TRUE);
 -- Product's insertion :
 INSERT INTO Product (product_id, product_name, description, price, quantity, reward_points_price, is_gift, discount_id, commerce_id, view) VALUES
                                                                                                                                                (1, 'Pain au levain', 'Délicieux pain croustillant', 3.50, 150, 3, TRUE, 0, 1, 12),

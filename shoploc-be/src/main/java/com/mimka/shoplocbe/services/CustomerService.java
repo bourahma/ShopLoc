@@ -14,7 +14,5 @@ public interface CustomerService {
 
     Customer enableCustomer (String uuid) throws RegistrationTokenInvalidException, RegistrationTokenInvalidException;
 
-    boolean orderSettled (double total);
-
     boolean orderSettled(String customerUsername, double total, boolean usingPoints);
 }

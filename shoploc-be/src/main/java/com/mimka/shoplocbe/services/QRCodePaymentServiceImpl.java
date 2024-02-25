@@ -7,8 +7,6 @@ import com.mimka.shoplocbe.repositories.QRCodePaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
 

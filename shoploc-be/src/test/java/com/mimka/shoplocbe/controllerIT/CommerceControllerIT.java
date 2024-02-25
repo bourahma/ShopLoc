@@ -2,20 +2,20 @@ package com.mimka.shoplocbe.controllerIT;
 
 import com.mimka.shoplocbe.dto.commerce.AddressDTO;
 import com.mimka.shoplocbe.dto.commerce.CommerceDTO;
+import com.mimka.shoplocbe.dto.commerce.CommerceTypeDTO;
 import com.mimka.shoplocbe.dto.product.ProductDTO;
 import jakarta.transaction.Transactional;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalTime;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 class CommerceControllerIT extends AuthenticationControllerIT {
@@ -38,6 +38,26 @@ class CommerceControllerIT extends AuthenticationControllerIT {
     }
 
     @Test
+    void testGetCommerceTypes_ReturnOK () throws Exception {
+        mockMvc.perform(get("/commerce/types")
+                        .header("Authorization", "Bearer " + customerJWTToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$", hasSize(16)));
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    void testCreateCommerceType_WhenAllFieldsFormAreValid_ReturnCreated () throws Exception {
+        mockMvc.perform(post("/commerce/type")
+                        .header("Authorization", "Bearer " + administratorJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(this.getCommerceTypeDTO())))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
     void testGetCommerceById_ReturnOk () throws Exception {
         mockMvc.perform(get("/commerce/1")
                         .header("Authorization", "Bearer " + customerJWTToken)
@@ -57,7 +77,7 @@ class CommerceControllerIT extends AuthenticationControllerIT {
     void testCreateCommerce_WhenAllFieldsFormAreValid_ReturnCreated () throws Exception {
         CommerceDTO commerceDTO = this.getCommerceDTO();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/commerce/")
+        mockMvc.perform(post("/commerce/")
                         .header("Authorization", "Bearer " + administratorJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(commerceDTO)))
@@ -66,7 +86,7 @@ class CommerceControllerIT extends AuthenticationControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.commerceName").value("Boulangerie du Coin"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.openingHour").value("08:00:00"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.closingHour").value("18:00:00"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.imageUrl").value("URL:/commerce-image"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.imageUrl").value("URL://error-while-uploading-image"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.addressDTO.street").value("1 Rue de la Clef"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.addressDTO.postalCode").value(59000))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.addressDTO.longitude").value(not(0.0)))
@@ -80,7 +100,7 @@ class CommerceControllerIT extends AuthenticationControllerIT {
     void testUpdateCommerce_WhenAllFieldsFormAreValid_ReturnOk () throws Exception {
         CommerceDTO commerceDTO = this.getCommerceDTO();
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/commerce/1")
+        mockMvc.perform(put("/commerce/1")
                         .header("Authorization", "Bearer " + administratorJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(commerceDTO)))
@@ -89,7 +109,7 @@ class CommerceControllerIT extends AuthenticationControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.commerceName").value("Boulangerie du Coin"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.openingHour").value("08:00:00"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.closingHour").value("18:00:00"))
-                //.andExpect(MockMvcResultMatchers.jsonPath("$.imageUrl").value("URL:/commerce-image"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.imageUrl").value("URL://error-while-uploading-image"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.addressDTO.street").value("1 Rue de la Clef"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.addressDTO.postalCode").value(59000))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.addressDTO.longitude").value(not(0.0)))
@@ -100,7 +120,8 @@ class CommerceControllerIT extends AuthenticationControllerIT {
     @Test
     void testUpdateCommerce_WhenInvalidCommerce_ReturnNoContent () throws Exception {
         CommerceDTO commerceDTO = this.getCommerceDTO();
-        mockMvc.perform(MockMvcRequestBuilders.put("/commerce/100")
+
+        mockMvc.perform(put("/commerce/100")
                         .header("Authorization", "Bearer " + administratorJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(commerceDTO)))
@@ -108,11 +129,33 @@ class CommerceControllerIT extends AuthenticationControllerIT {
     }
 
     @Test
+    void testGetCommercesByType_WhenCommerceTypeIdDoNotExist_ReturnNoContent () throws Exception {
+        mockMvc.perform(get("/commerce/type/100")
+                        .header("Authorization", "Bearer " + customerJWTToken))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void testGetCommercesByType_WhenCommerceTypeIdThatExist_ReturnOk () throws Exception {
+        mockMvc.perform(get("/commerce/type/14")
+                        .header("Authorization", "Bearer " + customerJWTToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].commerceType.commerceTypeId").value(14))
+                .andExpect(jsonPath("$[0].commerceType.label").value("Cafétéria"))
+                .andExpect(jsonPath("$[1].commerceType.commerceTypeId").value(14))
+                .andExpect(jsonPath("$[0].commerceType.label").value("Cafétéria"))
+                .andExpect(jsonPath("$[2].commerceType.commerceTypeId").value(14))
+                .andExpect(jsonPath("$[0].commerceType.label").value("Cafétéria"));
+    }
+
+    @Test
     void testCreateCommerce_WithBlankCommerceName_ReturnBadRequest () throws Exception {
         CommerceDTO commerceDTO = this.getCommerceDTO();
         commerceDTO.setCommerceName(" ");
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/commerce/")
+        mockMvc.perform(post("/commerce/")
                         .header("Authorization", "Bearer " + administratorJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(commerceDTO)))
@@ -126,7 +169,7 @@ class CommerceControllerIT extends AuthenticationControllerIT {
         CommerceDTO commerceDTO = this.getCommerceDTO();
         commerceDTO.setOpeningHour(null);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/commerce/")
+        mockMvc.perform(post("/commerce/")
                         .header("Authorization", "Bearer " + administratorJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(commerceDTO)))
@@ -138,7 +181,7 @@ class CommerceControllerIT extends AuthenticationControllerIT {
         CommerceDTO commerceDTO = this.getCommerceDTO();
         commerceDTO.setClosingHour(null);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/commerce/")
+        mockMvc.perform(post("/commerce/")
                         .header("Authorization", "Bearer " + administratorJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(commerceDTO)))
@@ -151,7 +194,7 @@ class CommerceControllerIT extends AuthenticationControllerIT {
         CommerceDTO commerceDTO = this.getCommerceDTO();
         commerceDTO.setAddressDTO(null);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/commerce/")
+        mockMvc.perform(post("/commerce/")
                         .header("Authorization", "Bearer " + administratorJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(commerceDTO)))
@@ -164,7 +207,7 @@ class CommerceControllerIT extends AuthenticationControllerIT {
         CommerceDTO commerceDTO = this.getCommerceDTO();
         commerceDTO.getAddressDTO().setStreet(null);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/commerce/")
+        mockMvc.perform(post("/commerce/")
                         .header("Authorization", "Bearer " + administratorJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(commerceDTO)))
@@ -177,7 +220,7 @@ class CommerceControllerIT extends AuthenticationControllerIT {
         CommerceDTO commerceDTO = this.getCommerceDTO();
         commerceDTO.getAddressDTO().setCity(null);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/commerce/")
+        mockMvc.perform(post("/commerce/")
                         .header("Authorization", "Bearer " + administratorJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(commerceDTO)))
@@ -215,7 +258,7 @@ class CommerceControllerIT extends AuthenticationControllerIT {
     void testAddProduct_WhenIdCommerceDoExist_ReturnCreated () throws Exception {
         ProductDTO productDTO = this.getProductDTO();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/commerce/1")
+        mockMvc.perform(post("/commerce/1")
                         .header("Authorization", "Bearer " + administratorJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(productDTO)))
@@ -232,7 +275,7 @@ class CommerceControllerIT extends AuthenticationControllerIT {
     @Transactional
     @Rollback
     void testDisableCommerce_ReturnOk () throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/commerce/1")
+        mockMvc.perform(delete("/commerce/1")
                         .header("Authorization", "Bearer " + administratorJWTToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
@@ -257,6 +300,11 @@ class CommerceControllerIT extends AuthenticationControllerIT {
         addressDTO.setStreet("1 Rue de la Clef");
         addressDTO.setPostalCode(59000);
         addressDTO.setCity("Lille");
+
+        CommerceTypeDTO commerceTypeDTO = new CommerceTypeDTO();
+        commerceTypeDTO.setCommerceTypeId(1L);
+
+        commerceDTO.setCommerceType(commerceTypeDTO);
         commerceDTO.setAddressDTO(addressDTO);
 
         return commerceDTO;
@@ -274,5 +322,15 @@ class CommerceControllerIT extends AuthenticationControllerIT {
         productDTO.setGift(false);
 
         return productDTO;
+    }
+
+    @NotNull
+    private CommerceTypeDTO getCommerceTypeDTO () {
+        CommerceTypeDTO commerceTypeDTO = new CommerceTypeDTO();
+
+        commerceTypeDTO.setDescription("Un nouveau type de commerce");
+        commerceTypeDTO.setLabel("Commerce");
+
+        return commerceTypeDTO;
     }
 }

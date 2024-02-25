@@ -5,6 +5,7 @@ import com.mimka.shoplocbe.entities.BalanceTransaction;
 import com.mimka.shoplocbe.entities.Customer;
 import com.mimka.shoplocbe.entities.FidelityCard;
 import com.mimka.shoplocbe.entities.PointTransaction;
+import com.mimka.shoplocbe.exception.InvalidCreditAmountException;
 import com.mimka.shoplocbe.services.CustomerService;
 import com.mimka.shoplocbe.services.FidelityCardService;
 import org.springframework.stereotype.Component;
@@ -36,7 +37,7 @@ public class FidelityCardFacade {
         return this.fidelityCardDotUtil.fidelityCardDTO(fidelityCard);
     }
 
-    public FidelityCardDTO creditFidelityCardBalance (CreditBalanceDTO creditBalanceDTO) {
+    public FidelityCardDTO creditFidelityCardBalance (CreditBalanceDTO creditBalanceDTO) throws InvalidCreditAmountException {
         FidelityCard fidelityCard = this.fidelityCardService.creditFidelityCardBalance(creditBalanceDTO.getFidelityCardId(), creditBalanceDTO.getAmount());
 
         return this.fidelityCardDotUtil.fidelityCardDTO(fidelityCard);

@@ -6,9 +6,11 @@ import com.mimka.shoplocbe.exception.RegistrationException;
 import com.mimka.shoplocbe.services.MailServiceImpl;
 import com.mimka.shoplocbe.services.MerchantService;
 import jakarta.mail.MessagingException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class MerchantFacade {
 
     private final MerchantService merchantService;
@@ -26,7 +28,7 @@ public class MerchantFacade {
         try {
             this.mailServiceImpl.triggerCredentialsEmail(merchantDTO);
         } catch (MessagingException e) {
-            System.out.println("Sending merchant email error : " + e.getMessage());
+            log.warn("Sending merchant email error : " + e.getMessage());
         }
         return merchant;
     }

@@ -2,8 +2,8 @@ package com.mimka.shoplocbe.services;
 
 import com.mimka.shoplocbe.dto.commerce.CommerceDTO;
 import com.mimka.shoplocbe.dto.commerce.CommerceDTOUtil;
-import com.mimka.shoplocbe.entities.Address;
 import com.mimka.shoplocbe.entities.Commerce;
+import com.mimka.shoplocbe.entities.CommerceType;
 import com.mimka.shoplocbe.entities.Product;
 import com.mimka.shoplocbe.exception.CommerceNotFoundException;
 import com.mimka.shoplocbe.repositories.CommerceRepository;
@@ -41,10 +41,16 @@ public class CommerceServiceImpl implements CommerceService {
     }
 
     @Override
-    public Commerce createCommerce(CommerceDTO commerceDTO) {
-        Commerce commerce = this.commerceDTOUtil.toCommerce(commerceDTO);
-        commerce.setDisabled(false);
+    public List<Commerce> getCommercesByType(CommerceType commerceType) throws CommerceNotFoundException {
+        List<Commerce> commerceList = this.commerceRepository.findByCommerceType(commerceType);
+        if (commerceList == null) {
+            throw new CommerceNotFoundException("Aucun commerce n'est trouvé pour le type du commerce.");
+        }
+        return commerceList;
+    }
 
+    @Override
+    public Commerce saveCommerce(Commerce commerce) {
         return this.commerceRepository.save(commerce);
     }
 
@@ -70,22 +76,10 @@ public class CommerceServiceImpl implements CommerceService {
     public Commerce updateCommerce(CommerceDTO commerceDTO) throws CommerceNotFoundException {
         Commerce commerce = this.getCommerce(commerceDTO.getCommerceId());
 
-        Commerce commerce1 = this.commerceDTOUtil.toCommerce(commerceDTO);
-
         commerce.setCommerceName(commerceDTO.getCommerceName());
         commerce.setOpeningHour(commerceDTO.getOpeningHour());
         commerce.setClosingHour(commerceDTO.getClosingHour());
         commerce.setImageUrl(commerceDTO.getImageUrl());
-
-        Address address = commerce.getAddress();
-
-        address.setCity(commerceDTO.getAddressDTO().getCity());
-        address.setStreet(commerceDTO.getAddressDTO().getStreet());
-        address.setPostalCode(commerceDTO.getAddressDTO().getPostalCode());
-
-        commerce.setAddress(address);
-
-        this.commerceRepository.save(commerce1);
 
         return commerce;
     }

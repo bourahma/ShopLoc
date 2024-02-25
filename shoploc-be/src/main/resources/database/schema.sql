@@ -134,7 +134,7 @@ CREATE TABLE Role (
 CREATE TABLE Commerce_Type (
     commerce_type_id INT DEFAULT nextval('commerce_type_sequence') PRIMARY KEY,
     label VARCHAR(255) NOT NULL,
-    description time NOT NULL
+    description VARCHAR(255) NOT NULL
 );
 
 -- Create Address Table :
@@ -154,7 +154,7 @@ CREATE TABLE Commerce (
     opening_hour time NOT NULL,
     closing_hour time NOT NULL,
     image_url VARCHAR(255),
-    commerce_type_id INT,
+    commerce_type_id INT NOT NULL,
     address_id INT,
     disabled BOOLEAN NOT NULL,
 

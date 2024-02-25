@@ -2,6 +2,7 @@ package com.mimka.shoplocbe.dto.commerce;
 
 import com.mimka.shoplocbe.entities.Address;
 import com.mimka.shoplocbe.entities.Commerce;
+import com.mimka.shoplocbe.entities.CommerceType;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,10 +19,12 @@ public class CommerceDTOUtil {
     }
 
     public CommerceDTO toCommerceDTO (Commerce commerce) {
-        AddressDTO addressDTO = this.toAddressDTO(commerce.getAddress());
         CommerceDTO commerceDTO = modelMapper.map(commerce, CommerceDTO.class);
+        AddressDTO addressDTO = this.toAddressDTO(commerce.getAddress());
+        CommerceTypeDTO commerceTypeDTO = this.toCommerceTypeDTO(commerce.getCommerceType());
         commerceDTO.setCommerceId(commerce.getCommerceId());
         commerceDTO.setAddressDTO(addressDTO);
+        commerceDTO.setCommerceType(commerceTypeDTO);
 
         return commerceDTO;
     }
@@ -37,4 +40,7 @@ public class CommerceDTOUtil {
     public AddressDTO toAddressDTO (Address address) {
         return modelMapper.map(address, AddressDTO.class);
     }
+
+    public CommerceType toCommerceType (CommerceTypeDTO commerceTypeDTO) {return  modelMapper.map(commerceTypeDTO, CommerceType.class);}
+    public CommerceTypeDTO toCommerceTypeDTO (CommerceType commerceType) {return  modelMapper.map(commerceType, CommerceTypeDTO.class);}
 }

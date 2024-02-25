@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -57,24 +58,25 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order payOrder(Long orderId) {
-        Order order = this.orderRepository.findById(orderId).get();
+    public Order getOrder(long orderId) {
+        return this.orderRepository.findById(orderId).get();
+    }
 
-        if (order.getOrderStatus().equals(OrderStatus.PENDING.name())) {
-            order.setOrderStatus(OrderStatus.PAID.name());
-            this.orderRepository.save(order);
-        }
-        return order;
+    @Override
+    public Order payOrder(Long orderId) {
+        Optional<Order> optionalOrder = this.orderRepository.findById(orderId);
+        optionalOrder.ifPresent(order -> {
+            if (order.getOrderStatus().equals(OrderStatus.PENDING.name())) {
+                order.setOrderStatus(OrderStatus.PAID.name());
+                this.orderRepository.save(order);
+            }
+        });
+        return optionalOrder.orElse(null);
     }
 
     @Override
     public double getOrderTotalPrice(Long orderId, boolean usingPoints) {
         return this.getOrderTotal(orderId, usingPoints);
-    }
-
-    @Override
-    public double getOrderTotalPointsPrice(Long orderId) {
-        return this.getOrderTotal(orderId, true);
     }
 
     public double getOrderTotal(Long orderId, boolean usePointsPrice) {

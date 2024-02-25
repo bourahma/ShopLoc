@@ -107,11 +107,6 @@ public class CustomerServiceImpl implements CustomerService, UserDetailsService 
     }
 
     @Override
-    public boolean orderSettled(double total) {
-        return false;
-    }
-
-    @Override
     public boolean orderSettled(String customerUsername, double total, boolean usingPoints) {
         Customer customer = this.customerRepository.findByUsername(customerUsername);
         FidelityCard fidelityCard = customer.getFidelityCard();

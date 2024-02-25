@@ -1,14 +1,10 @@
 package com.mimka.shoplocbe.controllers;
 
-import com.mimka.shoplocbe.exception.CommerceNotFoundException;
-import com.mimka.shoplocbe.exception.RegistrationException;
-import com.mimka.shoplocbe.exception.RegistrationTokenInvalidException;
+import com.mimka.shoplocbe.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
 import java.util.Map;
@@ -59,6 +55,24 @@ public class ControllerAdvice {
     @ExceptionHandler(value = RegistrationTokenInvalidException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public Map<String, String> registrationTokenInvalidExceptionHandler(RegistrationTokenInvalidException exception) {
+        return Map.of(message, exception.getMessage());
+    }
+
+    @ExceptionHandler(value = CommerceTypeNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public Map<String, String> CommerceTypeNotFoundExceptionHandler(CommerceTypeNotFoundException exception) {
+        return Map.of(message, exception.getMessage());
+    }
+
+    @ExceptionHandler(value = InsufficientFundsException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public Map<String, String> InsufficientFundsExceptionHandler(InsufficientFundsException exception) {
+        return Map.of(message, exception.getMessage());
+    }
+
+    @ExceptionHandler(value = InvalidCreditAmountException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public Map<String, String> InvalidCreditAmountExceptionHandler(InvalidCreditAmountException exception) {
         return Map.of(message, exception.getMessage());
     }
 }

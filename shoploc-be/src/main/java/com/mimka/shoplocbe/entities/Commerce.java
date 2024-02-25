@@ -42,6 +42,10 @@ public class Commerce {
     @JoinColumn(name = "address_id", referencedColumnName = "address_id")
     private Address address;
 
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "commerce_type_id", referencedColumnName = "commerce_type_id")
+    private CommerceType commerceType;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "commerce_id", referencedColumnName = "commerce_id")
     private List<Product> products;
