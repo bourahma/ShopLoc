@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Alert, Button, Label, TextInput } from "flowbite-react";
-import { Link, useNavigate } from "react-router-dom";
-import signupService from "../services/signup";
-import { ErrorMessage, Field, Formik } from "formik";
+import { useNavigate } from "react-router-dom";
+import { ErrorMessage, Formik } from "formik";
 import * as Yup from "yup";
+import registerMerchantService from "../services/registerMerchant";
 
-const SignupForm = () => {
+const MerchantRegistrationForm = () => {
   const [error, setError] = useState(null);
 
-  const initialUser = {
+  const initialMerchant = {
     username: "",
     lastname: "",
     firstname: "",
@@ -16,18 +16,19 @@ const SignupForm = () => {
     confirmedPassword: "",
     email: "",
     phoneNumber: "",
-    agree: false,
+    subscriptionDate: "",
+    commerceId: "",
   };
 
   const navigate = useNavigate();
 
-  const createUser = (values) => {
+  const createMerchant = (values) => {
     delete values.agree;
-    signupService
-      .signup(values)
+    registerMerchantService
+      .registerMerchant(values)
       .then((data) => {
         console.log(data);
-        navigate("/login");
+        navigate("/admin/home");
       })
       .catch((error) => {
         console.log(error);
@@ -50,7 +51,7 @@ const SignupForm = () => {
       {error && <Alert color="failure">{error.message}</Alert>}
       <div>
         <Formik
-          initialValues={initialUser}
+          initialValues={initialMerchant}
           validationSchema={Yup.object({
             username: Yup.string()
               .max(15, "Doit être 15 caractères ou moins")
@@ -79,12 +80,11 @@ const SignupForm = () => {
               .min(10, "Doit être 10 caractères ou plus")
               .max(10, "Doit être 10 caractères ou moins")
               .required("Champ requis"),
-            agree: Yup.boolean()
-              .oneOf([true], "Vous devez accepter les termes et conditions")
-              .required("Champ requis"),
+            subscriptionDate: Yup.date().default(() => new Date()),
+            commerceId: Yup.string().required("Champ requis"),
           })}
           onSubmit={(values, { setSubmitting }) => {
-            createUser(values);
+            createMerchant(values);
             setSubmitting(false);
           }}
         >
@@ -97,7 +97,7 @@ const SignupForm = () => {
             isSubmitting,
           }) => (
             <form
-              className="flex flex-wrap flex-row justify-center my-12 mx-6 gap-4"
+              className="flex flex-wrap justify-center gap-4 my-6 mx-6"
               onSubmit={handleSubmit}
             >
               <div className="flex max-w-md w-full flex-col gap-4">
@@ -238,33 +238,50 @@ const SignupForm = () => {
                     className="text-red-500 text-xs"
                   />
                 </div>
+                <div className="mb-2 block">
+                  <Label htmlFor="subscriptionDate">Date d'inscription</Label>
+                </div>
+                <TextInput
+                  id="subscriptionDate"
+                  type="date"
+                  placeholder="Date d'inscription"
+                  value={values.subscriptionDate}
+                  error={errors.subscriptionDate}
+                  fieldtouched={touched.subscriptionDate?.toString()}
+                  onChange={handleChange}
+                />
+                <ErrorMessage
+                  name="subscriptionDate"
+                  component="div"
+                  className="text-red-500 text-xs"
+                />
                 <div>
                   <div className="mb-2 block">
-                    <Field type="checkbox" id="agree" name="agree" />
-                    <Label htmlFor="agree" className="ml-2">
-                      J'accepte les &nbsp;
-                      <Link
-                        to="https://docs.google.com/document/d/e/2PACX-1vQkr79lY7kZhUDVaGT1RWqroKso5BSf5AAWy6R2lTSoBu2KzAHVBoveYEZwygwaz-TU9RZMRCGNoEbi/pub"
-                        className="text-cyan-600 hover:underline dark:text-cyan-400"
-                        target="_blank"
-                      >
-                        termes et conditions
-                      </Link>
-                    </Label>
-                    <ErrorMessage
-                      name="agree"
-                      component="div"
-                      className="text-red-500 text-xs"
-                    />
+                    <Label htmlFor="commerceId">ID du commerce</Label>
                   </div>
-                  <Button
-                    className="mb-2 block bg-shopred w-full justify-center items-center"
-                    type="submit"
-                    disabled={isSubmitting}
-                  >
-                    S'inscrire
-                  </Button>
+                  <TextInput
+                    id="commerceId"
+                    type="text"
+                    placeholder="ID du commerce"
+                    value={values.commerceId}
+                    error={errors.commerceId}
+                    fieldtouched={touched.commerceId?.toString()}
+                    onChange={handleChange}
+                  />
+                  <ErrorMessage
+                    name="commerceId"
+                    component="div"
+                    className="text-red-500 text-xs"
+                  />
                 </div>
+
+                <Button
+                  className="mb-2 block bg-shopred w-full justify-center items-center"
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  Inscrire le commerçant
+                </Button>
               </div>
             </form>
           )}
@@ -274,4 +291,4 @@ const SignupForm = () => {
   );
 };
 
-export default SignupForm;
+export default MerchantRegistrationForm;

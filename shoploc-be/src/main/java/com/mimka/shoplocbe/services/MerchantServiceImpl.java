@@ -85,6 +85,10 @@ public class MerchantServiceImpl implements MerchantService, UserDetailsService 
             merchant.setRole(this.roleRepository.findByRoleId(1L));
             merchant.setEnabled(true);
             // Merchant is saved.
+            /*
+            merchant.setCommerce(this.commerceRepository.findByCommerceId(merchantDTO.getCommerceId()));
+
+             */
             this.merchantRepository.save(merchant);
         }
 

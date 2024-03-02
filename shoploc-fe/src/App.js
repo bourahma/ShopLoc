@@ -73,16 +73,16 @@ function App() {
               </PrivateRoute>
             }
           />
+          <Route
+            path="/admin/home"
+            element={
+              <PrivateRoute>
+                <Header />
+                <AdminHomeComponent />
+              </PrivateRoute>
+            }
+          />
         </Route>
-        <Route
-          path="/admin/home"
-          element={
-            <>
-              <Header />
-              <AdminHomeComponent />
-            </>
-          }
-        />
       </Routes>
     </BrowserRouter>
   );

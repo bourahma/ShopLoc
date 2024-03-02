@@ -23,6 +23,7 @@ const Header = () => {
     e.preventDefault();
     window.localStorage.removeItem("userToken");
     window.localStorage.removeItem("loggedUser");
+    window.localStorage.removeItem("userRole");
     window.location.reload();
     navigate("/");
   };
