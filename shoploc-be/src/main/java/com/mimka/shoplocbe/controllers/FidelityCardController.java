@@ -4,16 +4,15 @@ import com.mimka.shoplocbe.dto.fidelityCard.BalanceTransactionDTO;
 import com.mimka.shoplocbe.dto.fidelityCard.CreditBalanceDTO;
 import com.mimka.shoplocbe.dto.fidelityCard.FidelityCardDTO;
 import com.mimka.shoplocbe.dto.fidelityCard.PointTransactionDTO;
+import com.mimka.shoplocbe.exception.InvalidCreditAmountException;
 import com.mimka.shoplocbe.facades.FidelityCardFacade;
 import jakarta.validation.Valid;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Set;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "${allowed.origin}")
 @RestController
 @RequestMapping("/fidelity-card")
 public class FidelityCardController {
@@ -22,14 +21,14 @@ public class FidelityCardController {
     public FidelityCardController(FidelityCardFacade fidelityCardFacade) {
         this.fidelityCardFacade = fidelityCardFacade;
     }
-    @PreAuthorize("hasRole('SCOPE_CUSTOMER')")
+
     @GetMapping(value = "/")
     public FidelityCardDTO getCustomerFidelityCard (Principal principal) {
         return this.fidelityCardFacade.getCustomerFidelityCard(principal);
     }
-    @PreAuthorize("hasRole('SCOPE_MERCHANT')")
+
     @PostMapping(value = "/credit")
-    public FidelityCardDTO creditFidelityCardBalance (@RequestBody @Valid CreditBalanceDTO creditBalanceDTO) {
+    public FidelityCardDTO creditFidelityCardBalance (@RequestBody @Valid CreditBalanceDTO creditBalanceDTO) throws InvalidCreditAmountException {
         return this.fidelityCardFacade.creditFidelityCardBalance(creditBalanceDTO);
     }
 

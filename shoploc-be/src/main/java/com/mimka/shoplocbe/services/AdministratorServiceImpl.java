@@ -2,12 +2,10 @@ package com.mimka.shoplocbe.services;
 
 import com.mimka.shoplocbe.dto.DtoUtil;
 import com.mimka.shoplocbe.dto.user.AdministratorDTO;
-import com.mimka.shoplocbe.dto.user.MerchantDTO;
 import com.mimka.shoplocbe.entities.*;
 import com.mimka.shoplocbe.exception.RegistrationException;
 import com.mimka.shoplocbe.repositories.AdministratorRepository;
 import com.mimka.shoplocbe.repositories.RoleRepository;
-import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,28 +24,18 @@ public class AdministratorServiceImpl implements AdministratorService, UserDetai
 
     private final RoleRepository roleRepository;
 
-    private final MailServiceImpl mailService;
-
     private final DtoUtil dtoUtil;
 
     @Autowired
-    public AdministratorServiceImpl(AdministratorRepository administratorRepository, RoleRepository roleRepository, MailServiceImpl mailService, DtoUtil dtoUtil) {
+    public AdministratorServiceImpl(AdministratorRepository administratorRepository, RoleRepository roleRepository, DtoUtil dtoUtil) {
         this.administratorRepository = administratorRepository;
         this.roleRepository = roleRepository;
-        this.mailService = mailService;
         this.dtoUtil = dtoUtil;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return this.getUserDetails(username);
-    }
-
-    @Override
-    public Administrator getAdministratorByUsername(String username) {
-        Administrator administrator = this.administratorRepository.findByUsername(username);
-        if (administrator == null)  throw new BadCredentialsException("invalidEmailMessage");
-        return administrator;
     }
 
     private UserDetails getUserDetails(String username) {

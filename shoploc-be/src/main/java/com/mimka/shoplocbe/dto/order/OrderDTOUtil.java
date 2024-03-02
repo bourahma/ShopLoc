@@ -27,7 +27,7 @@ public class OrderDTOUtil {
             protected void configure() {
                 map().setCommerceId(source.getCommerce().getCommerceId());
                 map().setCommerceName(source.getCommerce().getCommerceName());
-                map().setStatus(source.getOrderStatus().getLabel());
+                map().setStatus(source.getOrderStatus());
                 using(orderToOrderProductDTOConverter).map(source).setProducts(null);
             }
         });
@@ -41,6 +41,7 @@ public class OrderDTOUtil {
                         orderProduct.getProduct().getProductId(),
                         orderProduct.getProduct().getProductName(),
                         orderProduct.getProduct().getPrice(),
+                        orderProduct.getProduct().getRewardPointsPrice(),
                         orderProduct.getQuantity()))
                 .collect(Collectors.toSet());
     };

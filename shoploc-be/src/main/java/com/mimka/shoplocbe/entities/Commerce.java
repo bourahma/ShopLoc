@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,7 +20,7 @@ public class Commerce {
     @Id
     @Column(name = "commerce_id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "commerce_sequence")
-    @SequenceGenerator(name = "commerce_sequence", sequenceName = "commerce_seq", allocationSize = 1, initialValue = 1)
+    @SequenceGenerator(name = "commerce_sequence", sequenceName = "commerce_seq", allocationSize = 1, initialValue = 20)
     private Long commerceId;
 
     @Column(name = "commerce_name", nullable = false)
@@ -34,11 +35,19 @@ public class Commerce {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "id")
-    private Address address;
+    @Column(name = "disabled")
+    private boolean disabled;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "commerce_id", referencedColumnName = "utilisateur_id")
-    private User merchant;
+    @JoinColumn(name = "address_id", referencedColumnName = "address_id")
+    private Address address;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "commerce_type_id", referencedColumnName = "commerce_type_id")
+    private CommerceType commerceType;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "commerce_id", referencedColumnName = "commerce_id")
+    private List<Product> products;
+
 }

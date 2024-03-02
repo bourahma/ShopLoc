@@ -6,7 +6,6 @@ import com.mimka.shoplocbe.exception.RegistrationException;
 
 public interface AdministratorService {
 
-    Administrator getAdministratorByUsername (String username);
     Administrator createAdministrator(AdministratorDTO administratorDTO) throws RegistrationException;
 
 }

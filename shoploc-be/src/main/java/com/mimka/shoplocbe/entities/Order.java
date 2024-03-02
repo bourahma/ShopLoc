@@ -37,7 +37,6 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<OrderProduct> orderProducts;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "commande_status_id", nullable = false)
-    private OrderStatus orderStatus;
+    @Column(name = "order_status")
+    private String orderStatus;
 }

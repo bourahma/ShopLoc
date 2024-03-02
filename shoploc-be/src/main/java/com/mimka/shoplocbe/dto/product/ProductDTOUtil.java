@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductDTOUtil {
 
-
     private ModelMapper modelMapper;
 
     @Autowired
@@ -20,6 +19,9 @@ public class ProductDTOUtil {
     }
 
     public ProductDTO toProductDTO (Product product) {
-        return modelMapper.map(product, ProductDTO.class);
+        ProductDTO productDTO = this.modelMapper.map(product, ProductDTO.class);
+        productDTO.setCommerceId(product.getCommerce().getCommerceId());
+
+        return productDTO;
     }
 }

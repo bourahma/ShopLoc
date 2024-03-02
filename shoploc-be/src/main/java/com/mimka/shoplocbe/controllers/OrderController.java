@@ -1,33 +1,53 @@
 package com.mimka.shoplocbe.controllers;
 
 import com.mimka.shoplocbe.dto.order.OrderDTO;
-import com.mimka.shoplocbe.services.OrderService;
+import com.mimka.shoplocbe.exception.CommerceNotFoundException;
+import com.mimka.shoplocbe.exception.InsufficientFundsException;
+import com.mimka.shoplocbe.facades.OrderFacade;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Map;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "${allowed.origin}")
 @RestController
 @RequestMapping("/order")
 public class OrderController {
 
-    private final OrderService orderService;
+    private final OrderFacade orderFacade;
 
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
+    public OrderController(OrderFacade orderFacade) {
+        this.orderFacade = orderFacade;
     }
 
     @PostMapping("/")
-    @ResponseStatus(value = HttpStatus.CREATED)
-    private OrderDTO createOrder (@RequestBody @Valid OrderDTO orderDTO, Principal principal) {
-        return this.orderService.createOrder(principal.getName(), orderDTO);
+    public OrderDTO createOrder (@RequestBody @Valid OrderDTO orderDTO, Principal principal) throws CommerceNotFoundException {
+        return this.orderFacade.createOrder(principal.getName(), orderDTO);
     }
 
-    @GetMapping("/{orderId}")
-    private OrderDTO getOrder (@PathVariable long orderId, Principal principal) {
-        return this.orderService.getOrder(principal.getName(), orderId);
+    @GetMapping("/settle/using-balance/{orderId}")
+    public OrderDTO settleOrderUsingBalance (@PathVariable long orderId, Principal principal) throws InsufficientFundsException {
+        return this.orderFacade.settleOrder(principal.getName(), orderId, false);
     }
 
+    @GetMapping("/settle/using-points/{orderId}")
+    public OrderDTO settleOrderUsingPoints (@PathVariable long orderId, Principal principal) throws InsufficientFundsException {
+        return this.orderFacade.settleOrder(principal.getName(), orderId, true);
+    }
+
+    @GetMapping("/qr-code-uuid/{orderId}")
+    public Map<String,String> getQrCodeSettle (@PathVariable long orderId, Principal principal) {
+        return this.orderFacade.generateQrCode(orderId, principal);
+    }
+
+    @GetMapping("/settle/using-qr-code-points/{QRCodeUUID}")
+    public Map<String,String> settleOrderUsingPointsQRCode (@PathVariable String QRCodeUUID) throws InsufficientFundsException {
+        return this.orderFacade.settleOrderUsingPointsQRCode(QRCodeUUID);
+    }
+
+    @GetMapping("/settle/using-qr-code-balance/{QRCodeUUID}")
+    public Map<String,String> settleOrderUsingBalanceQRCode (@PathVariable String QRCodeUUID) throws InsufficientFundsException {
+        return this.orderFacade.settleOrderUsingBalanceQRCode(QRCodeUUID);
+    }
 }

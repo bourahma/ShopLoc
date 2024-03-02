@@ -1,6 +1,8 @@
 package com.mimka.shoplocbe.dto.user;
 
 
+import com.mimka.shoplocbe.entities.Commerce;
+import com.mimka.shoplocbe.entities.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,5 +28,9 @@ public class MerchantDTO {
 
     private LocalDate subscriptionDate;
 
-    private Long commerceId;
+    private Commerce commerce;
+
+    private  long commerceId;
+
+    private Role role;
 }

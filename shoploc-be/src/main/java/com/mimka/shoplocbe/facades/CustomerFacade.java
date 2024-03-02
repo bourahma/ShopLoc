@@ -5,12 +5,15 @@ import com.mimka.shoplocbe.entities.Customer;
 import com.mimka.shoplocbe.entities.FidelityCard;
 import com.mimka.shoplocbe.entities.Token;
 import com.mimka.shoplocbe.exception.RegistrationException;
+import com.mimka.shoplocbe.exception.RegistrationTokenInvalidException;
 import com.mimka.shoplocbe.services.*;
 import jakarta.mail.MessagingException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class CustomerFacade {
 
     private final CustomerService customerService;
@@ -38,13 +41,13 @@ public class CustomerFacade {
         return customer;
     }
 
-    public void confirmCustomerRegistration(String uuid) {
+    public void confirmCustomerRegistration(String uuid) throws RegistrationTokenInvalidException {
         Customer customer = this.customerService.enableCustomer(uuid);
 
         try {
             this.mailServiceImpl.triggerWelcomeEmail(customer);
         } catch (MessagingException e) {
-            System.out.println("Sending welcome e-mail : " + e.getMessage());
+            log.warn("Sending welcome e-mail : " + e.getMessage());
         }
     }
 
@@ -54,7 +57,7 @@ public class CustomerFacade {
         try {
             this.mailServiceImpl.triggerEmailVerification(customer, token.getUuid().toString());
         } catch (MessagingException e) {
-            System.out.println("Sending email verification error : " + e.getMessage());
+            log.warn("Sending email verification error : " + e.getMessage());
         }
     }
 }

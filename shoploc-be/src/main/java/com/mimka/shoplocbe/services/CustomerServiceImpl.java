@@ -4,7 +4,9 @@ import com.mimka.shoplocbe.dto.DtoUtil;
 import com.mimka.shoplocbe.dto.user.CustomerDTO;
 import com.mimka.shoplocbe.entities.*;
 import com.mimka.shoplocbe.exception.RegistrationException;
+import com.mimka.shoplocbe.exception.RegistrationTokenInvalidException;
 import com.mimka.shoplocbe.repositories.CustomerRepository;
+import com.mimka.shoplocbe.repositories.FidelityCardRepository;
 import com.mimka.shoplocbe.repositories.RoleRepository;
 import com.mimka.shoplocbe.repositories.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,7 @@ public class CustomerServiceImpl implements CustomerService, UserDetailsService 
 
     private final CustomerRepository customerRepository;
 
-    //private final PasswordEncoder passwordEncoder;
+    private final FidelityCardRepository fidelityCardRepository;
 
     private final DtoUtil dtoUtil;
 
@@ -31,9 +33,9 @@ public class CustomerServiceImpl implements CustomerService, UserDetailsService 
 
     private final TokenRepository tokenRepository;
     @Autowired
-    public CustomerServiceImpl(CustomerRepository customerRepository,DtoUtil dtoUtil, RoleRepository roleRepository, TokenRepository tokenRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, FidelityCardRepository fidelityCardRepository, DtoUtil dtoUtil, RoleRepository roleRepository, TokenRepository tokenRepository) {
         this.customerRepository = customerRepository;
-        //this.passwordEncoder = passwordEncoder;
+        this.fidelityCardRepository = fidelityCardRepository;
         this.dtoUtil = dtoUtil;
         this.roleRepository = roleRepository;
         this.tokenRepository = tokenRepository;
@@ -81,29 +83,20 @@ public class CustomerServiceImpl implements CustomerService, UserDetailsService 
     @Override
     public Customer createCustomer(CustomerDTO customerDTO, FidelityCard fidelityCard) throws RegistrationException {
         Customer customer = this.dtoUtil.toCustomer(customerDTO);
-        // Check passwords are valid.
-        /*if (this.dtoUtil.checkPasswords(customerDTO.getConfirmedPassword(), customerDTO.getPassword())) {
-            // Encode password.
-            String encodedPassword = passwordEncoder.encode(customerDTO.getPassword());
-            customerDTO.setPassword(encodedPassword);
-            customerDTO.setConfirmedPassword(encodedPassword);
-        }*/
-
         if (this.emailAndUsernameUniquenessValid(customerDTO.getEmail(), customerDTO.getUsername())) {
-            // Add user authorities.
             customer.setRole(this.roleRepository.findByRoleId(1L));
-            // Disable the user until he confirms his registration.
             customer.setEnabled(false);
-            //customer.setFidelityCard(fidelityCard);
-            // User is saved.
             this.customerRepository.save(customer);
         }
 
         return customer;
     }
 
-    public Customer enableCustomer (String uuid) {
+    public Customer enableCustomer (String uuid) throws RegistrationTokenInvalidException {
         Token token = this.tokenRepository.findTokenByUuid(uuid);
+        if (token == null) {
+            throw new RegistrationTokenInvalidException("Le token founi n'est pas valide");
+        }
         Customer customer = token.getCustomer();
 
         customer.setEnabled(true);
@@ -113,12 +106,23 @@ public class CustomerServiceImpl implements CustomerService, UserDetailsService 
         return customer;
     }
 
+    @Override
+    public boolean orderSettled(String customerUsername, double total, boolean usingPoints) {
+        Customer customer = this.customerRepository.findByUsername(customerUsername);
+        FidelityCard fidelityCard = customer.getFidelityCard();
 
-    /*public void sendCredentialsEmail (MerchantDTO merchantDTO) {
-        try {
-            this.mailService.sendCredentialToMerchant(merchantDTO);
-        } catch (MessagingException e) {
-            System.out.println("Sending email verification error : " + e.getMessage());
+        boolean settled = usingPoints ? fidelityCard.getPoints() >= total : fidelityCard.getBalance() >= total;
+
+        if (settled) {
+            if (usingPoints) {
+                fidelityCard.setPoints(fidelityCard.getPoints() - total);
+            } else {
+                fidelityCard.setBalance(fidelityCard.getBalance() - total);
+                fidelityCard.setPoints(fidelityCard.getPoints() + total);
+            }
         }
-    }*/
+        this.fidelityCardRepository.save(fidelityCard);
+
+        return settled;
+    }
 }

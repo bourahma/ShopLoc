@@ -1,7 +1,6 @@
 package com.mimka.shoplocbe.repositories;
 
 import com.mimka.shoplocbe.entities.Customer;
-import com.mimka.shoplocbe.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
