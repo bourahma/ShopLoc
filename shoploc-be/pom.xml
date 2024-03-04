@@ -117,11 +117,9 @@
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk-s3</artifactId>
-			<version>1.12.133</version>
+			<groupId>io.supabase</groupId>
+			<artifactId>java</artifactId>
 		</dependency>
-
 	</dependencies>
 
 	<build>

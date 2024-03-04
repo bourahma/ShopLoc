@@ -7,11 +7,11 @@ import lombok.Setter;
 import java.time.LocalDate;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "Promotion")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
-@Getter
-@Setter
 public abstract class Promotion {
 
     @Id

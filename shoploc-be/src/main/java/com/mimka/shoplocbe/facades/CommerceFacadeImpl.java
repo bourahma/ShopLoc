@@ -1,5 +1,6 @@
 package com.mimka.shoplocbe.facades;
 
+import com.mimka.shoplocbe.api.supabase.ImageAPI;
 import com.mimka.shoplocbe.dto.commerce.CommerceDTO;
 import com.mimka.shoplocbe.dto.commerce.CommerceDTOUtil;
 import com.mimka.shoplocbe.dto.commerce.CommerceTypeDTO;
@@ -24,7 +25,7 @@ public class CommerceFacadeImpl implements CommerceFacade {
 
     private final ProductService productService;
 
-    private final ImageService imageService;
+    private final ImageAPI imageAPI;
 
     private final CommerceTypeService commerceTypeService;
 
@@ -36,10 +37,10 @@ public class CommerceFacadeImpl implements CommerceFacade {
 
 
     @Autowired
-    public CommerceFacadeImpl(CommerceService commerceService, ProductService productService, ImageService imageService, CommerceTypeService commerceTypeService, CommerceDTOUtil commerceDTOUtil, ProductDTOUtil productDTOUtil, AddressService addressService) {
+    public CommerceFacadeImpl(CommerceService commerceService, ProductService productService, ImageAPI imageAPI, CommerceTypeService commerceTypeService, CommerceDTOUtil commerceDTOUtil, ProductDTOUtil productDTOUtil, AddressService addressService) {
         this.commerceService = commerceService;
         this.productService = productService;
-        this.imageService = imageService;
+        this.imageAPI = imageAPI;
         this.commerceTypeService = commerceTypeService;
         this.commerceDTOUtil = commerceDTOUtil;
         this.productDTOUtil = productDTOUtil;
@@ -64,7 +65,7 @@ public class CommerceFacadeImpl implements CommerceFacade {
         commerce.setCommerceType(commerceType);
         commerce.setAddress(address);
         // Save commerce image to amazon S3 bucket and get back the image url.
-        commerce.setImageUrl(this.imageService.uploadImage(commerceDTO.getMultipartFile()));
+        commerce.setImageUrl(this.imageAPI.uploadImage(commerceDTO.getMultipartFile()));
         commerce = this.commerceService.saveCommerce(commerce);
 
         return this.commerceDTOUtil.toCommerceDTO(commerce);
@@ -73,7 +74,7 @@ public class CommerceFacadeImpl implements CommerceFacade {
     @Override
     public CommerceDTO addProduct(Long commerceId, ProductDTO productDTO) throws CommerceNotFoundException {
         Product product = this.productService.createProduct(productDTO);
-        product.setImageUrl(this.imageService.uploadImage(productDTO.getMultipartFile()));
+        product.setImageUrl(this.imageAPI.uploadImage(productDTO.getMultipartFile()));
         Commerce commerce = this.commerceService.addProduct(product, commerceId);
 
         return this.commerceDTOUtil.toCommerceDTO(commerce);
@@ -136,7 +137,7 @@ public class CommerceFacadeImpl implements CommerceFacade {
         // Update the address
         Commerce commerce = this.commerceService.updateCommerce(commerceDTO);
         // Update the commerce image if any
-        commerce.setImageUrl(this.imageService.uploadImage(commerceDTO.getMultipartFile()));
+        commerce.setImageUrl(this.imageAPI.uploadImage(commerceDTO.getMultipartFile()));
         // Get commerce type.
         CommerceType commerceType = this.commerceTypeService.getCommerceTypeById(commerceDTO.getCommerceType().getCommerceTypeId());
         commerce.setAddress(address);

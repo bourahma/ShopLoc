@@ -39,6 +39,6 @@ public class CustomerOrdersReader implements ItemReader<Pair<List<Order>, Custom
         }
 
         Customer currentCustomer = customerIterator.next();
-        return Pair.of(orderRepository.findByCustomerAndAndOrderDateAfterAndAndOrderStatus(currentCustomer, LocalDate.now().minusDays(7), OrderStatus.PAID), currentCustomer);
+        return Pair.of(orderRepository.findByCustomerAndAndOrderDateAfterAndAndOrderStatus(currentCustomer, LocalDate.now().minusDays(7), OrderStatus.PAID.name()), currentCustomer);
     }
 }
