@@ -18,7 +18,7 @@ public class PointTransaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "point_transaction_sequence")
-    @SequenceGenerator(name = "point_transaction_sequence", sequenceName = "point_transaction_seq", allocationSize = 1, initialValue = 10)
+    @SequenceGenerator(name = "point_transaction_sequence", sequenceName = "point_transaction_seq", allocationSize = 1, initialValue = 50)
     @Column(name = "point_transaction_id")
     private Long pointTransactionId;
 

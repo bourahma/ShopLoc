@@ -6,6 +6,7 @@ import com.mimka.shoplocbe.services.AuthenticationServiceImpl;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,7 @@ public class AuthenticationController {
 
     @PostMapping("/customer/login")
     public Map<String, String> loginCustomerWithUsername (@RequestBody @Valid AuthDTO authDTO) {
-        log.info("Customer authentication attempt from : {}", authDTO.getUsername() + " " + authDTO.getPassword());
+        log.info("Customer authentication attempt from : {}", authDTO.getUsername());
         return this.authenticationService.loginCustomerWithUsername(authDTO.getUsername(), authDTO.getPassword());
     }
 

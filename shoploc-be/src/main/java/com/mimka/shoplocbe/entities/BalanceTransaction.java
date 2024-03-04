@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @Entity
@@ -18,7 +17,7 @@ public class BalanceTransaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "balance_transaction_sequence")
-    @SequenceGenerator(name = "balance_transaction_sequence", sequenceName = "balance_transaction_seq", allocationSize = 1, initialValue = 10)
+    @SequenceGenerator(name = "balance_transaction_sequence", sequenceName = "balance_transaction_seq", allocationSize = 1, initialValue = 50)
     private Long balanceTransactionId;
 
     @Column(name = "transaction_date", nullable = false)

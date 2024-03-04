@@ -5,14 +5,16 @@ import com.mimka.shoplocbe.exception.CommerceNotFoundException;
 import com.mimka.shoplocbe.exception.InsufficientFundsException;
 import com.mimka.shoplocbe.facades.OrderFacade;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Map;
 
-@CrossOrigin(origins = "${allowed.origin}")
 @RestController
 @RequestMapping("/order")
+@CrossOrigin(origins = "${allowed.origin}")
+@PreAuthorize("hasAuthority('SCOPE_CUSTOMER')")
 public class OrderController {
 
     private final OrderFacade orderFacade;

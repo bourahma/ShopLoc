@@ -2,11 +2,14 @@ package com.mimka.shoplocbe.facades;
 
 import com.mimka.shoplocbe.dto.commerce.CommerceDTO;
 import com.mimka.shoplocbe.dto.commerce.CommerceTypeDTO;
+import com.mimka.shoplocbe.dto.product.ProductCategoryDTO;
 import com.mimka.shoplocbe.dto.product.ProductDTO;
+import com.mimka.shoplocbe.entities.ProductCategory;
 import com.mimka.shoplocbe.exception.CommerceNotFoundException;
 import com.mimka.shoplocbe.exception.CommerceTypeNotFoundException;
 
 import java.util.List;
+import java.util.Set;
 
 public interface CommerceFacade {
 
@@ -29,4 +32,6 @@ public interface CommerceFacade {
     CommerceTypeDTO createCommerceType (CommerceTypeDTO commerceTypeDTO);
 
     CommerceDTO updateCommerce (CommerceDTO commerceDTO) throws CommerceNotFoundException, CommerceTypeNotFoundException;
+
+    Set<ProductCategoryDTO> getCommerceProductCategories (Long commerceId) throws CommerceNotFoundException;
 }

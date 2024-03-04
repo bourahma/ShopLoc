@@ -17,7 +17,7 @@ public class BenefitHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "benefit_history_sequence")
-    @SequenceGenerator(name = "benefit_history_sequence", sequenceName = "benefit_history_seq", allocationSize = 1, initialValue = 1)
+    @SequenceGenerator(name = "benefit_history_sequence", sequenceName = "benefit_history_seq", allocationSize = 1, initialValue = 50)
     private Long id;
 
     @Column(name = "date_acquisition")

@@ -17,7 +17,7 @@ public class Product {
     @Id
     @Column(name = "product_id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_sequence")
-    @SequenceGenerator(name = "product_sequence", sequenceName = "product_seq", allocationSize = 1, initialValue = 20)
+    @SequenceGenerator(name = "product_sequence", sequenceName = "product_seq", allocationSize = 1, initialValue = 50)
     private Long productId;
 
     @Column(name = "product_name", nullable = false)
@@ -50,6 +50,10 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "commerce_id", referencedColumnName = "commerce_id")
     private Commerce commerce;
+
+    @ManyToOne
+    @JoinColumn(name = "product_category_id", referencedColumnName = "product_category_id")
+    private ProductCategory productCategory;
 
     @Override
     public String toString() {

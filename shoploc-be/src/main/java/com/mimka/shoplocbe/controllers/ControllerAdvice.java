@@ -75,4 +75,10 @@ public class ControllerAdvice {
     public Map<String, String> InvalidCreditAmountExceptionHandler(InvalidCreditAmountException exception) {
         return Map.of(message, exception.getMessage());
     }
+
+    @ExceptionHandler(value = ProductCategoryNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public Map<String, String> ProductCategoryNotFoundExceptionHandler(ProductCategoryNotFoundException exception) {
+        return Map.of(message, exception.getMessage());
+    }
 }

@@ -1,6 +1,5 @@
 package com.mimka.shoplocbe.dto.user;
 
-
 import com.mimka.shoplocbe.entities.Commerce;
 import com.mimka.shoplocbe.entities.Role;
 import lombok.Getter;

@@ -7,13 +7,15 @@ import com.mimka.shoplocbe.dto.fidelityCard.PointTransactionDTO;
 import com.mimka.shoplocbe.exception.InvalidCreditAmountException;
 import com.mimka.shoplocbe.facades.FidelityCardFacade;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Set;
 
-@CrossOrigin(origins = "${allowed.origin}")
 @RestController
+@CrossOrigin(origins = "${allowed.origin}")
+@PreAuthorize("hasAuthority('SCOPE_CUSTOMER')")
 @RequestMapping("/fidelity-card")
 public class FidelityCardController {
     private final FidelityCardFacade fidelityCardFacade;

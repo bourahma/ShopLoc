@@ -3,12 +3,10 @@ package com.mimka.shoplocbe.facades;
 import com.mimka.shoplocbe.dto.commerce.CommerceDTO;
 import com.mimka.shoplocbe.dto.commerce.CommerceDTOUtil;
 import com.mimka.shoplocbe.dto.commerce.CommerceTypeDTO;
+import com.mimka.shoplocbe.dto.product.ProductCategoryDTO;
 import com.mimka.shoplocbe.dto.product.ProductDTO;
 import com.mimka.shoplocbe.dto.product.ProductDTOUtil;
-import com.mimka.shoplocbe.entities.Address;
-import com.mimka.shoplocbe.entities.Commerce;
-import com.mimka.shoplocbe.entities.CommerceType;
-import com.mimka.shoplocbe.entities.Product;
+import com.mimka.shoplocbe.entities.*;
 import com.mimka.shoplocbe.exception.CommerceNotFoundException;
 import com.mimka.shoplocbe.exception.CommerceTypeNotFoundException;
 import com.mimka.shoplocbe.services.*;
@@ -16,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class CommerceFacadeImpl implements CommerceFacade {
@@ -145,5 +145,13 @@ public class CommerceFacadeImpl implements CommerceFacade {
         this.commerceService.saveCommerce(commerce);
 
         return this.commerceDTOUtil.toCommerceDTO(commerce);
+    }
+
+    @Override
+    public Set<ProductCategoryDTO> getCommerceProductCategories(Long commerceId) throws CommerceNotFoundException {
+        Set<ProductCategory> productCategorySet = this.commerceService.getCommerceProductCategories(commerceId);
+        return productCategorySet
+                .stream()
+                .map(productDTOUtil::toProductCategoryDTO).collect(Collectors.toSet());
     }
 }

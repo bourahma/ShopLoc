@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OfferPromotion extends Promotion {
+
     @Column(name = "required_items", nullable = false)
     private int requiredItems;
 

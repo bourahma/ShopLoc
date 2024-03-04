@@ -51,10 +51,21 @@ class CommerceControllerIT extends AuthenticationControllerIT {
     @Rollback
     void testCreateCommerceType_WhenAllFieldsFormAreValid_ReturnCreated () throws Exception {
         mockMvc.perform(post("/commerce/type")
-                        .header("Authorization", "Bearer " + administratorJWTToken)
+                        .header("Authorization", "Bearer " + merchantJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(this.getCommerceTypeDTO())))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    void testGetCommerceProductCategories_ReturnOk () throws Exception {
+        mockMvc.perform(get("/commerce/categories/1")
+                        .header("Authorization", "Bearer " + administratorJWTToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$", hasSize(3)));
     }
 
     @Test
@@ -101,7 +112,7 @@ class CommerceControllerIT extends AuthenticationControllerIT {
         CommerceDTO commerceDTO = this.getCommerceDTO();
 
         mockMvc.perform(put("/commerce/1")
-                        .header("Authorization", "Bearer " + administratorJWTToken)
+                        .header("Authorization", "Bearer " + merchantJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(commerceDTO)))
                 .andExpect(status().isOk())
@@ -122,7 +133,7 @@ class CommerceControllerIT extends AuthenticationControllerIT {
         CommerceDTO commerceDTO = this.getCommerceDTO();
 
         mockMvc.perform(put("/commerce/100")
-                        .header("Authorization", "Bearer " + administratorJWTToken)
+                        .header("Authorization", "Bearer " + merchantJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(commerceDTO)))
                 .andExpect(status().isNoContent());
@@ -259,24 +270,23 @@ class CommerceControllerIT extends AuthenticationControllerIT {
         ProductDTO productDTO = this.getProductDTO();
 
         mockMvc.perform(post("/commerce/1")
-                        .header("Authorization", "Bearer " + administratorJWTToken)
+                        .header("Authorization", "Bearer " + merchantJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(productDTO)))
                 .andExpect(status().isCreated());
 
         mockMvc.perform(get("/commerce/1/products")
-                        .header("Authorization", "Bearer " + customerJWTToken))
+                        .header("Authorization", "Bearer " + merchantJWTToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").exists())
                 .andExpect(jsonPath("$", hasSize(3)));
     }
-    // TODO : Move this test to product controller it and do needed actions on the code.
     @Test
     @Transactional
     @Rollback
     void testDisableCommerce_ReturnOk () throws Exception {
         mockMvc.perform(delete("/commerce/1")
-                        .header("Authorization", "Bearer " + administratorJWTToken)
+                        .header("Authorization", "Bearer " + merchantJWTToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 

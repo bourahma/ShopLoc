@@ -30,15 +30,19 @@ public class ProductDTO {
     @Min(value = 0, message = "La quantité doit être un nombre entier positif")
     private int quantity;
 
-    @Positive(message = "Le prix en points de fidélité doit être un nombre positif ou nul")
+    @Positive(message = "Le prix en points de fidélité doit être un nombre positif ou nul.")
     private double rewardPointsPrice;
 
     @NotNull(message = "Le statut de cadeau est requis")
     private boolean isGift;
 
+    private String productCategoryLabel;
+
+    private MultipartFile multipartFile;
+
+    private Long productCategoryId;
+
     private Long commerceId;
 
     private Long discountId;
-
-    private MultipartFile multipartFile;
 }

@@ -1,4 +1,5 @@
 package com.mimka.shoplocbe.entities;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +15,7 @@ public class Benefit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "benefit_sequence")
-    @SequenceGenerator(name = "benefit_sequence", sequenceName = "benefit_seq", allocationSize = 1, initialValue = 1)
+    @SequenceGenerator(name = "benefit_sequence", sequenceName = "benefit_seq", allocationSize = 1, initialValue = 50)
     private Long benefitId;
 
     @Column(name = "type", nullable = false)

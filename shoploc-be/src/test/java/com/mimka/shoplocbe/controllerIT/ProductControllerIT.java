@@ -37,7 +37,7 @@ class ProductControllerIT extends AuthenticationControllerIT {
         ProductDTO productDTO = this.getProductDTO();
 
         mockMvc.perform(put("/product/")
-                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .header("Authorization", "Bearer " + merchantJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(productDTO)))
                 .andExpect(status().isOk())
@@ -55,7 +55,7 @@ class ProductControllerIT extends AuthenticationControllerIT {
     @Test
     void testDeleteProduct_ReturnNoContent () throws Exception {
         mockMvc.perform(delete("/product/1")
-                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .header("Authorization", "Bearer " + merchantJWTToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }

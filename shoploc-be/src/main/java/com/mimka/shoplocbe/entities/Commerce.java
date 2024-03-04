@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -20,7 +21,7 @@ public class Commerce {
     @Id
     @Column(name = "commerce_id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "commerce_sequence")
-    @SequenceGenerator(name = "commerce_sequence", sequenceName = "commerce_seq", allocationSize = 1, initialValue = 20)
+    @SequenceGenerator(name = "commerce_sequence", sequenceName = "commerce_seq", allocationSize = 1, initialValue = 50)
     private Long commerceId;
 
     @Column(name = "commerce_name", nullable = false)
@@ -50,4 +51,6 @@ public class Commerce {
     @JoinColumn(name = "commerce_id", referencedColumnName = "commerce_id")
     private List<Product> products;
 
+    @OneToMany(mappedBy = "commerce")
+    private Set<ProductCategory> productCategories;
 }

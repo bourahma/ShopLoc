@@ -5,12 +5,14 @@ import com.mimka.shoplocbe.dto.commerce.CommerceDTOUtil;
 import com.mimka.shoplocbe.entities.Commerce;
 import com.mimka.shoplocbe.entities.CommerceType;
 import com.mimka.shoplocbe.entities.Product;
+import com.mimka.shoplocbe.entities.ProductCategory;
 import com.mimka.shoplocbe.exception.CommerceNotFoundException;
 import com.mimka.shoplocbe.repositories.CommerceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CommerceServiceImpl implements CommerceService {
@@ -82,6 +84,11 @@ public class CommerceServiceImpl implements CommerceService {
         commerce.setImageUrl(commerceDTO.getImageUrl());
 
         return commerce;
+    }
+
+    @Override
+    public Set<ProductCategory> getCommerceProductCategories (Long commerceId) throws CommerceNotFoundException {
+        return this.getCommerce(commerceId).getProductCategories();
     }
 
 }

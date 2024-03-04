@@ -16,7 +16,7 @@ public abstract class Promotion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "promotion_sequence")
-    @SequenceGenerator(name = "promotion_sequence", sequenceName = "promotion_seq", allocationSize = 1, initialValue = 1)
+    @SequenceGenerator(name = "promotion_sequence", sequenceName = "promotion_seq", allocationSize = 1, initialValue = 50)
     private Long promotionId;
 
     @Column(name = "start_date", nullable = false)

@@ -3,9 +3,7 @@ package com.mimka.shoplocbe.dto;
 import com.mimka.shoplocbe.dto.user.AdministratorDTO;
 import com.mimka.shoplocbe.dto.user.CustomerDTO;
 import com.mimka.shoplocbe.dto.user.MerchantDTO;
-import com.mimka.shoplocbe.dto.user.RegisterDTO;
 import com.mimka.shoplocbe.entities.*;
-import com.mimka.shoplocbe.exception.RegistrationException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -62,17 +60,6 @@ public class DtoUtil {
                 });
 
         return modelMapper.map(administrator, AdministratorDTO.class);
-    }
-
-    public User toUser (RegisterDTO registerDTO) {
-        return modelMapper.map(registerDTO, User.class);
-    }
-
-    public boolean checkPasswords (String confirmedPassword, String password) throws RegistrationException {
-        if (!confirmedPassword.equals(password)) {
-            throw new RegistrationException(differentP);
-        }
-        return true;
     }
 
 }

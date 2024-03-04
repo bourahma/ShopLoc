@@ -5,7 +5,6 @@ import com.mimka.shoplocbe.dto.user.CustomerDTO;
 import com.mimka.shoplocbe.dto.user.MerchantDTO;
 import com.mimka.shoplocbe.entities.Customer;
 import com.mimka.shoplocbe.entities.Merchant;
-import com.mimka.shoplocbe.exception.RegistrationException;
 import com.mimka.shoplocbe.exception.RegistrationTokenInvalidException;
 import com.mimka.shoplocbe.facades.AdministratorFacade;
 import com.mimka.shoplocbe.facades.CustomerFacade;

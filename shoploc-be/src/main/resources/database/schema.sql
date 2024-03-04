@@ -25,7 +25,9 @@ DROP TABLE IF EXISTS Viewed_Product CASCADE;
 DROP TABLE IF EXISTS VFP_History CASCADE;
 DROP TABLE IF EXISTS Address CASCADE;
 DROP TABLE IF EXISTS QR_Code_Payment CASCADE;
+DROP TABLE IF EXISTS Product_Category CASCADE;
 
+DROP SEQUENCE IF EXISTS product_category_sequence CASCADE;
 DROP SEQUENCE IF EXISTS order_sequence CASCADE;
 DROP SEQUENCE IF EXISTS address_sequence CASCADE;
 DROP SEQUENCE IF EXISTS utilisateur_sequence CASCADE;
@@ -124,21 +126,24 @@ CREATE SEQUENCE order_sequence
     CACHE 1;
 
 -- Create the Role Table :
-CREATE TABLE Role (
+CREATE TABLE Role
+(
     role_id INT PRIMARY KEY,
     role_name VARCHAR(50) NOT NULL,
     role_description VARCHAR(250)
 );
 
 -- Create the Commerce_Type Table :
-CREATE TABLE Commerce_Type (
+CREATE TABLE Commerce_Type
+(
     commerce_type_id INT DEFAULT nextval('commerce_type_sequence') PRIMARY KEY,
     label VARCHAR(255) NOT NULL,
     description VARCHAR(255) NOT NULL
 );
 
 -- Create Address Table :
-CREATE TABLE Address (
+CREATE TABLE Address
+(
     address_id INT DEFAULT nextval('address_sequence') PRIMARY KEY,
     street VARCHAR(255) NOT NULL,
     postal_code INT NOT NULL,
@@ -148,7 +153,8 @@ CREATE TABLE Address (
 );
 
 -- Create the commerce Table :
-CREATE TABLE Commerce (
+CREATE TABLE Commerce
+(
     commerce_id INT DEFAULT nextval('commerce_sequence') PRIMARY KEY,
     commerce_name VARCHAR(255) NOT NULL,
     opening_hour time NOT NULL,
@@ -162,8 +168,20 @@ CREATE TABLE Commerce (
     FOREIGN KEY (address_id) REFERENCES Address (address_id)
 );
 
+-- Create the Category Table :
+CREATE TABLE Product_Category
+(
+    product_category_id INT PRIMARY KEY,
+    commerce_id INT NOT NULL,
+    label VARCHAR(100) NOT NULL,
+    description VARCHAR(255),
+
+    FOREIGN KEY (commerce_id) REFERENCES Commerce (commerce_id)
+);
+
 -- Create the Product Table :
-CREATE TABLE Product (
+CREATE TABLE Product
+(
     product_id INT DEFAULT nextval('product_sequence') PRIMARY KEY,
     product_name VARCHAR(255) NOT NULL,
     description TEXT,
@@ -175,19 +193,23 @@ CREATE TABLE Product (
     commerce_id INT,
     view INT,
     image_url VARCHAR(255),
+    product_category_id INT NOT NULL,
 
+    FOREIGN KEY (product_category_id) REFERENCES Product_Category(product_category_id),
     FOREIGN KEY (commerce_id) REFERENCES Commerce(commerce_id)
 );
 
 -- Create FidelityCard Table :
-CREATE TABLE Fidelity_Card (
+CREATE TABLE Fidelity_Card
+(
     fidelity_card_id VARCHAR(50) PRIMARY KEY,
     points NUMERIC(10,2) NOT NULL,
     balance NUMERIC(10,2) NOT NULL
 );
 
 -- Create Customer Table :
-CREATE TABLE Customer (
+CREATE TABLE Customer
+(
     id INT DEFAULT nextval('utilisateur_sequence') PRIMARY KEY,
     username VARCHAR(255) UNIQUE NOT NULL,
     lastname VARCHAR(255) NOT NULL,
@@ -206,7 +228,8 @@ CREATE TABLE Customer (
 
 
 -- Create Customer_Connection Table :
-CREATE TABLE Customer_Connection (
+CREATE TABLE Customer_Connection
+(
     connection_id VARCHAR(255) PRIMARY KEY,
     connect_time TIME,
     disconnect_time TIME,
@@ -216,7 +239,8 @@ CREATE TABLE Customer_Connection (
 );
 
 -- Create the User table :
-CREATE TABLE Merchant (
+CREATE TABLE Merchant
+(
     id INT DEFAULT nextval('utilisateur_sequence') PRIMARY KEY,
     username VARCHAR(255) UNIQUE NOT NULL,
     lastname VARCHAR(255) NOT NULL,
@@ -236,7 +260,8 @@ CREATE TABLE Merchant (
 );
 
 -- Create Administrator table :
-CREATE TABLE Administrator (
+CREATE TABLE Administrator
+(
     id INT DEFAULT nextval('utilisateur_sequence') PRIMARY KEY,
     username VARCHAR(255) UNIQUE NOT NULL,
     lastname VARCHAR(255) NOT NULL,
@@ -251,7 +276,8 @@ CREATE TABLE Administrator (
 );
 
 -- Create OrderStatus Table
-CREATE TABLE Order_Status (
+CREATE TABLE Order_Status
+(
     order_status_id INT NOT NULL,
     label VARCHAR(255),
     description VARCHAR(250),
@@ -259,7 +285,8 @@ CREATE TABLE Order_Status (
 );
 
 -- Create Orders Table
-CREATE TABLE Orders (
+CREATE TABLE Orders
+(
     order_id INT DEFAULT nextval('order_sequence') PRIMARY KEY,
     customer_id INT NOT NULL,
     commerce_id INT NOT NULL,
@@ -271,7 +298,8 @@ CREATE TABLE Orders (
 );
 
 -- Create BalanceTransaction Table
-CREATE TABLE Balance_Transaction (
+CREATE TABLE Balance_Transaction
+(
     balance_transaction_id INT DEFAULT nextval('balance_transaction_sequence') PRIMARY KEY,
     transaction_date DATE NOT NULL,
     type VARCHAR(255) NOT NULL,
@@ -284,7 +312,8 @@ CREATE TABLE Balance_Transaction (
 );
 
 -- Create PointTransaction Table
-CREATE TABLE Point_Transaction (
+CREATE TABLE Point_Transaction
+(
     point_transaction_id INT DEFAULT nextval('point_transaction_sequence') PRIMARY KEY,
     fidelity_card_id VARCHAR(50) NOT NULL,
     transaction_date DATE NOT NULL,
@@ -297,7 +326,8 @@ CREATE TABLE Point_Transaction (
 );
 
 -- Create the Token table :
-CREATE TABLE Token (
+CREATE TABLE Token
+(
     uuid VARCHAR(255) PRIMARY KEY,
     customer_id INT,
 
@@ -305,7 +335,8 @@ CREATE TABLE Token (
 );
 
 -- Create OrderProduct Table :
-CREATE TABLE Order_Product (
+CREATE TABLE Order_Product
+(
     order_product_id INT NOT NULL,
     order_id INT NOT NULL,
     quantity INT NOT NULL CHECK (quantity > 0),
@@ -316,13 +347,15 @@ CREATE TABLE Order_Product (
 );
 
 -- Create Benefits Table :
-CREATE TABLE Benefit (
+CREATE TABLE Benefit
+(
     benefit_id INT DEFAULT nextval('benefit_sequence') PRIMARY KEY,
     description VARCHAR(255)
 );
 
 -- Create BenefitHistory Table :
-CREATE TABLE Benefit_History (
+CREATE TABLE Benefit_History
+(
     benefit_history_id INT DEFAULT nextval('benefit_history_sequence') PRIMARY KEY,
     dateAcquisition DATE,
     customer_id INT,
@@ -333,7 +366,8 @@ CREATE TABLE Benefit_History (
 );
 
 -- Create GiftHistory Table :
-CREATE TABLE Gift_History (
+CREATE TABLE Gift_History
+(
     gift_history_id INT DEFAULT nextval('gift_history_sequence') PRIMARY KEY,
     purchase_date DATE,
     customer_id INT,
@@ -344,7 +378,8 @@ CREATE TABLE Gift_History (
 );
 
 -- Create Promotion Table :
-CREATE TABLE Promotion (
+CREATE TABLE Promotion
+(
     promotion_id INT DEFAULT nextval('promotion_sequence') PRIMARY KEY,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
@@ -363,7 +398,8 @@ CREATE TABLE Promotion (
 );
 
 -- Create VFP_History Table
-CREATE TABLE VFP_History (
+CREATE TABLE VFP_History
+(
     vfp_update_id INT DEFAULT nextval('promotion_sequence') PRIMARY KEY,
     customer_id INT UNIQUE NOT NULL,
     granted_date DATE,
@@ -373,7 +409,8 @@ CREATE TABLE VFP_History (
 );
 
 -- Create QR_Code_Payment Table
-CREATE TABLE QR_Code_Payment (
+CREATE TABLE QR_Code_Payment
+(
     qr_code_payment_id VARCHAR(255) PRIMARY KEY,
     customer_id INT,
     order_id INT,
@@ -382,51 +419,3 @@ CREATE TABLE QR_Code_Payment (
     FOREIGN KEY (customer_id) REFERENCES Customer(id),
     FOREIGN KEY (order_id) REFERENCES Orders(order_id)
 );
-
--- Function to update VFP status after each purchase
-CREATE OR REPLACE FUNCTION update_vfp_status()
-RETURNS TRIGGER AS '
-    BEGIN
-        IF (SELECT COUNT(*) FROM Orders
-            WHERE customer_id = NEW.customer_id
-            AND order_date >= CURRENT_DATE - INTERVAL ''15 days'') >= 10 THEN
-            IF EXISTS (SELECT 1 FROM VFP_Status WHERE customer_id = NEW.customer_id) THEN
-                UPDATE Customer
-                SET is_vfp_membership = TRUE
-                WHERE id = NEW.customer_id;
-            ELSE
-                INSERT INTO VFP_Status (customer_id, is_vfp, last_evaluation)
-                VALUES (NEW.customer_id, TRUE, CURRENT_DATE);
-            END IF;
-        END IF;
-
-        RETURN NEW;
-    END;
-' LANGUAGE plpgsql;
-
--- Function to update VFP status nightly
-CREATE OR REPLACE FUNCTION update_vfp_status_nightly()
-RETURNS void AS '
-BEGIN
-    -- Logic to mark customers as non-VFP if they don''t meet the criteria
-    UPDATE VFP_Status
-    SET enabled = FALSE, last_evaluation = CURRENT_DATE
-    WHERE customer_id IN (
-        SELECT v.customer_id
-        FROM VFP v
-                 LEFT JOIN (
-            SELECT customer_id, COUNT(*) as recent_orders
-            FROM Orders
-            WHERE order_date >= CURRENT_DATE - INTERVAL ''15 days''
-            GROUP BY customer_id
-        ) as recent ON v.customer_id = recent.customer_id
-        WHERE v.enabled = TRUE AND (recent.recent_orders IS NULL OR recent.recent_orders < 10)
-    );
-END;
-' LANGUAGE plpgsql;
-
--- Trigger to execute the update_vfp_status function after each new order insertion
-CREATE TRIGGER after_order_insert
-    AFTER INSERT ON Orders
-    FOR EACH ROW
-    EXECUTE FUNCTION update_vfp_status();
