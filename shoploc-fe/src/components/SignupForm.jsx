@@ -48,7 +48,7 @@ const SignupForm = () => {
   return (
     <>
       {error && <Alert color="failure">{error.message}</Alert>}
-      <div className="flex justify-center my-12 mx-6">
+      <div>
         <Formik
           initialValues={initialUser}
           validationSchema={Yup.object({
@@ -97,10 +97,10 @@ const SignupForm = () => {
             isSubmitting,
           }) => (
             <form
-              className="grid grid-cols-2 gap-4 max-w-2xl mx-auto"
+              className="flex flex-wrap flex-row justify-center my-12 mx-6 gap-4"
               onSubmit={handleSubmit}
             >
-              <div className="flex flex-col gap-4">
+              <div className="flex max-w-md w-full flex-col gap-4">
                 <div>
                   <div className="mb-2 block">
                     <Label htmlFor="username">Nom d'utilisateur</Label>
@@ -158,8 +158,27 @@ const SignupForm = () => {
                     className="text-red-500 text-xs"
                   />
                 </div>
+                <div>
+                  <div className="mb-2 block">
+                    <Label htmlFor="phoneNumber">Numéro de téléphone</Label>
+                  </div>
+                  <TextInput
+                    id="phoneNumber"
+                    type="text"
+                    placeholder="Votre numéro de téléphone"
+                    value={values.phoneNumber}
+                    error={errors.phoneNumber}
+                    fieldtouched={touched.phoneNumber?.toString()}
+                    onChange={handleChange}
+                  />
+                  <ErrorMessage
+                    name="phoneNumber"
+                    component="div"
+                    className="text-red-500 text-xs"
+                  />
+                </div>
               </div>
-              <div className="flex flex-col gap-4">
+              <div className="flex max-w-md w-full flex-col gap-4">
                 <div>
                   <div className="mb-2 block">
                     <Label htmlFor="password">Mot de passe</Label>
@@ -219,54 +238,34 @@ const SignupForm = () => {
                     className="text-red-500 text-xs"
                   />
                 </div>
-              </div>
-              <div>
-                <div className="mb-2 block">
-                  <Label htmlFor="phoneNumber">Numéro de téléphone</Label>
+                <div>
+                  <div className="mb-2 block">
+                    <Field type="checkbox" id="agree" name="agree" />
+                    <Label htmlFor="agree" className="ml-2">
+                      J'accepte les &nbsp;
+                      <Link
+                        to="https://docs.google.com/document/d/e/2PACX-1vQkr79lY7kZhUDVaGT1RWqroKso5BSf5AAWy6R2lTSoBu2KzAHVBoveYEZwygwaz-TU9RZMRCGNoEbi/pub"
+                        className="text-cyan-600 hover:underline dark:text-cyan-400"
+                        target="_blank"
+                      >
+                        termes et conditions
+                      </Link>
+                    </Label>
+                    <ErrorMessage
+                      name="agree"
+                      component="div"
+                      className="text-red-500 text-xs"
+                    />
+                  </div>
+                  <Button
+                    className="mb-2 block bg-shopred w-full justify-center items-center"
+                    type="submit"
+                    disabled={isSubmitting}
+                  >
+                    S'inscrire
+                  </Button>
                 </div>
-                <TextInput
-                  id="phoneNumber"
-                  type="text"
-                  placeholder="Votre numéro de téléphone"
-                  value={values.phoneNumber}
-                  error={errors.phoneNumber}
-                  fieldtouched={touched.phoneNumber?.toString()}
-                  onChange={handleChange}
-                />
-                <ErrorMessage
-                  name="phoneNumber"
-                  component="div"
-                  className="text-red-500 text-xs"
-                />
               </div>
-              <div className="flex flex-col ">
-                <div className="flex items-center gap-2">
-                  <Field type="checkbox" id="agree" name="agree" />
-                  <Label htmlFor="agree" className="flex">
-                    J'accepte les &nbsp;
-                    <Link
-                      to="https://docs.google.com/document/d/e/2PACX-1vQkr79lY7kZhUDVaGT1RWqroKso5BSf5AAWy6R2lTSoBu2KzAHVBoveYEZwygwaz-TU9RZMRCGNoEbi/pub"
-                      className="text-cyan-600 hover:underline dark:text-cyan-400"
-                      target="_blank"
-                    >
-                      termes et conditions
-                    </Link>
-                  </Label>
-                </div>
-                <ErrorMessage
-                  name="agree"
-                  component="div"
-                  className="text-red-500 text-xs"
-                />
-              </div>
-
-              <Button
-                type="submit"
-                className="bg-shopred"
-                disabled={isSubmitting}
-              >
-                S'inscrire
-              </Button>
             </form>
           )}
         </Formik>

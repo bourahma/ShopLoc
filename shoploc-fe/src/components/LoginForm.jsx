@@ -7,6 +7,8 @@ import { ErrorMessage, Formik } from "formik";
 
 const LoginForm = () => {
   const [error, setError] = useState(null);
+  const [userRole, setUserRole] = useState(null);
+
   const initialUser = {
     username: "",
     password: "",
@@ -14,11 +16,9 @@ const LoginForm = () => {
 
   const navigate = useNavigate();
 
-  const loginUser = (values) => {
-    loginService
-      .login(values)
+  const userLogin = (values, loginFn, successUrl) => {
+    loginFn(values)
       .then((data) => {
-        console.log(data);
         window.localStorage.setItem(
           "loggedUser",
           JSON.stringify(values.username)
@@ -27,7 +27,9 @@ const LoginForm = () => {
           "userToken",
           JSON.stringify(data["access-token"])
         );
-        navigate("/home");
+        console.log(data);
+        window.localStorage.setItem("userRole", JSON.stringify(data["role"]));
+        navigate(successUrl);
       })
       .catch((error) => {
         console.log(error);
@@ -39,6 +41,28 @@ const LoginForm = () => {
       });
   };
 
+  const userLoginWithRole = (values, roleUser) => {
+    if (roleUser === "ADMINISTRATOR") {
+      userLogin(
+        values,
+        (values) => loginService.adminLogin(values),
+        "/admin/home"
+      );
+    } else if (roleUser === "MERCHANT") {
+      userLogin(
+        values,
+        (values) => loginService.merchantLogin(values),
+        "/merchant/home"
+      );
+    } else {
+      userLogin(
+        values,
+        (values) => loginService.customerLogin(values),
+        "/home"
+      );
+    }
+  };
+
   if (error) {
     setTimeout(() => {
       setError(null);
@@ -48,7 +72,8 @@ const LoginForm = () => {
   return (
     <>
       {error && <Alert color="failure">{error.message}</Alert>}
-      <div className="flex justify-center gap-10 my-12 mx-6">
+
+      <div className="flex flex-wrap justify-center gap-20 my-12 mx-6">
         <Formik
           initialValues={initialUser}
           validationSchema={Yup.object({
@@ -61,7 +86,7 @@ const LoginForm = () => {
               .required("Champ requis"),
           })}
           onSubmit={(values, { setSubmitting }) => {
-            loginUser(values);
+            userLoginWithRole(values, userRole);
             setSubmitting(false);
           }}
         >
@@ -77,6 +102,15 @@ const LoginForm = () => {
               className="flex max-w-md flex-col gap-4"
               onSubmit={handleSubmit}
             >
+              {!userRole && (
+                <h1 className="text-lg font-bold">Connexion client</h1>
+              )}
+              {userRole === "ADMINISTRATOR" && (
+                <h1 className="text-lg font-bold">Connexion administrateur</h1>
+              )}
+              {userRole === "MERCHANT" && (
+                <h1 className="text-lg font-bold">Connexion commerçant</h1>
+              )}
               <div>
                 <div className="mb-2 block">
                   <Label htmlFor="username">Nom d'utilisateur</Label>
@@ -126,10 +160,35 @@ const LoginForm = () => {
           )}
         </Formik>
         <div className="flex max-w-md flex-col gap-4">
-          Vous n'avez pas de encore compte ? &nbsp;
-          <Link to="/signup" className="text-shopred font-bold">
-            Inscrivez-vous
-          </Link>
+          {!userRole && (
+            <div>
+              Vous n'avez pas de encore compte ? &nbsp;
+              <Link to="/signup" className="text-shopred font-bold">
+                Inscrivez-vous
+              </Link>
+            </div>
+          )}
+          {(!userRole || userRole === "MERCHANT") && (
+            <Button
+              className="border-l-blue-800 hover:bg-shopred"
+              onClick={() => setUserRole("ADMINISTRATOR")}
+            >
+              <span className="flex">Êtes-vous administrateur ?</span>
+            </Button>
+          )}
+          {(!userRole || userRole === "ADMINISTRATOR") && (
+            <Button
+              className="border-l-blue-800 hover:bg-shopred"
+              onClick={() => setUserRole("MERCHANT")}
+            >
+              Êtes-vous commerçant ?
+            </Button>
+          )}
+          {userRole && (
+            <Button className="" onClick={() => setUserRole(null)}>
+              Êtes-vous client ?
+            </Button>
+          )}
         </div>
       </div>
     </>

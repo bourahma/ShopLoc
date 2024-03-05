@@ -12,69 +12,79 @@ import HomeComponent from "./components/HomeComponent";
 import Template from "./components/Template";
 import FirstScreen from "./components/FirstScreen";
 import Cart from "./components/Cart";
+import AdminHomeComponent from "./components/AdminHomeComponent";
 
 function App() {
   return (
-      <BrowserRouter>
-          <Routes>
-              <Route path="/" element={<Template />}>
-                  <Route
-                      index
-                      element={
-                          <PublicRoute>
-                              <Header />
-                              <FirstScreen />
-                          </PublicRoute>
-                      }
-                  />
-                  <Route
-                      path="/home"
-                      element={
-                          <PrivateRoute>
-                              <Header />
-                              <HomeComponent />
-                          </PrivateRoute>
-                      }
-                  />
-                  <Route
-                      path="/signup"
-                      element={
-                          <PublicRoute>
-                              <Header />
-                              <SignupForm />
-                          </PublicRoute>
-                      }
-                  />
-                  <Route
-                      path="/login"
-                      element={
-                          <PublicRoute>
-                              <Header />
-                              <LoginForm />
-                          </PublicRoute>
-                      }
-                  />
-                  <Route
-                      path="/commercant/:commercantId"
-                      element={
-                          <PrivateRoute>
-                              <Header />
-                              <Products />
-                          </PrivateRoute>
-                      }
-                  />
-                  <Route
-                      path="/cart"
-                      element={
-                          <PrivateRoute>
-                              <Header />
-                              <Cart />
-                          </PrivateRoute>
-                      }
-                  />
-              </Route>
-          </Routes>
-      </BrowserRouter>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Template />}>
+          <Route
+            index
+            element={
+              <PublicRoute>
+                <Header />
+                <FirstScreen />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/home"
+            element={
+              <PrivateRoute>
+                <Header />
+                <HomeComponent />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <PublicRoute>
+                <Header />
+                <SignupForm />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <Header />
+                <LoginForm />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/commercant/:commercantId"
+            element={
+              <PrivateRoute>
+                <Header />
+                <Products />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/cart"
+            element={
+              <PrivateRoute>
+                <Header />
+                <Cart />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/home"
+            element={
+              <PrivateRoute>
+                <Header />
+                <AdminHomeComponent />
+              </PrivateRoute>
+            }
+          />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

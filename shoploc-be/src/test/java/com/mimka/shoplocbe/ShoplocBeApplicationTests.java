@@ -13,5 +13,6 @@ class ShoplocBeApplicationTests {
 	@Test
 
 	void contextLoads() {
+
 	}
 }
