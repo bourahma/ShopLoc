@@ -53,7 +53,7 @@ public class FidelityCardServiceImpl implements FidelityCardService {
         Optional<FidelityCard> optionalFidelityCard = this.fidelityCardRepository.findById(fidelityCardId);
         if (optionalFidelityCard.isPresent()) {
             FidelityCard fidelityCard = optionalFidelityCard.get();
-            fidelityCard.setPoints(fidelityCard.getPoints() + amount);
+            fidelityCard.setPoints(fidelityCard.getPoints() + Math.floor((amount)));
             createPointTransaction(fidelityCard, commerceId, amount, TransactionType.EARNED);
             this.fidelityCardRepository.save(fidelityCard);
         }

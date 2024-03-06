@@ -2,10 +2,7 @@ package com.mimka.shoplocbe.facades;
 
 import com.mimka.shoplocbe.dto.order.OrderDTO;
 import com.mimka.shoplocbe.dto.order.OrderDTOUtil;
-import com.mimka.shoplocbe.entities.Customer;
-import com.mimka.shoplocbe.entities.FidelityCard;
-import com.mimka.shoplocbe.entities.Order;
-import com.mimka.shoplocbe.entities.QRCodePayment;
+import com.mimka.shoplocbe.entities.*;
 import com.mimka.shoplocbe.exception.CommerceNotFoundException;
 import com.mimka.shoplocbe.exception.InsufficientFundsException;
 import com.mimka.shoplocbe.services.CustomerService;
@@ -52,10 +49,15 @@ public class OrderFacadeImpl implements OrderFacade {
     public OrderDTO settleOrder (String customerUsername, Long orderId, boolean usingPoints) throws InsufficientFundsException {
         double total = this.orderService.getOrderTotalPrice(orderId, usingPoints);
         Customer customer = this.customerService.getCustomerByUsername(customerUsername);
+        Commerce commerce = this.orderService.getOrder(orderId).getCommerce();
         FidelityCard fidelityCard = customer.getFidelityCard();
 
-        this.fidelityCardService.spendPoints(fidelityCard.getFidelityCardId(), this.orderService.getOrder(orderId).getCommerce().getCommerceId(), total);
-        this.fidelityCardService.debitFidelityCardBalance(fidelityCard.getFidelityCardId(), this.orderService.getOrder(orderId).getCommerce().getCommerceId(), total);
+        if (usingPoints) {
+            this.fidelityCardService.spendPoints(fidelityCard.getFidelityCardId(), commerce.getCommerceId(), total);
+        } else {
+            this.fidelityCardService.debitFidelityCardBalance(fidelityCard.getFidelityCardId(), commerce.getCommerceId(), total);
+            this.fidelityCardService.earnPoints(fidelityCard.getFidelityCardId(), commerce.getCommerceId(), total);
+        }
 
         Order order = this.orderService.payOrder(orderId);
 

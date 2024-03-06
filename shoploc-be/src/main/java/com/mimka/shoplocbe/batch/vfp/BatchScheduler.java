@@ -1,4 +1,4 @@
-package com.mimka.shoplocbe.batch;
+package com.mimka.shoplocbe.batch.vfp;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;

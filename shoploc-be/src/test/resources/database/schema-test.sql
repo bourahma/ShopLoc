@@ -26,7 +26,10 @@ DROP TABLE IF EXISTS VFP_History CASCADE;
 DROP TABLE IF EXISTS Address CASCADE;
 DROP TABLE IF EXISTS QR_Code_Payment CASCADE;
 DROP TABLE IF EXISTS Product_Category CASCADE;
+DROP TABLE IF EXISTS Product_Promotion_History CASCADE;
+DROP TABLE IF EXISTS Product_Promotion CASCADE;
 
+DROP SEQUENCE IF EXISTS product_promotion_history_sequence CASCADE;
 DROP SEQUENCE IF EXISTS product_category_sequence CASCADE;
 DROP SEQUENCE IF EXISTS order_sequence CASCADE;
 DROP SEQUENCE IF EXISTS address_sequence CASCADE;
@@ -40,6 +43,13 @@ DROP SEQUENCE IF EXISTS promotion_sequence CASCADE;
 DROP SEQUENCE IF EXISTS gift_history_sequence CASCADE;
 DROP SEQUENCE IF EXISTS benefit_history_sequence CASCADE;
 DROP SEQUENCE IF EXISTS commerce_type_sequence CASCADE;
+
+CREATE SEQUENCE product_promotion_history_sequence
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
 
 CREATE SEQUENCE address_sequence
     INCREMENT 1
@@ -193,7 +203,7 @@ CREATE TABLE Product
     commerce_id INT,
     view INT,
     image_url VARCHAR(255),
-    product_category_id INT,
+    product_category_id INT NOT NULL,
 
     FOREIGN KEY (product_category_id) REFERENCES Product_Category(product_category_id),
     FOREIGN KEY (commerce_id) REFERENCES Commerce(commerce_id)
@@ -383,9 +393,9 @@ CREATE TABLE Promotion
     promotion_id INT DEFAULT nextval('promotion_sequence') PRIMARY KEY,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
-    product_id INT NULL,
     description VARCHAR(255) NOT NULL,
     type VARCHAR(255) NOT NULL,
+    commerce_id INT NOT NULL,
 
     -- For discount promotion type :
     discount_percent INT,
@@ -394,7 +404,29 @@ CREATE TABLE Promotion
     required_items INT,
     offered_items INT,
 
-    FOREIGN KEY (product_id) REFERENCES Product(product_id)
+    FOREIGN KEY (commerce_id) REFERENCES Commerce (commerce_id)
+);
+
+-- Create Promotion Table :
+CREATE TABLE Product_Promotion
+(
+    promotion_id INT,
+    product_id INT,
+
+    PRIMARY KEY (promotion_id, product_id),
+    FOREIGN KEY (product_id) REFERENCES Product(product_id),
+    FOREIGN KEY (promotion_id) REFERENCES Promotion(promotion_id)
+);
+
+-- Create Product_Promotion_History Table :
+CREATE TABLE Product_Promotion_History
+(
+    product_promotion_history_id INT DEFAULT nextval('product_promotion_history_sequence') PRIMARY KEY,
+    promotion_id INT,
+    product_id INT,
+
+    FOREIGN KEY (product_id) REFERENCES Product(product_id),
+    FOREIGN KEY (promotion_id) REFERENCES Promotion(promotion_id)
 );
 
 -- Create VFP_History Table

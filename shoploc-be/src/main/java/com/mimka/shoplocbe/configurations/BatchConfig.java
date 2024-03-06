@@ -1,8 +1,8 @@
 package com.mimka.shoplocbe.configurations;
 
-import com.mimka.shoplocbe.batch.CustomerOrdersReader;
-import com.mimka.shoplocbe.batch.CustomerWriter;
-import com.mimka.shoplocbe.batch.VFPStatusProcessor;
+import com.mimka.shoplocbe.batch.vfp.CustomerOrdersReader;
+import com.mimka.shoplocbe.batch.vfp.CustomerWriter;
+import com.mimka.shoplocbe.batch.vfp.VFPStatusProcessor;
 import com.mimka.shoplocbe.entities.Customer;
 import com.mimka.shoplocbe.entities.Order;
 import lombok.RequiredArgsConstructor;

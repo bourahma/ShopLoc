@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -50,6 +52,9 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "commerce_id", referencedColumnName = "commerce_id")
     private Commerce commerce;
+
+    @OneToOne(mappedBy = "product")
+    private Promotion promotion;
 
     @ManyToOne
     @JoinColumn(name = "product_category_id", referencedColumnName = "product_category_id")

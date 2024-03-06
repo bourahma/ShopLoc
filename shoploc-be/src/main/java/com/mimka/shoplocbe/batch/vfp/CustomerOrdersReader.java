@@ -1,4 +1,4 @@
-package com.mimka.shoplocbe.batch;
+package com.mimka.shoplocbe.batch.vfp;
 
 import com.mimka.shoplocbe.entities.Customer;
 import com.mimka.shoplocbe.entities.Order;
