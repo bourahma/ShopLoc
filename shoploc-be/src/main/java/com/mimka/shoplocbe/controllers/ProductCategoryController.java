@@ -40,7 +40,7 @@ public class ProductCategoryController {
     }
 
     @PutMapping("/category/{productCategoryId}")
-    public ProductCategoryDTO updateProductCategory (@PathVariable Long productCategoryId, @RequestBody @Valid ProductCategoryDTO productCategoryDTO) throws CommerceNotFoundException {
+    public ProductCategoryDTO updateProductCategory (@PathVariable Long productCategoryId, @RequestBody @Valid ProductCategoryDTO productCategoryDTO) throws ProductCategoryNotFoundException {
         return this.productFacade.updateProductCategory(productCategoryId, productCategoryDTO);
     }
 }

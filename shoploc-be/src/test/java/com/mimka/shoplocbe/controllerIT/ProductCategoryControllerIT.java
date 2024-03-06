@@ -42,7 +42,7 @@ public class ProductCategoryControllerIT extends AuthenticationControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(this.getProductCategoryDTO())))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.productCategoryId").value(1001))
+                .andExpect(jsonPath("$.productCategoryId").value(1000))
                 .andExpect(jsonPath("$.commerceId").value(1))
                 .andExpect(jsonPath("$.label").value("Label"))
                 .andExpect(jsonPath("$.description").value("Product description"));
@@ -73,7 +73,7 @@ public class ProductCategoryControllerIT extends AuthenticationControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(this.getProductCategoryDTO())))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.productCategoryId").value(1000))
+                .andExpect(jsonPath("$.productCategoryId").value(1))
                 .andExpect(jsonPath("$.commerceId").value(1))
                 .andExpect(jsonPath("$.label").value("Label"))
                 .andExpect(jsonPath("$.description").value("Product description"));
