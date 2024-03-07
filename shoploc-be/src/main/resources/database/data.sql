@@ -134,9 +134,9 @@ VALUES
     (110, 2, 1, '2024-03-01', 'PAID');
 
 -- OrderProduct data insertion :
-INSERT INTO Order_Product (order_product_id, order_id, quantity)
+INSERT INTO Order_Product (order_product_id, order_id, quantity, purchase_price)
 VALUES
-    (1, 100, 10);
+    (1, 100, 10, 3.50);
 
 -- Insert PointTransaction for Joe
 INSERT INTO Point_Transaction (point_transaction_id, fidelity_card_id, transaction_date, type, amount, commerce_id)
@@ -167,3 +167,4 @@ VALUES
     (nextval('promotion_sequence'), '2024-03-01', '2024-05-15', 'Vente de printemps', 'Discount', 8, 13, 20, NULL, NULL),
     (nextval('promotion_sequence'), '2024-04-01', '2024-04-30', 'Achetez 3, obtenez-en 1 gratuitement', 'Offer', 1, 1, NULL, 3, 1),
     (nextval('promotion_sequence'), '2024-05-01', '2024-05-15', 'Réduction d été', 'Discount', 6, 6, 15,  NULL, NULL);
+

@@ -31,4 +31,5 @@ public interface ProductFacade {
     ProductCategoryDTO createProductCategory (Long commerceId, ProductCategoryDTO productCategoryDTO) throws CommerceNotFoundException;
 
     ProductCategoryDTO updateProductCategory (Long productCategoryId, ProductCategoryDTO productCategoryDTO) throws ProductCategoryNotFoundException;
+
 }

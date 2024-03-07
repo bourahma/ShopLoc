@@ -175,4 +175,3 @@ VALUES
 INSERT INTO Product_Promotion_History (promotion_id, product_id)
 VALUES
     (4, 6);
-

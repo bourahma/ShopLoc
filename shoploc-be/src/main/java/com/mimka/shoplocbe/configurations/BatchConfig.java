@@ -21,8 +21,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import java.util.List;
 
 @Configuration
-@RequiredArgsConstructor
 @EnableBatchProcessing
+@RequiredArgsConstructor
 public class BatchConfig {
 
     private final CustomerOrdersReader customerOrdersReader;
