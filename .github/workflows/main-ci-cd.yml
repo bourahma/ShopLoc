@@ -161,7 +161,7 @@ jobs:
         run: |
           ssh -i shoploc.pem -o StrictHostKeyChecking=no ubuntu@$IP_BE_ADDRESS 'sudo docker stop shoploc-be-container || true'
           ssh -i shoploc.pem -o StrictHostKeyChecking=no ubuntu@$IP_BE_ADDRESS 'sudo docker rm shoploc-be-container || true'
-          ssh -i shoploc.pem -o StrictHostKeyChecking=no ubuntu@$IP_BE_ADDRESS 'docker rmi -f $(sudo docker images -aq) || true'
+          ssh -i shoploc.pem -o StrictHostKeyChecking=no ubuntu@$IP_BE_ADDRESS 'sudo docker rmi -f $(sudo docker images -aq) || true'
       - name: Run new shoploc-be-container
         run: |
           ssh -i shoploc.pem -o StrictHostKeyChecking=no ubuntu@$IP_BE_ADDRESS 'sudo docker run -d --name shoploc-be-container -p 80:8080 bourahma/shoploc-be:latest'
@@ -174,7 +174,7 @@ jobs:
         run: |
           ssh -i shoploc.pem -o StrictHostKeyChecking=no ubuntu@$IP_FE_ADDRESS 'sudo docker stop shoploc-fe-container || true'
           ssh -i shoploc.pem -o StrictHostKeyChecking=no ubuntu@$IP_FE_ADDRESS 'sudo docker rm shoploc-fe-container || true'
-          ssh -i shoploc.pem -o StrictHostKeyChecking=no ubuntu@$IP_FE_ADDRESS 'docker rmi -f $(sudo docker images -aq) || true'
+          ssh -i shoploc.pem -o StrictHostKeyChecking=no ubuntu@$IP_FE_ADDRESS 'sudo docker rmi -f $(sudo docker images -aq) || true'
       - name: Run new shoploc-fe-container
         run: |
           ssh -i shoploc.pem -o StrictHostKeyChecking=no ubuntu@$IP_FE_ADDRESS 'sudo docker run -d --name shoploc-fe-container -p 80:3000 bourahma/shoploc-fe:latest'
