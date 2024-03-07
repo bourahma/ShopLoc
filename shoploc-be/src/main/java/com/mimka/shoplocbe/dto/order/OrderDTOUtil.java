@@ -53,7 +53,7 @@ public class OrderDTOUtil {
 
     public OrderProduct toOrderProduct (Long commerceId, OrderProductDTO orderProductDTO) {
         OrderProductId orderProductId = new OrderProductId(orderProductDTO.getProductId(), commerceId);
-        OrderProduct orderProduct = new OrderProduct(orderProductId, null, null, orderProductDTO.getQuantity());
+        OrderProduct orderProduct = new OrderProduct(orderProductId, null, null, null, orderProductDTO.getQuantity(), orderProductDTO.getPrice());
 
         return orderProduct;
     }

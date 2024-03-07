@@ -116,10 +116,6 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>io.supabase</groupId>
-			<artifactId>java</artifactId>
-		</dependency>
 	</dependencies>
 
 	<build>

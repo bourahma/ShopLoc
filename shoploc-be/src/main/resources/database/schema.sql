@@ -18,6 +18,8 @@ DROP TABLE IF EXISTS Benefit CASCADE;
 DROP TABLE IF EXISTS Benefit_History CASCADE;
 DROP TABLE IF EXISTS Gift_History CASCADE;
 DROP TABLE IF EXISTS Promotion CASCADE;
+DROP TABLE IF EXISTS Promotion_History CASCADE;
+
 DROP TABLE IF EXISTS VFP CASCADE;
 DROP TABLE IF EXISTS Commerce_Type CASCADE;
 DROP TABLE IF EXISTS Customer_Connection CASCADE;
@@ -199,6 +201,50 @@ CREATE TABLE Product
     FOREIGN KEY (commerce_id) REFERENCES Commerce(commerce_id)
 );
 
+-- Create Promotion Table :
+CREATE TABLE Promotion
+(
+    promotion_id INT DEFAULT nextval('promotion_sequence') PRIMARY KEY,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    type VARCHAR(255) NOT NULL,
+    commerce_id INT NOT NULL,
+    product_id INT UNIQUE,
+
+    -- For discount promotion type :
+    discount_percent INT,
+
+    -- For Offer promotion type :
+    required_items INT,
+    offered_items INT,
+
+    FOREIGN KEY (product_id) REFERENCES Product(product_id),
+    FOREIGN KEY (commerce_id) REFERENCES Commerce (commerce_id)
+);
+
+-- Create Promotion_History Table :
+CREATE TABLE Promotion_History
+(
+    promotion_history_id INT PRIMARY KEY,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    type VARCHAR(255) NOT NULL,
+    commerce_id INT,
+    product_id INT NOT NULL,
+
+    -- For discount promotion type :
+    discount_percent INT,
+
+    -- For Offer promotion type :
+    required_items INT,
+    offered_items INT,
+
+    FOREIGN KEY (product_id) REFERENCES Product(product_id),
+    FOREIGN KEY (commerce_id) REFERENCES Commerce (commerce_id)
+);
+
 -- Create FidelityCard Table :
 CREATE TABLE Fidelity_Card
 (
@@ -225,7 +271,6 @@ CREATE TABLE Customer
     FOREIGN KEY (fidelity_card_id) REFERENCES Fidelity_Card (fidelity_card_id),
     FOREIGN KEY (role) REFERENCES Role (role_id)
 );
-
 
 -- Create Customer_Connection Table :
 CREATE TABLE Customer_Connection
@@ -340,9 +385,12 @@ CREATE TABLE Order_Product
     order_product_id INT NOT NULL,
     order_id INT NOT NULL,
     quantity INT NOT NULL CHECK (quantity > 0),
+    promotion_id INT,
+    purchase_price NUMERIC(4,2),
 
     PRIMARY KEY (order_product_id, order_id),
     FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+    FOREIGN KEY (promotion_id) REFERENCES Promotion(promotion_id),
     FOREIGN KEY (order_product_id) REFERENCES Product(product_id)
 );
 
@@ -374,26 +422,6 @@ CREATE TABLE Gift_History
     product_id INT,
 
     FOREIGN KEY (customer_id) REFERENCES Customer(id),
-    FOREIGN KEY (product_id) REFERENCES Product(product_id)
-);
-
--- Create Promotion Table :
-CREATE TABLE Promotion
-(
-    promotion_id INT DEFAULT nextval('promotion_sequence') PRIMARY KEY,
-    start_date DATE NOT NULL,
-    end_date DATE NOT NULL,
-    product_id INT NULL,
-    description VARCHAR(255) NOT NULL,
-    type VARCHAR(255) NOT NULL,
-
-    -- For discount promotion type :
-    discount_percent INT,
-
-    -- For Offer promotion type :
-    required_items INT,
-    offered_items INT,
-
     FOREIGN KEY (product_id) REFERENCES Product(product_id)
 );
 

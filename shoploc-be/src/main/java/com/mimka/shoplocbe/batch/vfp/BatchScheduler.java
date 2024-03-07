@@ -1,4 +1,4 @@
-package com.mimka.shoplocbe.batch;
+package com.mimka.shoplocbe.batch.vfp;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-@Component("VFPScheduler")
+@Component
 @EnableScheduling
 @RequiredArgsConstructor
 public class BatchScheduler {

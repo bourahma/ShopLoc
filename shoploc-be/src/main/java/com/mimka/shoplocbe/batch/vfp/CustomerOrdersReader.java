@@ -1,4 +1,4 @@
-package com.mimka.shoplocbe.batch;
+package com.mimka.shoplocbe.batch.vfp;
 
 import com.mimka.shoplocbe.entities.Customer;
 import com.mimka.shoplocbe.entities.Order;
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.List;
 
-@Component("VFPReader")
+@Component
 public class CustomerOrdersReader implements ItemReader<Pair<List<Order>, Customer>> {
     private OrderRepository orderRepository;
     private CustomerRepository customerRepository;

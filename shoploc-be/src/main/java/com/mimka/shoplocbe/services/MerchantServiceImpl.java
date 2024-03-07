@@ -82,7 +82,7 @@ public class MerchantServiceImpl implements MerchantService, UserDetailsService 
         Merchant merchant = this.dtoUtil.toMerchant(merchantDTO);
         if (this.emailAndUsernameUniquenessValid(merchantDTO.getEmail(), merchantDTO.getUsername())) {
             // Add merchant authorities.
-            merchant.setRole(this.roleRepository.findByRoleId(1L));
+            merchant.setRole(this.roleRepository.findByRoleId(3L));
             merchant.setEnabled(true);
             // Merchant is saved.
             /*

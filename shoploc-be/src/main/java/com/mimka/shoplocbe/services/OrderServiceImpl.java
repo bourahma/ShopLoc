@@ -7,6 +7,7 @@ import com.mimka.shoplocbe.entities.*;
 import com.mimka.shoplocbe.exception.CommerceNotFoundException;
 import com.mimka.shoplocbe.repositories.OrderRepository;
 import com.mimka.shoplocbe.repositories.ProductRepository;
+import com.mimka.shoplocbe.repositories.PromotionHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +22,17 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final CommerceService commerceService;
+
+    private final PromotionHistoryRepository promotionHistoryRepository;
     private final OrderDTOUtil orderDTOUtil;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, CommerceService commerceService, OrderDTOUtil orderDTOUtil, ProductRepository productRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, CommerceService commerceService, OrderDTOUtil orderDTOUtil, ProductRepository productRepository, PromotionHistoryRepository promotionHistoryRepository) {
         this.orderRepository = orderRepository;
         this.commerceService = commerceService;
         this.orderDTOUtil = orderDTOUtil;
         this.productRepository = productRepository;
+        this.promotionHistoryRepository = promotionHistoryRepository;
     }
 
     @Override
@@ -67,6 +71,31 @@ public class OrderServiceImpl implements OrderService {
         Optional<Order> optionalOrder = this.orderRepository.findById(orderId);
         optionalOrder.ifPresent(order -> {
             if (order.getOrderStatus().equals(OrderStatus.PENDING.name())) {
+                for (OrderProduct orderProduct : order.getOrderProducts()) {
+                    Product product = orderProduct.getProduct();
+                    Promotion promotion = product.getPromotion();
+
+                    if (promotion instanceof OfferPromotion && promotion != null) {
+                        int quantity = (int) Math.floor((double) (orderProduct.getQuantity() * ((OfferPromotion) promotion).getOfferedItems()) / ((OfferPromotion) promotion).getRequiredItems());
+                        orderProduct.setQuantity(orderProduct.getQuantity() + quantity);
+                        orderProduct.setPurchasePrice(product.getPrice());
+                        product.setQuantity(product.getQuantity() - orderProduct.getQuantity());
+                        this.productRepository.save(product);
+                    }
+                    if (promotion != null) {
+                        PromotionHistory promotionHistory = new PromotionHistory();
+                        promotionHistory.setPromotionHistoryId(promotion.getPromotionId());
+                        promotionHistory.setDescription(promotion.getDescription());
+                        promotionHistory.setProduct(product);
+                        promotionHistory.setCommerce(promotion.getCommerce());
+                        promotionHistory.setEndDate(promotion.getEndDate());
+                        promotionHistory.setDiscountPercent(10);//promotion.getDiscountPercent());
+                        promotionHistory.setOfferedItems(10);//(promotion.getOfferedItems());
+                        promotionHistory.setRequiredItems(10);//(promotion.getRequiredItems());
+
+                        this.promotionHistoryRepository.save(promotionHistory);
+                    }
+                }
                 order.setOrderStatus(OrderStatus.PAID.name());
                 this.orderRepository.save(order);
             }
@@ -89,9 +118,28 @@ public class OrderServiceImpl implements OrderService {
         double totalOrderPrice = 0.0;
 
         for (OrderProduct orderProduct : order.getOrderProducts()) {
-            double productPrice = usePointsPrice ? orderProduct.getProduct().getRewardPointsPrice()
-                    : orderProduct.getProduct().getPrice();
-            totalOrderPrice += orderProduct.getQuantity() * productPrice;
+            Product product = orderProduct.getProduct();
+            Promotion promotion = product.getPromotion();
+
+            double productPrice = 0.0;
+
+            if (promotion instanceof DiscountPromotion && promotion != null) {
+                productPrice = usePointsPrice ? orderProduct.getProduct().getRewardPointsPrice()
+                        : orderProduct.getProduct().getPrice();
+                totalOrderPrice += orderProduct.getQuantity() * (productPrice * ((double) ((DiscountPromotion) promotion).getDiscountPercent() / 100));
+
+            } else if (promotion != null && promotion instanceof OfferPromotion && orderProduct.getQuantity() >= ((OfferPromotion) promotion).getRequiredItems()) {
+                productPrice = usePointsPrice ? orderProduct.getProduct().getRewardPointsPrice()
+                        : orderProduct.getProduct().getPrice();
+                totalOrderPrice += orderProduct.getQuantity() * productPrice;
+
+                int quantity = (int) Math.floor((double) (orderProduct.getQuantity() * ((OfferPromotion) promotion).getOfferedItems()) / ((OfferPromotion) promotion).getRequiredItems());
+                orderProduct.setQuantity(orderProduct.getQuantity() + quantity);
+            } else {
+                productPrice = usePointsPrice ? orderProduct.getProduct().getRewardPointsPrice()
+                        : orderProduct.getProduct().getPrice();
+                totalOrderPrice += orderProduct.getQuantity() * productPrice;
+            }
         }
 
         return totalOrderPrice;

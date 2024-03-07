@@ -1,4 +1,4 @@
-package com.mimka.shoplocbe.batch;
+package com.mimka.shoplocbe.batch.vfp;
 
 import com.mimka.shoplocbe.entities.Customer;
 import com.mimka.shoplocbe.entities.Order;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component("VFPProcessor")
+@Component
 public class VFPStatusProcessor implements ItemProcessor<Pair<List<Order>, Customer>, Customer> {
 
     @Value("${vfp.minus.orders.to.enable}")

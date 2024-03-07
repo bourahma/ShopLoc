@@ -90,11 +90,8 @@ public class ProductFacadeImpl implements ProductFacade {
     }
 
     @Override
-    public ProductCategoryDTO updateProductCategory(Long productCategoryId, ProductCategoryDTO productCategoryDTO) throws CommerceNotFoundException {
-        ProductCategory productCategory = this.productCategoryService.createProductCategory(productCategoryDTO);
-        Commerce commerce = this.commerceService.getCommerce(productCategoryDTO.getCommerceId());
-
-        productCategory.setCommerce(commerce);
+    public ProductCategoryDTO updateProductCategory(Long productCategoryId, ProductCategoryDTO productCategoryDTO) throws ProductCategoryNotFoundException {
+        ProductCategory productCategory = this.productCategoryService.updateProductCategory(productCategoryId, productCategoryDTO);
 
         this.productCategoryService.saveProductCategory(productCategory);
 

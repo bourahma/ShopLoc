@@ -45,4 +45,8 @@ public class ProductDTO {
     private Long commerceId;
 
     private Long discountId;
+
+
+    private PromotionDTO promotion;
+
 }

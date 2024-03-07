@@ -1,4 +1,4 @@
-package com.mimka.shoplocbe.batch;
+package com.mimka.shoplocbe.batch.vfp;
 
 import com.mimka.shoplocbe.entities.Customer;
 import com.mimka.shoplocbe.repositories.CustomerRepository;
@@ -6,7 +6,7 @@ import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.stereotype.Component;
 
-@Component("VFPWriter")
+@Component
 public class CustomerWriter implements ItemWriter<Customer> {
 
     private final CustomerRepository customerRepository;
