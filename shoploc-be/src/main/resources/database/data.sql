@@ -134,9 +134,9 @@ VALUES
     (110, 2, 1, '2024-03-01', 'PAID');
 
 -- OrderProduct data insertion :
-INSERT INTO Order_Product (order_product_id, order_id, quantity)
+INSERT INTO Order_Product (order_product_id, order_id, quantity, purchase_price)
 VALUES
-    (1, 100, 10);
+    (1, 100, 10, 3.50);
 
 -- Insert PointTransaction for Joe
 INSERT INTO Point_Transaction (point_transaction_id, fidelity_card_id, transaction_date, type, amount, commerce_id)
