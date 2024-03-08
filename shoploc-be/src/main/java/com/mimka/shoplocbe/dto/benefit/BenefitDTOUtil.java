@@ -1,6 +1,7 @@
 package com.mimka.shoplocbe.dto.benefit;
 
 import com.mimka.shoplocbe.entities.Benefit;
+import com.mimka.shoplocbe.entities.BenefitHistory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,10 @@ public class BenefitDTOUtil {
 
     public Benefit toBenefit (BenefitDTO benefitDTO) {
         return modelMapper.map(benefitDTO, Benefit.class);
+    }
+
+    public BenefitHistoryDTO toBenefitHistoryDTO (BenefitHistory benefitHistory) {
+        return modelMapper.map(benefitHistory, BenefitHistoryDTO.class);
     }
 
 

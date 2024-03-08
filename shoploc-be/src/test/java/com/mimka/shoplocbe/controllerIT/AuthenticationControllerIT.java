@@ -26,6 +26,8 @@ class AuthenticationControllerIT extends ControllerIT {
 
     protected String customerJWTToken;
 
+    protected String notVFPCustomerJWTToken;
+
     protected String merchantJWTToken;
 
     protected String administratorJWTToken;
@@ -50,8 +52,10 @@ class AuthenticationControllerIT extends ControllerIT {
         postgres.start();
 
         customerJWTToken = authenticateUser("Joe", "12345678", "customer");
+        notVFPCustomerJWTToken = authenticateUser("Donald", "12345678", "customer");
         merchantJWTToken = authenticateUser("Loris", "12345678", "merchant");
         administratorJWTToken = authenticateUser("Jane", "12345678", "administrator");
+
     }
 
 

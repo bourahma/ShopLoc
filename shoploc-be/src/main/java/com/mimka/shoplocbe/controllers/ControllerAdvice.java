@@ -81,4 +81,10 @@ public class ControllerAdvice {
     public Map<String, String> ProductCategoryNotFoundExceptionHandler(ProductCategoryNotFoundException exception) {
         return Map.of(message, exception.getMessage());
     }
+
+    @ExceptionHandler(value = BenefitException.class)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    public Map<String, String> authenticationFailed(BenefitException exception) {
+        return Map.of(message, exception.getMessage());
+    }
 }

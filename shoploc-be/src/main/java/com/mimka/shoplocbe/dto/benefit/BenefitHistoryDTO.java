@@ -1,13 +1,11 @@
 package com.mimka.shoplocbe.dto.benefit;
 
-import com.mimka.shoplocbe.entities.Benefit;
-import com.mimka.shoplocbe.entities.Customer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -15,11 +13,16 @@ import java.util.List;
 @NoArgsConstructor
 public class BenefitHistoryDTO {
 
-    private Long id;
+    private Long benefitHistoryId;
 
-    private String dateAcquisition;
+    private String acquisitionDate;
 
-    private List<Customer> customerId;
+    private LocalTime acquisitionTime;
 
-    private List<Benefit> benefitId;
+    private String qrCode;
+
+    private long customerId;
+
+    private BenefitDTO benefitDTO;
+
 }
