@@ -5,14 +5,17 @@ import com.mimka.shoplocbe.dto.benefit.BenefitDTOUtil;
 import com.mimka.shoplocbe.entities.Benefit;
 import com.mimka.shoplocbe.entities.BenefitHistory;
 import com.mimka.shoplocbe.entities.Customer;
+import com.mimka.shoplocbe.exception.BenefitException;
 import com.mimka.shoplocbe.repositories.BenefitHistoryRepository;
 import com.mimka.shoplocbe.repositories.BenefitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -37,8 +40,13 @@ public class BenefitServiceImpl implements BenefitService {
     }
 
     @Override
-    public Benefit getBenefit(Long benefitId) {
-        return this.benefitRepository.findById(benefitId).get();
+    public Benefit getBenefit(Long benefitId) throws BenefitException {
+        Optional<Benefit> benefit = this.benefitRepository.findById(benefitId);
+        if (!benefit.isPresent()) {
+           throw new BenefitException("Aucun avantage ne correspond à l'id : " + benefitId);
+        }
+
+        return benefit.get();
     }
 
     @Override
@@ -55,7 +63,7 @@ public class BenefitServiceImpl implements BenefitService {
         benefitHistory.setCustomer(customer);
         benefitHistory.setBenefit(benefit);
         benefitHistory.setAcquisitionDate(LocalDate.now());
-        benefitHistory.setAcquisitionTime(LocalTime.now());
+        benefitHistory.setAcquisitionTime(Timestamp.from(Instant.now()));
         benefitHistory.setQrCode(UUID.randomUUID().toString());
 
         benefitHistory = this.benefitHistoryRepository.save(benefitHistory);

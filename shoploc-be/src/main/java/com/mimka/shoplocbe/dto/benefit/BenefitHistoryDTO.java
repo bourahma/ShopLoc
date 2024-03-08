@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalTime;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -17,7 +17,7 @@ public class BenefitHistoryDTO {
 
     private String acquisitionDate;
 
-    private LocalTime acquisitionTime;
+    private Timestamp acquisitionTime;
 
     private String qrCode;
 

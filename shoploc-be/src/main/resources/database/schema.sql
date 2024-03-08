@@ -408,7 +408,7 @@ CREATE TABLE Benefit_History
     benefit_history_id INT DEFAULT nextval('benefit_history_sequence') PRIMARY KEY,
     qr_code VARCHAR(255) NOT NULL,
     acquisition_date DATE,
-    acquisition_time TIME,
+    acquisition_time TIMESTAMP,
     customer_id INT,
     benefit_id INT,
 

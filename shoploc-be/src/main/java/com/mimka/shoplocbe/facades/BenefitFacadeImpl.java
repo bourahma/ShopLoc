@@ -57,7 +57,6 @@ public class BenefitFacadeImpl implements BenefitFacade {
     @Override
     public BenefitDTO createBenefit(BenefitDTO benefitDTO) {
         Benefit benefit = this.benefitService.createBenefit(benefitDTO);
-
         return this.benefitDTOUtil.toBenefitDTO(benefit);
     }
 

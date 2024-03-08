@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -29,7 +29,7 @@ public class BenefitHistory {
     private LocalDate acquisitionDate;
 
     @Column(name = "acquisition_time")
-    private LocalTime acquisitionTime;
+    private Timestamp acquisitionTime;
 
     @ManyToOne
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
