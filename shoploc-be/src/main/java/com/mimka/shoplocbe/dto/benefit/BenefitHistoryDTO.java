@@ -1,4 +1,4 @@
-package com.mimka.shoplocbe.dto.benefits;
+package com.mimka.shoplocbe.dto.benefit;
 
 import com.mimka.shoplocbe.entities.Benefit;
 import com.mimka.shoplocbe.entities.Customer;

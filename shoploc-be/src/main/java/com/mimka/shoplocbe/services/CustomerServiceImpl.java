@@ -50,13 +50,13 @@ public class CustomerServiceImpl implements CustomerService, UserDetailsService 
     @Override
     public Customer getCustomerByUsername(String username) {
         Customer customer = this.customerRepository.findByUsername(username);
-        if (customer == null)  throw new BadCredentialsException("invalidEmailMessage");
+        if (customer == null)  throw new BadCredentialsException("Aucun client n'est associé à ce nom d'utilisateur.");
+
         return customer;
     }
 
     private UserDetails getUserDetails(String username) {
-        User user = this.customerRepository.findByUsername(username);
-        if (user == null)  throw new BadCredentialsException ("invalidUsernameMessage");
+        User user = this.getCustomerByUsername(username);
 
         Set<GrantedAuthority> authorities = Set.of(new SimpleGrantedAuthority(user.getRole().getRoleName()));
 
@@ -70,14 +70,22 @@ public class CustomerServiceImpl implements CustomerService, UserDetailsService 
                 authorities);
     }
 
-    public boolean emailAndUsernameUniquenessValid (String email, String password) throws RegistrationException {
-        if (this.customerRepository.findByEmail(email) != null) {
-            throw new RegistrationException("registrationEmailMessage");
+    public boolean emailAndUsernameUniquenessValid(String email, String username) throws RegistrationException {
+        if (isEmailAlreadyRegistered(email)) {
+            throw new RegistrationException("L'adresse e-mail est déjà utilisée. Veuillez en choisir une autre.");
         }
-        if (this.customerRepository.findByUsername(password) != null) {
-            throw new RegistrationException("registrationUsernameMessage");
+        if (isUsernameAlreadyRegistered(username)) {
+            throw new RegistrationException("Le nom d'utilisateur est déjà pris. Veuillez en choisir un autre.");
         }
         return true;
+    }
+
+    private boolean isEmailAlreadyRegistered(String email) {
+        return this.customerRepository.findByEmail(email) != null;
+    }
+
+    private boolean isUsernameAlreadyRegistered(String username) {
+        return this.customerRepository.findByUsername(username) != null;
     }
 
     @Override

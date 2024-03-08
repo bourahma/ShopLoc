@@ -19,7 +19,7 @@ public class ControllerAdvice {
     @ExceptionHandler(value = BadCredentialsException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public Map<String, String> authenticationFailed(BadCredentialsException exception) {
-        if (!exception.getMessage().contains("Nom d\'utilisateur incorrect.")) {
+        if (!exception.getMessage().contains("Aucun client n'est associé à ce nom d'utilisateur.")) {
             return Map.of(message, pIncorrect);
         }
         return Map.of(message, exception.getMessage());

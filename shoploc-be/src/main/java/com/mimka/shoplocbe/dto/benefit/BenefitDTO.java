@@ -1,4 +1,4 @@
-package com.mimka.shoplocbe.dto.benefits;
+package com.mimka.shoplocbe.dto.benefit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,11 +9,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BenefitDto {
+public class BenefitDTO {
 
-    private Long benefit_id;
+    private Long benefitId;
 
-    private String type;
+    private Boolean benefitAvailable;
+
+    private String imageUrl;
 
     private String description;
 }

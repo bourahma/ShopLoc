@@ -13,10 +13,11 @@ import org.springframework.validation.annotation.Validated;
 @NoArgsConstructor
 public class AuthDTO {
 
-    @NotBlank(message = "Username cannot be empty")
+    @NotBlank(message = "Le nom d'utilisateur ne peut pas être vide.")
     private String username;
 
-    @NotBlank(message = "Password cannot be empty")
-    @Size(min = 8, max = 20, message = "Password must be between 8 and 20 characters")
+    @NotBlank(message = "Le mot de passe ne peut pas être vide.")
+    @Size(min = 8, max = 20, message = "Le mot de passe doit contenir entre 8 et 20 caractères.")
     private String password;
+
 }

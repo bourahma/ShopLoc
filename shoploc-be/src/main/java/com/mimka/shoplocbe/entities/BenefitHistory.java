@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Getter
@@ -16,20 +18,25 @@ import java.util.List;
 public class BenefitHistory {
 
     @Id
+    @Column(name = "benefit_history_id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "benefit_history_sequence")
     @SequenceGenerator(name = "benefit_history_sequence", sequenceName = "benefit_history_seq", allocationSize = 1, initialValue = 50)
-    private Long id;
+    private Long benefitHistoryId;
 
-    @Column(name = "date_acquisition")
-    private String dateAcquisition;
+    @Column(name = "qr_code")
+    private String qrCode;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "customer_id")
-    private List<Customer> customerId;
+    @Column(name = "acquisition_date")
+    private LocalDate acquisitionDate;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "benefit_id")
-    private List<Benefit> benefitId;
+    @Column(name = "acquisition_time")
+    private LocalTime acquisitionTime;
 
+    @ManyToOne
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+    private Customer customer;
 
+    @ManyToOne
+    @JoinColumn(name = "benefit_id", referencedColumnName = "benefit_id")
+    private Benefit benefit;
 }

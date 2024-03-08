@@ -168,3 +168,9 @@ VALUES
     (nextval('promotion_sequence'), '2024-04-01', '2024-04-30', 'Achetez 3, obtenez-en 1 gratuitement', 'Offer', 1, 1, NULL, 3, 1),
     (nextval('promotion_sequence'), '2024-05-01', '2024-05-15', 'Réduction d été', 'Discount', 6, 6, 15,  NULL, NULL);
 
+-- Sample data for Promotion table
+INSERT INTO Benefit (benefit_id, benefit_available, description)
+VALUES
+    (nextval('benefit_sequence'), true, 'Place de parking réservée dans le parking couvert pour une durée inférieure à 20 minutes'),
+    (nextval('benefit_sequence'), true, 'Accès gratuit au stationnement de vélo surveillé'),
+    (nextval('benefit_sequence'), true, 'Ticket de bus pour une journée');
