@@ -1,6 +1,5 @@
 package com.mimka.shoplocbe.dto.user;
 
-import com.mimka.shoplocbe.entities.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -34,7 +33,7 @@ public class CustomerDTO {
     @Email(message = "Adresse e-mail invalide.")
     private String email;
 
-    @Pattern(regexp = "^[0-9]+$", message = "Le numéro de téléphone doit contenir uniquement des chiffres.")
+    @Pattern(regexp = "\\d+$", message = "Le numéro de téléphone doit contenir uniquement des chiffres.")
     @Size(min = 10, max = 10, message = "Le numéro de téléphone doit contenir 10 caractères.")
     private String phoneNumber;
 

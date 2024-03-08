@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class BenefitControllerIT extends AuthenticationControllerIT {
+class BenefitControllerIT extends AuthenticationControllerIT {
 
     @Test
     void testGetBenefits_ReturnOK () throws Exception {

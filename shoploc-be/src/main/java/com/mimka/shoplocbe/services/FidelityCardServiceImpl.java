@@ -25,9 +25,9 @@ public class FidelityCardServiceImpl implements FidelityCardService {
     private final CommerceRepository commerceRepository;
     private final FidelityCardRepository fidelityCardRepository;
 
-    private final double maxAmountCreditValueAllowed = 50.00;
+    private static final double maxAmountCreditValueAllowed = 50.00;
 
-    private double minAmountCreditValueAllowed = 1.0;
+    private static final double minAmountCreditValueAllowed = 1.0;
 
     @Autowired
     public FidelityCardServiceImpl(PointTransactionRepository pointTransactionRepository, BalanceTransactionRepository balanceTransactionRepository, CommerceRepository commerceRepository, FidelityCardRepository fidelityCardRepository) {
