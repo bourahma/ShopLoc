@@ -25,9 +25,9 @@ public class FidelityCardServiceImpl implements FidelityCardService {
     private final CommerceRepository commerceRepository;
     private final FidelityCardRepository fidelityCardRepository;
 
-    private static final double maxAmountCreditValueAllowed = 50.00;
+    private static final double MAXIMUMAMOUNTCREDITALLOWED = 50.00;
 
-    private static final double minAmountCreditValueAllowed = 1.0;
+    private static final double MINIMUMAMOUNTCREDITALLOWED = 1.0;
 
     @Autowired
     public FidelityCardServiceImpl(PointTransactionRepository pointTransactionRepository, BalanceTransactionRepository balanceTransactionRepository, CommerceRepository commerceRepository, FidelityCardRepository fidelityCardRepository) {
@@ -109,7 +109,7 @@ public class FidelityCardServiceImpl implements FidelityCardService {
 
     @Override
     public FidelityCard creditFidelityCardBalance(String fidelityCardId, double amount) throws InvalidCreditAmountException {
-        if (amount < this.minAmountCreditValueAllowed || amount > this.maxAmountCreditValueAllowed) {
+        if (amount < FidelityCardServiceImpl.MINIMUMAMOUNTCREDITALLOWED || amount > FidelityCardServiceImpl.MAXIMUMAMOUNTCREDITALLOWED) {
             throw new InvalidCreditAmountException("le montant de crédit doit être compris entre 1€ et 50€.");
         }
         FidelityCard fidelityCard = this.fidelityCardRepository.findById(fidelityCardId).get();
