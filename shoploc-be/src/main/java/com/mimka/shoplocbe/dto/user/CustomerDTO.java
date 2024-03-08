@@ -8,32 +8,35 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 public class CustomerDTO {
-    @NotBlank(message = "Username cannot be empty")
+
+    @NotBlank(message = "Le nom d'utilisateur ne peut pas être vide.")
     private String username;
 
-    @NotBlank(message = "Lastname cannot be empty")
+    @NotBlank(message = "Le nom de famille ne peut pas être vide.")
     private String lastname;
 
-    @NotBlank(message = "Firstname cannot be empty")
+    @NotBlank(message = "Le prénom ne peut pas être vide.")
     private String firstname;
 
-    @NotBlank(message = "Password cannot be empty")
-    @Size(min = 8, max = 20, message = "Password must be between 8 and 20 characters")
+    @NotBlank(message = "Le mot de passe ne peut pas être vide.")
+    @Size(min = 8, max = 20, message = "Le mot de passe doit contenir entre 8 et 20 caractères.")
     private String password;
 
-    @NotBlank(message = "Password cannot be empty")
-    @Size(min = 8, max = 20, message = "Password must be between 8 and 20 characters")
+    @NotBlank(message = "Le mot de passe ne peut pas être vide.")
+    @Size(min = 8, max = 20, message = "Le mot de passe doit contenir entre 8 et 20 caractères.")
     private String confirmedPassword;
 
-    @Email(message = "Invalid email address")
+    @Email(message = "Adresse e-mail invalide.")
     private String email;
 
-    @Pattern(regexp = "^[0-9]+$", message = "Phone number must contain only digits")
-    @Size(min = 10, max = 10, message = "Phone number must contain 10 characters")
+    @Pattern(regexp = "^[0-9]+$", message = "Le numéro de téléphone doit contenir uniquement des chiffres.")
+    @Size(min = 10, max = 10, message = "Le numéro de téléphone doit contenir 10 caractères.")
     private String phoneNumber;
 
-    private Role role;
+    private LocalDate subscriptionDate;
 }

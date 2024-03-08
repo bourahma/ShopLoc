@@ -1,6 +1,5 @@
 package com.mimka.shoplocbe.controllerIT;
 
-import com.mimka.shoplocbe.dto.user.AdministratorDTO;
 import com.mimka.shoplocbe.dto.user.AuthDTO;
 import com.mimka.shoplocbe.dto.user.CustomerDTO;
 import com.mimka.shoplocbe.dto.user.MerchantDTO;
@@ -11,6 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.time.LocalDate;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -27,8 +28,14 @@ class RegistrationControllerIT  extends  ControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(getCustomerDTO())))
                         .andExpect(status().isCreated())
-                        .andExpect(jsonPath("$.role").exists())
-                        .andExpect(jsonPath("$.username").value("Aziz"));
+                        .andExpect(jsonPath("$.username").value("Aziz"))
+                        .andExpect(jsonPath("$.lastname").value("Aziz"))
+                        .andExpect(jsonPath("$.firstname").value("BOURAHMA"))
+                        .andExpect(jsonPath("$.password").isEmpty())
+                        .andExpect(jsonPath("$.confirmedPassword").isEmpty())
+                        .andExpect(jsonPath("$.subscriptionDate").value(LocalDate.now().toString()))
+                        .andExpect(jsonPath("$.email").value("az.az2012221@gmail.com"))
+                        .andExpect(jsonPath("$.phoneNumber").value("0691797369"));
     }
 
     @Test
@@ -66,21 +73,16 @@ class RegistrationControllerIT  extends  ControllerIT {
         mockMvc.perform(post("/authentication/merchant/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(getMerchantDTO())))
-                        .andExpect(status().isCreated())
-                        .andExpect(jsonPath("$.role").exists())
-                        .andExpect(jsonPath("$.username").value("Aziz"));
-    }
-
-    @Test
-    @Transactional
-    @Rollback
-    void testRegisterAdministrator_WithValidDTO_ReturnCreated () throws Exception {
-        mockMvc.perform(post("/authentication/administrator/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(this.objectMapper.writeValueAsString(getAdministratorDTO())))
-                        .andExpect(status().isCreated())
-                        .andExpect(jsonPath("$.role").exists())
-                        .andExpect(jsonPath("$.username").value("Aziz"));
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.username").value("Aziz"))
+                .andExpect(jsonPath("$.firstname").value("BOURAHMA"))
+                .andExpect(jsonPath("$.lastname").value("Aziz"))
+                .andExpect(jsonPath("$.email").value("az.az2012221@gmail.com"))
+                .andExpect(jsonPath("$.password").isEmpty())
+                .andExpect(jsonPath("$.confirmedPassword").isEmpty())
+                .andExpect(jsonPath("$.phoneNumber").value("0691797369"))
+                .andExpect(jsonPath("$.subscriptionDate").value(LocalDate.now().toString()))
+                .andExpect(jsonPath("$.commerceId").value(1));
     }
 
     @Test
@@ -123,21 +125,6 @@ class RegistrationControllerIT  extends  ControllerIT {
 
     // Methods
     @NotNull
-    private AdministratorDTO getAdministratorDTO () {
-        AdministratorDTO administratorDTO = new AdministratorDTO();
-
-        administratorDTO.setUsername("Aziz");
-        administratorDTO.setLastname("Aziz");
-        administratorDTO.setFirstname("BOURAHMA");
-        administratorDTO.setPassword("123456789");
-        administratorDTO.setConfirmedPassword("123456789");
-        administratorDTO.setEmail("az.az2012221@gmail.com");
-        administratorDTO.setPhoneNumber("0691797369");
-
-        return administratorDTO;
-    }
-
-    @NotNull
     private MerchantDTO getMerchantDTO () {
         MerchantDTO merchantDTO = new MerchantDTO();
 
@@ -149,7 +136,6 @@ class RegistrationControllerIT  extends  ControllerIT {
         merchantDTO.setEmail("az.az2012221@gmail.com");
         merchantDTO.setPhoneNumber("0691797369");
         merchantDTO.setCommerceId(1L);
-
 
         return merchantDTO;
     }

@@ -7,6 +7,7 @@ import com.mimka.shoplocbe.repositories.CustomerRepository;
 import com.mimka.shoplocbe.repositories.OrderRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.batch.item.ItemReader;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,7 @@ public class CustomerOrdersReader implements ItemReader<Pair<List<Order>, Custom
     private List<Customer> customers;
     private Iterator<Customer> customerIterator;
 
+    @Autowired
     public CustomerOrdersReader(OrderRepository orderRepository, CustomerRepository customerRepository) {
         this.orderRepository = orderRepository;
         this.customerRepository = customerRepository;

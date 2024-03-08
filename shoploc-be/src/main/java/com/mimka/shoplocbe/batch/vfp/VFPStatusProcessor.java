@@ -2,8 +2,6 @@ package com.mimka.shoplocbe.batch.vfp;
 
 import com.mimka.shoplocbe.entities.Customer;
 import com.mimka.shoplocbe.entities.Order;
-import com.mimka.shoplocbe.repositories.CustomerRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
@@ -18,11 +16,15 @@ public class VFPStatusProcessor implements ItemProcessor<Pair<List<Order>, Custo
     private int minimumOrdersToEnableVFP;
     @Override
     public Customer process(Pair<List<Order>, Customer> pair)  {
+        return getCustomer(pair, this.minimumOrdersToEnableVFP);
+    }
+
+    public Customer getCustomer(Pair<List<Order>, Customer> pair, int minimumOrdersToEnableVFP) {
         Customer customer = pair.getSecond();
 
-        if (pair.getFirst().size() >= this.minimumOrdersToEnableVFP) {
+        if (pair.getFirst().size() >= minimumOrdersToEnableVFP) {
             customer.setVfpMembership(true);
-        } else if (pair.getFirst() == null  || pair.getFirst().size() <= this.minimumOrdersToEnableVFP) {
+        } else if (pair.getFirst() == null  || pair.getFirst().size() <= minimumOrdersToEnableVFP) {
             customer.setVfpMembership(false);
         }
 

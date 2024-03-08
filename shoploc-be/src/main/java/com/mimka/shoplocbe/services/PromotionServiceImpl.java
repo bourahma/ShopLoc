@@ -25,9 +25,8 @@ public class PromotionServiceImpl implements PromotionService {
         DiscountPromotion discountPromotion = this.productDTOUtil.toDiscountPromotion(promotionDTO);
         discountPromotion.setProduct(product);
         discountPromotion.setCommerce(product.getCommerce());
-        Promotion promotion = (DiscountPromotion) this.promotionRepository.save(discountPromotion);
 
-        return promotion;
+        return (Promotion) this.promotionRepository.save(discountPromotion);
     }
 
     @Override
@@ -35,8 +34,7 @@ public class PromotionServiceImpl implements PromotionService {
         OfferPromotion offerPromotion = this.productDTOUtil.toOfferPromotion(promotionDTO);
         offerPromotion.setProduct(product);
         offerPromotion.setCommerce(product.getCommerce());
-        Promotion promotion = (OfferPromotion) this.promotionRepository.save(offerPromotion);
 
-        return promotion;
+        return (Promotion) this.promotionRepository.save(offerPromotion);
     }
 }

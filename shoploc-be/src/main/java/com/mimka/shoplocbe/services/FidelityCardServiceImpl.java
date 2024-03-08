@@ -8,7 +8,6 @@ import com.mimka.shoplocbe.repositories.CommerceRepository;
 import com.mimka.shoplocbe.repositories.FidelityCardRepository;
 import com.mimka.shoplocbe.repositories.PointTransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,7 +25,7 @@ public class FidelityCardServiceImpl implements FidelityCardService {
     private final CommerceRepository commerceRepository;
     private final FidelityCardRepository fidelityCardRepository;
 
-    private double maxAmountCreditValueAllowed = 50.00;
+    private final double maxAmountCreditValueAllowed = 50.00;
 
     private double minAmountCreditValueAllowed = 1.0;
 

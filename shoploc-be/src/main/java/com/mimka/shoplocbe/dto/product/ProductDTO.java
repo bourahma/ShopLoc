@@ -46,7 +46,6 @@ public class ProductDTO {
 
     private Long discountId;
 
-
     private PromotionDTO promotion;
 
 }

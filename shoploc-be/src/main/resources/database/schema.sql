@@ -267,6 +267,7 @@ CREATE TABLE Customer
     role INT NOT NULL,
     is_vfp_membership BOOLEAN DEFAULT false,
     fidelity_card_id VARCHAR(255),
+    subscription_date DATE,
 
     FOREIGN KEY (fidelity_card_id) REFERENCES Fidelity_Card (fidelity_card_id),
     FOREIGN KEY (role) REFERENCES Role (role_id)
@@ -295,8 +296,6 @@ CREATE TABLE Merchant
     enabled BOOLEAN NOT NULL,
     phone_number VARCHAR(20),
     role INT NOT NULL,
-
-    -- Merchant attributes
     subscription_date DATE,
     commerce_id INT,
 

@@ -1,7 +1,6 @@
 package com.mimka.shoplocbe.services;
 
 import com.mimka.shoplocbe.dto.product.PromotionDTO;
-import com.mimka.shoplocbe.entities.Commerce;
 import com.mimka.shoplocbe.entities.Product;
 import com.mimka.shoplocbe.entities.Promotion;
 

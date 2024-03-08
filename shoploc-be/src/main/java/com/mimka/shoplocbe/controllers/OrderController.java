@@ -5,6 +5,7 @@ import com.mimka.shoplocbe.exception.CommerceNotFoundException;
 import com.mimka.shoplocbe.exception.InsufficientFundsException;
 import com.mimka.shoplocbe.facades.OrderFacade;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ public class OrderController {
 
     private final OrderFacade orderFacade;
 
+    @Autowired
     public OrderController(OrderFacade orderFacade) {
         this.orderFacade = orderFacade;
     }

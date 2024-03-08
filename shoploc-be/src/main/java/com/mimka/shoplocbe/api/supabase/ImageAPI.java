@@ -32,6 +32,7 @@ public class ImageAPI {
 
     @Value("${bucket.jwt.token}")
     private String bucketJwtToken;
+
     @Autowired
     public ImageAPI(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -57,7 +58,6 @@ public class ImageAPI {
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 log.warn("Image uploaded Successfully to supabase.");
-                log.warn("https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/" + imageTitle);
                 imageUrl = "https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/" + imageTitle;
             } else {
                 log.warn("Failed to upload image to supabase.");

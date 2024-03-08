@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Component
 public class FidelityCardDotUtil {
+
     private final ModelMapper modelMapper;
 
     @Autowired
@@ -29,21 +30,6 @@ public class FidelityCardDotUtil {
     public FidelityCardDTO fidelityCardDTO(FidelityCard fidelityCard) {
         return modelMapper.map(fidelityCard, FidelityCardDTO.class);
     }
-
-        /*
-        private final Converter<Set<PortfolioTransaction>, Set<PortfolioTransactionDTO>> portfolioToPortfolioTransactionDTOConverter = context -> {
-        Set<PortfolioTransaction> sourceTransactions = context.getSource();
-        return sourceTransactions.stream()
-                .map(transaction -> new PortfolioTransactionDTO(
-                        transaction.getPortfolioTransactionId(),
-                        transaction.getTransactionDate(),
-                        transaction.getType(),
-                        transaction.getAmount(),
-                        Optional.ofNullable(transaction.getCommerce())
-                                .map(Commerce::getCommerceId)
-                                .orElse(null)))
-                .collect(Collectors.toSet());
-    };*/
 
     public BalanceTransactionDTO toBalanceTransactionDTO(BalanceTransaction transaction) {
         return new BalanceTransactionDTO (

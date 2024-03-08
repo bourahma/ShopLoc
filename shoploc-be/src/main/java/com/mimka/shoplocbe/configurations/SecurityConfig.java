@@ -33,7 +33,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final MerchantServiceImpl merchantServiceImpl;
@@ -83,7 +82,6 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-    
 
     @Bean
     public PasswordEncoder passwordEncoder ( ) {

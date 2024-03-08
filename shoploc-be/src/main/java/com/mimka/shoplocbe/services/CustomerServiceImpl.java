@@ -6,7 +6,6 @@ import com.mimka.shoplocbe.entities.*;
 import com.mimka.shoplocbe.exception.RegistrationException;
 import com.mimka.shoplocbe.exception.RegistrationTokenInvalidException;
 import com.mimka.shoplocbe.repositories.CustomerRepository;
-import com.mimka.shoplocbe.repositories.FidelityCardRepository;
 import com.mimka.shoplocbe.repositories.RoleRepository;
 import com.mimka.shoplocbe.repositories.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Service
@@ -25,17 +25,14 @@ public class CustomerServiceImpl implements CustomerService, UserDetailsService 
 
     private final CustomerRepository customerRepository;
 
-    private final FidelityCardRepository fidelityCardRepository;
-
     private final DtoUtil dtoUtil;
 
     private final RoleRepository roleRepository;
 
     private final TokenRepository tokenRepository;
     @Autowired
-    public CustomerServiceImpl(CustomerRepository customerRepository, FidelityCardRepository fidelityCardRepository, DtoUtil dtoUtil, RoleRepository roleRepository, TokenRepository tokenRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, DtoUtil dtoUtil, RoleRepository roleRepository, TokenRepository tokenRepository) {
         this.customerRepository = customerRepository;
-        this.fidelityCardRepository = fidelityCardRepository;
         this.dtoUtil = dtoUtil;
         this.roleRepository = roleRepository;
         this.tokenRepository = tokenRepository;
@@ -94,6 +91,7 @@ public class CustomerServiceImpl implements CustomerService, UserDetailsService 
         if (this.emailAndUsernameUniquenessValid(customerDTO.getEmail(), customerDTO.getUsername())) {
             customer.setRole(this.roleRepository.findByRoleId(1L));
             customer.setEnabled(false);
+            customer.setSubscriptionDate(LocalDate.now());
             this.customerRepository.save(customer);
         }
 
@@ -106,31 +104,10 @@ public class CustomerServiceImpl implements CustomerService, UserDetailsService 
             throw new RegistrationTokenInvalidException("Le token founi n'est pas valide");
         }
         Customer customer = token.getCustomer();
-
         customer.setEnabled(true);
         this.customerRepository.save(customer);
         this.tokenRepository.delete(token);
 
         return customer;
-    }
-
-    @Override
-    public boolean orderSettled(String customerUsername, double total, boolean usingPoints) {
-        Customer customer = this.customerRepository.findByUsername(customerUsername);
-        FidelityCard fidelityCard = customer.getFidelityCard();
-
-        boolean settled = usingPoints ? fidelityCard.getPoints() >= total : fidelityCard.getBalance() >= total;
-
-        if (settled) {
-            if (usingPoints) {
-                fidelityCard.setPoints(fidelityCard.getPoints() - total);
-            } else {
-                fidelityCard.setBalance(fidelityCard.getBalance() - total);
-                fidelityCard.setPoints(fidelityCard.getPoints() + total);
-            }
-        }
-        this.fidelityCardRepository.save(fidelityCard);
-
-        return settled;
     }
 }
