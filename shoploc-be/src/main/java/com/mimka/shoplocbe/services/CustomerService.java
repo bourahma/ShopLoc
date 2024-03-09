@@ -12,7 +12,6 @@ public interface CustomerService {
 
     Customer createCustomer(CustomerDTO customerDTO, FidelityCard fidelityCard) throws RegistrationException;
 
-    Customer enableCustomer (String uuid) throws RegistrationTokenInvalidException, RegistrationTokenInvalidException;
+    Customer enableCustomer (String uuid) throws RegistrationTokenInvalidException;
 
-    boolean orderSettled(String customerUsername, double total, boolean usingPoints);
 }

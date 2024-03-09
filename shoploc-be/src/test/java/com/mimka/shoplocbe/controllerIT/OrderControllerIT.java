@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class OrderControllerIT extends AuthenticationControllerIT {
+class OrderControllerIT extends ControllerIT {
 
     @Test
     @Transactional
@@ -125,6 +125,7 @@ class OrderControllerIT extends AuthenticationControllerIT {
                         .header("Authorization", "Bearer " + customerJWTToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.points").value(54.50))
                 .andExpect(jsonPath("$.balance").value(49.5));
 
         // Create an order.
@@ -146,6 +147,7 @@ class OrderControllerIT extends AuthenticationControllerIT {
                         .header("Authorization", "Bearer " + customerJWTToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.points").value(68.5))
                 .andExpect(jsonPath("$.balance").value(34.54));
     }
 
@@ -158,7 +160,8 @@ class OrderControllerIT extends AuthenticationControllerIT {
                         .header("Authorization", "Bearer " + customerJWTToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.points").value(54.50));
+                .andExpect(jsonPath("$.points").value(54.50))
+                .andExpect(jsonPath("$.balance").value(49.5));
 
         // Create an order.
         Integer orderId = JsonPath.read(mockMvc.perform(post("/order/")
@@ -179,7 +182,8 @@ class OrderControllerIT extends AuthenticationControllerIT {
                         .header("Authorization", "Bearer " + customerJWTToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.points").value(44.5));
+                .andExpect(jsonPath("$.points").value(44.5))
+                .andExpect(jsonPath("$.balance").value(49.5));
     }
 
     @Test

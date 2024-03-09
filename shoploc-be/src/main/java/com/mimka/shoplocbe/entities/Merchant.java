@@ -16,8 +16,8 @@ import java.time.LocalDate;
 @Getter
 public class Merchant extends User {
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "commerce_id")
+    @ManyToOne
+    @JoinColumn(name = "commerce_id", referencedColumnName = "commerce_id")
     private Commerce commerce;
 
     @Column(name = "subscription_date")

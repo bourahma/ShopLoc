@@ -18,7 +18,7 @@ import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-class CommerceControllerIT extends AuthenticationControllerIT {
+class CommerceControllerIT extends ControllerIT {
     @Test
     void testGetAllCommerce_ReturnOK () throws Exception {
         mockMvc.perform(get("/commerce/")

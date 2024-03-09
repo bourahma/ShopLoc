@@ -99,5 +99,4 @@ public class CommerceController {
     public void disableCommerce (@PathVariable("commerceId") Long commerceId) {
         this.commerceFacade.disableCommerce(commerceId);
     }
-    // TODO : RF - Commerce is disabled, not deleted.
 }

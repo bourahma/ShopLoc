@@ -34,7 +34,7 @@ public class ProductDTO {
     private double rewardPointsPrice;
 
     @NotNull(message = "Le statut de cadeau est requis")
-    private boolean isGift;
+    private boolean gift;
 
     private String productCategoryLabel;
 
@@ -45,4 +45,7 @@ public class ProductDTO {
     private Long commerceId;
 
     private Long discountId;
+
+    private PromotionDTO promotion;
+
 }

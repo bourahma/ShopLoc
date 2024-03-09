@@ -1,6 +1,6 @@
 package com.mimka.shoplocbe.facades;
 
-import com.mimka.shoplocbe.dto.fidelityCard.*;
+import com.mimka.shoplocbe.dto.fidelity.*;
 import com.mimka.shoplocbe.entities.BalanceTransaction;
 import com.mimka.shoplocbe.entities.Customer;
 import com.mimka.shoplocbe.entities.FidelityCard;
@@ -31,7 +31,7 @@ public class FidelityCardFacade {
     }
 
     public FidelityCardDTO getCustomerFidelityCard (Principal principal) {
-        Customer customer = this.customerService.getCustomerByUsername(principal.getName()); // TODO : Si le customer n'existe lever une erruer et la gérer.
+        Customer customer = this.customerService.getCustomerByUsername(principal.getName());
         FidelityCard fidelityCard = customer.getFidelityCard();
 
         return this.fidelityCardDotUtil.fidelityCardDTO(fidelityCard);
@@ -47,28 +47,28 @@ public class FidelityCardFacade {
         Set<BalanceTransaction> transactions = this.fidelityCardService.getCreditedTransactions(fidelityCardId);
 
         return transactions.stream()
-                .map(transaction -> this.fidelityCardDotUtil.toBalanceTransactionDTO(transaction))
+                .map(this.fidelityCardDotUtil::toBalanceTransactionDTO)
                 .collect(Collectors.toSet());
     }
 
     public Set<BalanceTransactionDTO> getDebitedTransactions(String fidelityCardId) {
         Set<BalanceTransaction> transactions = this.fidelityCardService.getDebitedTransactions(fidelityCardId);
         return transactions.stream()
-                .map(transaction -> this.fidelityCardDotUtil.toBalanceTransactionDTO(transaction))
+                .map(this.fidelityCardDotUtil::toBalanceTransactionDTO)
                 .collect(Collectors.toSet());
     }
 
     public Set<PointTransactionDTO> getEarnedPointsTransactions(String fidelityCardId) {
         Set<PointTransaction> transactions = this.fidelityCardService.getEarnedPoints(fidelityCardId);
         return transactions.stream()
-                .map(transaction -> this.fidelityCardDotUtil.toPointTransactionDTO(transaction))
+                .map(this.fidelityCardDotUtil::toPointTransactionDTO)
                 .collect(Collectors.toSet());
     }
 
     public Set<PointTransactionDTO> getSpentPointsTransactions(String fidelityCardId) {
         Set<PointTransaction> transactions = this.fidelityCardService.getSpentPoints(fidelityCardId);
         return transactions.stream()
-                .map(transaction -> this.fidelityCardDotUtil.toPointTransactionDTO(transaction))
+                .map(this.fidelityCardDotUtil::toPointTransactionDTO)
                 .collect(Collectors.toSet());
     }
 

@@ -36,7 +36,7 @@ public class Product {
     private double rewardPointsPrice;
 
     @Column(name = "is_gift", nullable = false)
-    private boolean isGift;
+    private boolean gift;
 
     @Column(name = "discount_id")
     private Long discountId;
@@ -50,6 +50,9 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "commerce_id", referencedColumnName = "commerce_id")
     private Commerce commerce;
+
+    @OneToOne(mappedBy = "product")
+    private Promotion promotion;
 
     @ManyToOne
     @JoinColumn(name = "product_category_id", referencedColumnName = "product_category_id")

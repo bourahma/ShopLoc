@@ -1,4 +1,4 @@
-package com.mimka.shoplocbe.dto.fidelityCard;
+package com.mimka.shoplocbe.dto.fidelity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

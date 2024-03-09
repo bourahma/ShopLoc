@@ -155,3 +155,23 @@ VALUES
     (nextval('balance_transaction_sequence'), '123e4567-e89b-12d3-a456-426614174000', '2024-01-28', 'CREDIT', 20.00, NULL),
     (nextval('balance_transaction_sequence'), '123e4567-e89b-12d3-a456-426614174000', '2024-01-29', 'DEBIT', -5.50, 4),
     (nextval('balance_transaction_sequence'), '123e4567-e89b-12d3-a456-426614174000', '2024-01-30', 'CREDIT', 30.00, NULL);
+
+-- Sample data for Promotion table
+INSERT INTO Promotion (start_date, end_date, description, type, commerce_id, discount_percent, required_items, offered_items)
+VALUES
+    ('2024-03-01', '2024-05-15', 'Vente de printemps', 'Discount', 1, 20, NULL, NULL),
+    ('2024-04-01', '2024-04-30', 'Achetez 3, obtenez-en 1 gratuitement', 'Offer', 8, NULL, 3, 1),
+    ('2024-05-01', '2024-05-15', 'Réduction d été', 'Discount', 6, 15,  NULL, NULL),
+    ('2023-05-01', '2023-05-15', 'Réduction d été', 'Discount', 6, 20, NULL, NULL);
+
+-- Sample data for Product_Promotion table
+INSERT INTO Product_Promotion (promotion_id, product_id)
+VALUES
+    (1, 1),
+    (2, 2),
+    (3, 6);
+
+-- Sample data for Product_Promotion_History table
+INSERT INTO Product_Promotion_History (promotion_id, product_id)
+VALUES
+    (4, 6);

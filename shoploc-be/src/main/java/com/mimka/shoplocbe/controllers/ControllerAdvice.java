@@ -19,7 +19,7 @@ public class ControllerAdvice {
     @ExceptionHandler(value = BadCredentialsException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public Map<String, String> authenticationFailed(BadCredentialsException exception) {
-        if (!exception.getMessage().contains("Nom d\'utilisateur incorrect.")) {
+        if (!exception.getMessage().contains("Aucun client n'est associé à ce nom d'utilisateur.")) {
             return Map.of(message, pIncorrect);
         }
         return Map.of(message, exception.getMessage());
@@ -60,25 +60,37 @@ public class ControllerAdvice {
 
     @ExceptionHandler(value = CommerceTypeNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public Map<String, String> CommerceTypeNotFoundExceptionHandler(CommerceTypeNotFoundException exception) {
+    public Map<String, String> commerceTypeNotFoundExceptionHandler(CommerceTypeNotFoundException exception) {
         return Map.of(message, exception.getMessage());
     }
 
     @ExceptionHandler(value = InsufficientFundsException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public Map<String, String> InsufficientFundsExceptionHandler(InsufficientFundsException exception) {
+    public Map<String, String> insufficientFundsExceptionHandler(InsufficientFundsException exception) {
         return Map.of(message, exception.getMessage());
     }
 
     @ExceptionHandler(value = InvalidCreditAmountException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public Map<String, String> InvalidCreditAmountExceptionHandler(InvalidCreditAmountException exception) {
+    public Map<String, String> invalidCreditAmountExceptionHandler(InvalidCreditAmountException exception) {
         return Map.of(message, exception.getMessage());
     }
 
     @ExceptionHandler(value = ProductCategoryNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public Map<String, String> ProductCategoryNotFoundExceptionHandler(ProductCategoryNotFoundException exception) {
+    public Map<String, String> productCategoryNotFoundExceptionHandler(ProductCategoryNotFoundException exception) {
+        return Map.of(message, exception.getMessage());
+    }
+
+    @ExceptionHandler(value = BenefitException.class)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    public Map<String, String> authenticationFailed(BenefitException exception) {
+        return Map.of(message, exception.getMessage());
+    }
+
+    @ExceptionHandler(value = ProductException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleProductException(ProductException exception) {
         return Map.of(message, exception.getMessage());
     }
 }

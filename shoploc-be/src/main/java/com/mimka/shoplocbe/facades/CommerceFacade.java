@@ -4,7 +4,6 @@ import com.mimka.shoplocbe.dto.commerce.CommerceDTO;
 import com.mimka.shoplocbe.dto.commerce.CommerceTypeDTO;
 import com.mimka.shoplocbe.dto.product.ProductCategoryDTO;
 import com.mimka.shoplocbe.dto.product.ProductDTO;
-import com.mimka.shoplocbe.entities.ProductCategory;
 import com.mimka.shoplocbe.exception.CommerceNotFoundException;
 import com.mimka.shoplocbe.exception.CommerceTypeNotFoundException;
 
