@@ -3,7 +3,8 @@ INSERT INTO Fidelity_Card (fidelity_card_id, points, balance)
 VALUES
     ('123e4567-e89b-12d3-a456-426614174000', 54.50, 49.50),
     ('e89b-16l3-a858-723a4867-856918174111', 54.50, 49.50),
-    ('723a4867-e89b-16l3-a858-856918174111', 84.00, 19.50);
+    ('723a4867-e89b-16l3-a858-856918174111', 84.00, 19.50),
+    ('e89b-a858-723a-16l34867-856918174111', 84.00, 19.50);
 
 -- Role's insert.
 INSERT INTO Role (role_id, role_name)
@@ -18,11 +19,13 @@ INSERT INTO Merchant (id, username, lastname, firstname, password, email, enable
 VALUES
     (3, 'Loris', 'Johnson', 'user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'michael.j@gmail.com', TRUE, '06 21 21 84 31', 3, '2024-01-24', NULL);
 
-INSERT INTO Customer (id, username, lastname, firstname, password, email, enabled, phone_number, role, is_vfp_membership, fidelity_card_id)
+INSERT INTO Customer (id, username, lastname, firstname, password, email, enabled, vfp_used, phone_number, role, is_vfp_membership, fidelity_card_id)
 VALUES
-    (1, 'Joe', 'John','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'az.az201221@gmail.com', TRUE, '06 54 71 03 11', 1, TRUE, '123e4567-e89b-12d3-a456-426614174000'),
-    (2, 'Mohammed', 'El Khir','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'mohammed@gmail.com', FALSE, '06 54 71 03 11', 1, TRUE, '723a4867-e89b-16l3-a858-856918174111'),
-    (3, 'Donald', 'Trump','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'az@gmail.com', TRUE, '06 54 71 03 11', 1, FALSE, 'e89b-16l3-a858-723a4867-856918174111');;
+    (1, 'Joe', 'John','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'az.az201221@gmail.com', TRUE, TRUE, '06 54 71 03 11', 1, TRUE, '123e4567-e89b-12d3-a456-426614174000'),
+    (2, 'Mohammed', 'El Khir','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'mohammed@gmail.com', FALSE, FALSE, '06 54 71 03 11', 1, TRUE, '723a4867-e89b-16l3-a858-856918174111'),
+    (3, 'Donald', 'Trump','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'az@gmail.com', TRUE, FALSE, '06 54 71 03 11', 1, FALSE, 'e89b-16l3-a858-723a4867-856918174111'),
+    (4, 'Jonas', 'Dupont','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'jonas@gmail.com', TRUE, FALSE, '06 54 71 03 11', 1, FALSE, 'e89b-a858-723a-16l34867-856918174111');
+
 
 -- Create the Token table :
 INSERT INTO Token (uuid, customer_id)
@@ -102,16 +105,16 @@ VALUES
     (1, 'Pain au levain', 'Délicieux pain croustillant', 3.50, 150, 3, TRUE, 0, 1, 1, 12),
     (2, 'Croissant aux amandes', 'Feuilleté et garni d''amandes', 2.75, 100, 2, TRUE, 2, 8, 4, 45),
     (3, 'Tarte aux fruits', 'Tarte aux fruits de saison', 12.99, 20, 12, TRUE, 1, 5, 5, 15),
-    (4, 'Baguette traditionnelle', 'Baguette française classique', 1.99, 200, 1, TRUE, 1, 1, 1, 12),
+    (4, 'Baguette traditionnelle', 'Baguette française classique', 1.99, 200, 1, FALSE, 1, 1, 1, 12),
     (5, 'Éclair au chocolat', 'Éclair garni de crème pâtissière au chocolat', 4.50, 50, 4, TRUE, 1, 5, 5, 35),
-    (6, 'Bouquet de Roses', 'Un assortiment de roses', 19.99, 50, 19, TRUE, 1, 6, 6, 56),
+    (6, 'Bouquet de Roses', 'Un assortiment de roses', 19.99, 50, 19, FALSE, 1, 6, 6, 56),
     (7, 'Lys en Pot', 'Lys blanc dans un pot élégant', 24.99, 30, 24, TRUE, 1, 6, 7, 78),
-    (8, 'Bougeoir en Bois', 'Bougeoir fait à la main en bois', 29.99, 40, 20, TRUE, 1, 4, 7, 89),
-    (9, 'Plateau en Bois', 'Plateau élégant pour servir', 39.99, 25, 30, TRUE, 1, 7, 8, 78),
+    (8, 'Bougeoir en Bois', 'Bougeoir fait à la main en bois', 29.99, 40, 20, FALSE, 1, 4, 7, 89),
+    (9, 'Plateau en Bois', 'Plateau élégant pour servir', 39.99, 25, 30, FALSE, 1, 7, 8, 78),
     (10, 'Espresso', 'Café fort et concentré', 2.50, 100, 2, TRUE, 1, 2, 9, 78),
     (11, 'Cappuccino', 'Espresso avec du lait mousseux', 3.50, 80, 3, TRUE, 1, 2, 10, 9),
     (12, 'Croissant', 'Pâtisserie feuilletée et beurrée', 1.99, 150, 1, TRUE, 1, 5, 11, 86),
-    (13, 'Grains de café (250g)', 'Grains de café premium pour la préparation à la maison', 12.99, 50, 11, TRUE, 1, 8, 12, 12);
+    (13, 'Grains de café (250g)', 'Grains de café premium pour la préparation à la maison', 12.99, 50, 11, FALSE, 1, 8, 12, 12);
 
 -- OrderStatus's data insertion :
 INSERT INTO Order_Status (order_status_id, label, description)
@@ -181,3 +184,17 @@ VALUES
     (nextval('benefit_sequence'), true, 'Place de parking réservée dans le parking couvert pour une durée inférieure à 20 minutes'),
     (nextval('benefit_sequence'), true, 'Accès gratuit au stationnement de vélo surveillé'),
     (nextval('benefit_sequence'), true, 'Ticket de bus pour une journée');
+
+-- Sample data for Benefit_History table
+INSERT INTO Benefit_History (benefit_history_id, qr_code, acquisition_date, acquisition_time, customer_id, benefit_id, license_plate_number)
+VALUES
+    (nextval('benefit_history_sequence'), '0f8fad5b-d9cb-469f-a165-70867728950e', '2024-05-15', '2024-05-15 08:00:00', 2, 1, 'AB-C1-23'),
+    (nextval('benefit_history_sequence'), 'a2ec7db1-af31-4cbf-bad2-71bbd4c2dcd9', '2024-05-15', '2024-05-15 09:30:00', 1, 2, NULL),
+    (nextval('benefit_history_sequence'), '8ebd17f1-d7b7-4a99-876e-41ff8a70f31e', '2024-04-30', '2024-04-30 12:45:00', 1, 1, 'DE-F7-89');
+
+-- Sample data for Gift_History table
+INSERT INTO Gift_History (gift_history_id, purchase_date, customer_id, product_id)
+VALUES
+    (nextval('gift_history_sequence'), '2024-01-15', 2, 1),
+    (nextval('gift_history_sequence'), '2024-02-15', 2, 2),
+    (nextval('gift_history_sequence'), '2024-02-03', 2, 3);

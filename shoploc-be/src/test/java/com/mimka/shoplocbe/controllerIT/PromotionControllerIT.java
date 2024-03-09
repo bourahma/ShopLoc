@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class PromotionControllerIT extends AuthenticationControllerIT {
+class PromotionControllerIT extends ControllerIT {
 
     @Test
     void testGetAllCommercePromotions_ReturnOK () throws Exception {

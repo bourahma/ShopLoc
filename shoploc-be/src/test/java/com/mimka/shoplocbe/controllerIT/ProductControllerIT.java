@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class ProductControllerIT extends AuthenticationControllerIT {
+class ProductControllerIT extends ControllerIT {
 
     @Test
     void testGetProduct_ReturnOK () throws Exception {

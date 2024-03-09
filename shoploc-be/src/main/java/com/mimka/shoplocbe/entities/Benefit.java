@@ -28,4 +28,7 @@ public class Benefit {
 
     @Column(name = "benefit_available", nullable = false)
     private boolean benefitAvailable;
+
+    @Column(name = "license_plate_number")
+    private String licensePlateNumber;
 }

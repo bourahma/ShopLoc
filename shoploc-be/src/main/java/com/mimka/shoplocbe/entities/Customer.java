@@ -21,4 +21,7 @@ public class Customer extends User {
 
     @Column(name = "subscription_date")
     private LocalDate subscriptionDate;
+
+    @Column(name = "vfp_used")
+    private boolean vfpUsed;
 }

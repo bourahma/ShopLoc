@@ -57,9 +57,9 @@ class BatchSchedulerIT {
     @Rollback
     void testVFPBatch_ReturnCOMPLETED() throws Exception {
 
-        testBatchVFP(1, 9, true);
-        testBatchVFP(2, 2, true);
-        testBatchVFP(3, 5, false);
+        testBatchVFP(1, 9, true, true);
+        testBatchVFP(2, 2, true, false);
+        testBatchVFP(3, 5, false, false);
 
         JobLauncherTestUtils jobLauncherTestUtils = new JobLauncherTestUtils();
         jobLauncherTestUtils.setJobLauncher(jobLauncher);
@@ -71,21 +71,23 @@ class BatchSchedulerIT {
 
         Assertions.assertEquals(BatchStatus.COMPLETED, jobExecution.getStatus());
 
-        testBatchVFP(1, 9, true);
-        testBatchVFP(2, 2, false);
-        testBatchVFP(3, 5, true);
+        testBatchVFP(1, 9, true,false);
+        testBatchVFP(2, 2, false, false);
+        testBatchVFP(3, 5, true, false);
     }
 
-    private void testBatchVFP(int customerId, int expectedOrderCount, boolean expectedVfpMembership) throws Exception {
+    private void testBatchVFP(int customerId, int expectedOrderCount, boolean expectedVfpMembership, boolean expectedVfpUsed) throws Exception {
+        Boolean vfpUsed = jdbcTemplate.queryForObject(
+                "SELECT vfp_used FROM Customer WHERE id = ?", Boolean.class, customerId);
+        Assertions.assertEquals(expectedVfpUsed, vfpUsed);
+
         Integer orderCount = jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM Orders WHERE customer_id = ? AND order_date >= CURRENT_DATE - INTERVAL '7 days'",
                 Integer.class, customerId);
-
         Assertions.assertEquals(expectedOrderCount, orderCount);
 
         Boolean isVfpMembership = jdbcTemplate.queryForObject(
                 "SELECT is_vfp_membership FROM Customer WHERE id = ?", Boolean.class, customerId);
-
         Assertions.assertEquals(expectedVfpMembership, isVfpMembership);
     }
 

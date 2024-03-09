@@ -268,6 +268,7 @@ CREATE TABLE Customer
     is_vfp_membership BOOLEAN DEFAULT false,
     fidelity_card_id VARCHAR(255),
     subscription_date DATE,
+    vfp_used BOOLEAN DEFAULT false,
 
     FOREIGN KEY (fidelity_card_id) REFERENCES Fidelity_Card (fidelity_card_id),
     FOREIGN KEY (role) REFERENCES Role (role_id)
@@ -399,7 +400,8 @@ CREATE TABLE Benefit
     benefit_id INT DEFAULT nextval('benefit_sequence') PRIMARY KEY,
     benefit_available BOOLEAN,
     image_url VARCHAR(255),
-    description VARCHAR(255)
+    description VARCHAR(255),
+    license_plate_number VARCHAR(10)
 );
 
 -- Create Benefit_History Table :
@@ -411,6 +413,7 @@ CREATE TABLE Benefit_History
     acquisition_time TIMESTAMP,
     customer_id INT,
     benefit_id INT,
+    license_plate_number VARCHAR(10),
 
     FOREIGN KEY (customer_id) REFERENCES Customer(id),
     FOREIGN KEY (benefit_id) REFERENCES Benefit(benefit_id)

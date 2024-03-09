@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class BenefitControllerIT extends AuthenticationControllerIT {
+class BenefitControllerIT extends ControllerIT {
 
     @Test
     void testGetBenefits_ReturnOK () throws Exception {
@@ -35,7 +35,7 @@ class BenefitControllerIT extends AuthenticationControllerIT {
         mockMvc.perform(get("/benefit/history")
                         .header("Authorization", "Bearer " + customerJWTToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(0)));
+                .andExpect(jsonPath("$", hasSize(2)));
 
         mockMvc.perform(get("/benefit/1")
                         .header("Authorization", "Bearer " + customerJWTToken))
@@ -48,7 +48,7 @@ class BenefitControllerIT extends AuthenticationControllerIT {
         mockMvc.perform(get("/benefit/history")
                         .header("Authorization", "Bearer " + customerJWTToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)));
+                .andExpect(jsonPath("$", hasSize(4)));
     }
     @Test
     @Transactional

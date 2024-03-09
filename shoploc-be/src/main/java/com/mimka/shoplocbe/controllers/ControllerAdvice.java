@@ -87,4 +87,10 @@ public class ControllerAdvice {
     public Map<String, String> authenticationFailed(BenefitException exception) {
         return Map.of(message, exception.getMessage());
     }
+
+    @ExceptionHandler(value = ProductException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleProductException(ProductException exception) {
+        return Map.of(message, exception.getMessage());
+    }
 }

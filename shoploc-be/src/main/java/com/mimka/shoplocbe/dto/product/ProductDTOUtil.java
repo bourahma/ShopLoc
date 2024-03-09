@@ -34,6 +34,12 @@ public class ProductDTOUtil {
         return productCategoryDTO;
     }
 
+    public GiftHistoryDTO toGiftHistoryDTO (GiftHistory giftHistory) {
+        GiftHistoryDTO giftHistoryDTO = this.modelMapper.map(giftHistory, GiftHistoryDTO.class);
+
+        return giftHistoryDTO;
+    }
+
     public ProductCategory toProductCategory (ProductCategoryDTO productCategoryDTO) {
         return this.modelMapper.map(productCategoryDTO, ProductCategory.class);
     }

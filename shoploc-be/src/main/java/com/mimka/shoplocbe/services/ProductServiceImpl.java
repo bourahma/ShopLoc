@@ -2,11 +2,15 @@ package com.mimka.shoplocbe.services;
 
 import com.mimka.shoplocbe.dto.product.ProductDTO;
 import com.mimka.shoplocbe.dto.product.ProductDTOUtil;
+import com.mimka.shoplocbe.entities.Commerce;
+import com.mimka.shoplocbe.entities.CommerceType;
 import com.mimka.shoplocbe.entities.Product;
 import com.mimka.shoplocbe.exception.ProductException;
 import com.mimka.shoplocbe.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -25,6 +29,21 @@ public class ProductServiceImpl implements ProductService {
     public Product getProduct(Long productId) throws ProductException {
         return this.productRepository.findById(productId)
                 .orElseThrow(() -> new ProductException("Product not found for ID : " + productId));
+    }
+
+    @Override
+    public List<Product> getGiftProducts() {
+        return this.productRepository.findByGiftIsTrue();
+    }
+
+    @Override
+    public List<Product> getCommerceGiftProducts(Commerce commerce) {
+        return this.productRepository.findByCommerceAndGiftIsTrue(commerce);
+    }
+
+    @Override
+    public List<Product> getGiftProductsPerCommerceType(CommerceType commerceType) {
+        return this.productRepository.findByCommerce_CommerceType(commerceType);
     }
 
     @Override

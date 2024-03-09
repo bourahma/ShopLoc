@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class ProductCategoryControllerIT extends AuthenticationControllerIT {
+class ProductCategoryControllerIT extends ControllerIT {
     @Test
     void testGetCommerceProductCategories_ReturnOK () throws Exception {
         mockMvc.perform(get("/product/categories/1")

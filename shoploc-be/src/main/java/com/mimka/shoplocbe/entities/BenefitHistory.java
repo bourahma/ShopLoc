@@ -31,6 +31,9 @@ public class BenefitHistory {
     @Column(name = "acquisition_time")
     private Timestamp acquisitionTime;
 
+    @Column(name = "license_plate_number")
+    private String licensePlateNumber;
+
     @ManyToOne
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer customer;

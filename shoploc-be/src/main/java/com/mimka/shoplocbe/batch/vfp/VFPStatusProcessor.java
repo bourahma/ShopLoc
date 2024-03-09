@@ -27,6 +27,7 @@ public class VFPStatusProcessor implements ItemProcessor<Pair<List<Order>, Custo
         } else if (pair.getFirst() == null  || pair.getFirst().size() <= minimumOrdersToEnableVFP) {
             customer.setVfpMembership(false);
         }
+        customer.setVfpUsed(false);
 
         return customer;
     }

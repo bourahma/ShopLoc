@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class FidelityCardControllerIT extends AuthenticationControllerIT {
+class FidelityCardControllerIT extends ControllerIT {
     @Test
     void testGetCustomerFidelityCard_ReturnOK () throws Exception {
         mockMvc.perform(get("/fidelity-card/")
