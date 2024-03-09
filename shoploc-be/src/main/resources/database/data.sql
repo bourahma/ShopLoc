@@ -119,20 +119,26 @@ VALUES
     (1, 'Pending', 'Waiting for payment'),
     (2, 'Approved', 'Merchant approval for the order');
 
--- Order data insertion :
+-- Order data insertion:
 INSERT INTO Orders (order_id, customer_id, commerce_id, order_date, order_status)
 VALUES
-    (100, 1, 1, '2024-03-01', 'PAID'),
-    (101, 1, 1, '2024-03-01', 'PAID'),
-    (102, 1, 1, '2024-03-01', 'PAID'),
-    (103, 1, 1, '2024-03-01', 'PAID'),
-    (104, 1, 1, '2024-03-01', 'PAID'),
-    (105, 1, 1, '2024-03-01', 'PAID'),
-    (106, 1, 1, '2024-03-01', 'PAID'),
-    (107, 1, 1, '2024-03-01', 'PAID'),
-    (108, 1, 1, '2024-03-01', 'PAID'),
-    (109, 2, 1, '2024-03-01', 'PAID'),
-    (110, 2, 1, '2024-03-01', 'PAID');
+    (100, 1, 1, CURRENT_DATE - INTERVAL '7 DAY', 'PAID'),
+    (101, 1, 1, CURRENT_DATE - INTERVAL '7 DAY', 'PAID'),
+    (102, 1, 1, CURRENT_DATE - INTERVAL '6 DAY', 'PAID'),
+    (103, 1, 1, CURRENT_DATE - INTERVAL '6 DAY', 'PAID'),
+    (104, 1, 1, CURRENT_DATE - INTERVAL '5 DAY', 'PAID'),
+    (105, 1, 1, CURRENT_DATE - INTERVAL '4 DAY', 'PAID'),
+    (106, 1, 1, CURRENT_DATE - INTERVAL '3 DAY', 'PAID'),
+    (107, 1, 1, CURRENT_DATE - INTERVAL '2 DAY', 'PAID'),
+    (108, 1, 1, CURRENT_DATE - INTERVAL '1 DAY', 'PAID'),
+    (109, 2, 1, CURRENT_DATE - INTERVAL '6 DAY', 'PAID'),
+    (110, 2, 1, CURRENT_DATE - INTERVAL '5 DAY', 'PAID'),
+    (111, 3, 1, CURRENT_DATE - INTERVAL '1 DAY', 'PAID'),
+    (112, 3, 1, CURRENT_DATE - INTERVAL '2 DAY', 'PAID'),
+    (113, 3, 1, CURRENT_DATE - INTERVAL '3 DAY', 'PAID'),
+    (114, 3, 1, CURRENT_DATE - INTERVAL '4 DAY', 'PAID'),
+    (115, 3, 1, CURRENT_DATE - INTERVAL '5 DAY', 'PAID');
+
 
 -- OrderProduct data insertion :
 INSERT INTO Order_Product (order_product_id, order_id, quantity, purchase_price)
