@@ -1,12 +1,28 @@
-import React, { useState } from "react";
-import { Alert, Button, Label, TextInput } from "flowbite-react";
+import React, { useEffect, useState } from "react";
+import { Alert, Button, Label, Select, TextInput } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import { ErrorMessage, Formik } from "formik";
 import * as Yup from "yup";
 import registerMerchantService from "../services/registerMerchant";
+import fetchCommerces from "../services/fetchCommerces";
 
 const MerchantRegistrationForm = () => {
   const [error, setError] = useState(null);
+  const [commerces, setCommerces] = useState([]);
+
+  const token = localStorage.getItem("userToken");
+  const cleanedToken = token.replace(/['"]+/g, "");
+
+  useEffect(() => {
+    fetchCommerces(cleanedToken)
+      .then((data) => {
+        setCommerces(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching commercants:", error);
+        setError(error);
+      });
+  }, [cleanedToken]);
 
   const initialMerchant = {
     username: "",
@@ -25,7 +41,21 @@ const MerchantRegistrationForm = () => {
   const createMerchant = (values) => {
     delete values.agree;
     registerMerchantService
-      .registerMerchant(values)
+      .registerMerchant(
+        {
+          username: values.username,
+          lastname: values.lastname,
+          firstname: values.firstname,
+          password: values.password,
+          email: values.email,
+          phoneNumber: values.phoneNumber,
+          subscriptionDate: null,
+          commerce: null,
+          commerceId: values.commerceId,
+          role: null,
+        },
+        cleanedToken
+      )
       .then((data) => {
         console.log(data);
         navigate("/admin/home");
@@ -80,7 +110,6 @@ const MerchantRegistrationForm = () => {
               .min(10, "Doit être 10 caractères ou plus")
               .max(10, "Doit être 10 caractères ou moins")
               .required("Champ requis"),
-            subscriptionDate: Yup.date().default(() => new Date()),
             commerceId: Yup.string().required("Champ requis"),
           })}
           onSubmit={(values, { setSubmitting }) => {
@@ -238,36 +267,30 @@ const MerchantRegistrationForm = () => {
                     className="text-red-500 text-xs"
                   />
                 </div>
-                <div className="mb-2 block">
-                  <Label htmlFor="subscriptionDate">Date d'inscription</Label>
-                </div>
-                <TextInput
-                  id="subscriptionDate"
-                  type="date"
-                  placeholder="Date d'inscription"
-                  value={values.subscriptionDate}
-                  error={errors.subscriptionDate}
-                  fieldtouched={touched.subscriptionDate?.toString()}
-                  onChange={handleChange}
-                />
-                <ErrorMessage
-                  name="subscriptionDate"
-                  component="div"
-                  className="text-red-500 text-xs"
-                />
                 <div>
                   <div className="mb-2 block">
-                    <Label htmlFor="commerceId">ID du commerce</Label>
+                    <Label htmlFor="commerceId">Commerce</Label>
                   </div>
-                  <TextInput
+                  <Select
                     id="commerceId"
-                    type="text"
-                    placeholder="ID du commerce"
                     value={values.commerceId}
                     error={errors.commerceId}
                     fieldtouched={touched.commerceId?.toString()}
                     onChange={handleChange}
-                  />
+                  >
+                    <option value="" disabled>
+                      Choisir un commerce
+                    </option>
+                    {commerces.map((commerce) => (
+                      <option
+                        key={commerce.commerceId}
+                        value={commerce.commerceId}
+                      >
+                        {commerce.commerceName}
+                      </option>
+                    ))}
+                  </Select>
+
                   <ErrorMessage
                     name="commerceId"
                     component="div"
