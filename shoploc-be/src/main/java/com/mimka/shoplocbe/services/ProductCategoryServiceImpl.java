@@ -34,9 +34,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 
     @Override
     public ProductCategory createProductCategory(ProductCategoryDTO productCategoryDTO) {
-        ProductCategory productCategory = this.productDTOUtil.toProductCategory(productCategoryDTO);
-
-        return productCategory;
+        return this.productDTOUtil.toProductCategory(productCategoryDTO);
     }
 
     @Override

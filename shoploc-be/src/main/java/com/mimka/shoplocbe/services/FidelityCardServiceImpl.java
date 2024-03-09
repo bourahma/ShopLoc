@@ -112,10 +112,15 @@ public class FidelityCardServiceImpl implements FidelityCardService {
         if (amount < FidelityCardServiceImpl.MINIMUMAMOUNTCREDITALLOWED || amount > FidelityCardServiceImpl.MAXIMUMAMOUNTCREDITALLOWED) {
             throw new InvalidCreditAmountException("le montant de crédit doit être compris entre 1€ et 50€.");
         }
-        FidelityCard fidelityCard = this.fidelityCardRepository.findById(fidelityCardId).get();
-        createBalanceTransaction(fidelityCard, 0, amount, TransactionType.CREDIT);
+        Optional<FidelityCard> optionalFidelityCard = this.fidelityCardRepository.findById(fidelityCardId);
+        if (optionalFidelityCard.isPresent()) {
+            FidelityCard fidelityCard = this.fidelityCardRepository.findById(fidelityCardId).get();
+            createBalanceTransaction(fidelityCard, 0, amount, TransactionType.CREDIT);
 
-        return this.fidelityCardRepository.save(fidelityCard);
+            return this.fidelityCardRepository.save(fidelityCard);
+        } else {
+            throw new InvalidCreditAmountException ("Aucune carte de fidélité avec l'id : " + fidelityCardId);
+        }
     }
 
     @Override

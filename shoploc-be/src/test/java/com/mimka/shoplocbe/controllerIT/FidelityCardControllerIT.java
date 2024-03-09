@@ -1,6 +1,6 @@
 package com.mimka.shoplocbe.controllerIT;
 
-import com.mimka.shoplocbe.dto.fidelityCard.CreditBalanceDTO;
+import com.mimka.shoplocbe.dto.fidelity.CreditBalanceDTO;
 import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;

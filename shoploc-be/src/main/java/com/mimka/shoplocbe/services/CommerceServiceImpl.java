@@ -19,12 +19,9 @@ public class CommerceServiceImpl implements CommerceService {
 
     private final CommerceRepository commerceRepository;
 
-    private final CommerceDTOUtil commerceDTOUtil;
-
     @Autowired
-    public CommerceServiceImpl(CommerceRepository commerceRepository, CommerceDTOUtil commerceDTOUtil) {
+    public CommerceServiceImpl(CommerceRepository commerceRepository) {
         this.commerceRepository = commerceRepository;
-        this.commerceDTOUtil = commerceDTOUtil;
     }
 
     @Override

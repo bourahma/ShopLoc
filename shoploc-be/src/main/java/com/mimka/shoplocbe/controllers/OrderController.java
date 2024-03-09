@@ -45,13 +45,13 @@ public class OrderController {
         return this.orderFacade.generateQrCode(orderId, principal);
     }
 
-    @GetMapping("/settle/using-qr-code-points/{QRCodeUUID}")
-    public Map<String,String> settleOrderUsingPointsQRCode (@PathVariable String QRCodeUUID) throws InsufficientFundsException {
-        return this.orderFacade.settleOrderUsingPointsQRCode(QRCodeUUID);
+    @GetMapping("/settle/using-qr-code-points/{qRCodeUUID}")
+    public Map<String,String> settleOrderUsingPointsQRCode (@PathVariable String qRCodeUUID) throws InsufficientFundsException {
+        return this.orderFacade.settleOrderUsingPointsQRCode(qRCodeUUID);
     }
 
-    @GetMapping("/settle/using-qr-code-balance/{QRCodeUUID}")
-    public Map<String,String> settleOrderUsingBalanceQRCode (@PathVariable String QRCodeUUID) throws InsufficientFundsException {
-        return this.orderFacade.settleOrderUsingBalanceQRCode(QRCodeUUID);
+    @GetMapping("/settle/using-qr-code-balance/{qRCodeUUID}")
+    public Map<String,String> settleOrderUsingBalanceQRCode (@PathVariable String qRCodeUUID) throws InsufficientFundsException {
+        return this.orderFacade.settleOrderUsingBalanceQRCode(qRCodeUUID);
     }
 }

@@ -12,4 +12,6 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findByCustomerAndAndOrderDateAfterAndAndOrderStatus(Customer customer, LocalDate orderDate, String orderStatus);
+
+    Order findByOrderIdAndOrderStatus(Long orderId, String name);
 }

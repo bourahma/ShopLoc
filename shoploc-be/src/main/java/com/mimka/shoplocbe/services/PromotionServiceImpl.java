@@ -7,16 +7,21 @@ import com.mimka.shoplocbe.repositories.PromotionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PromotionServiceImpl implements PromotionService {
 
-    private final PromotionRepository promotionRepository;
-
+    private final PromotionRepository<OfferPromotion> offerPromotionRepository;
+    private final PromotionRepository<Promotion> promotionRepository;
+    private final PromotionRepository<DiscountPromotion> discountPromotionRepository;
     private final ProductDTOUtil productDTOUtil;
 
     @Autowired
-    public PromotionServiceImpl(PromotionRepository promotionRepository, ProductDTOUtil productDTOUtil) {
-        this.promotionRepository = promotionRepository;
+    public PromotionServiceImpl(PromotionRepository<OfferPromotion> offerPromotionRepository, PromotionRepository<Promotion> promotionRepository1, PromotionRepository<DiscountPromotion> discountPromotionRepository, ProductDTOUtil productDTOUtil) {
+        this.offerPromotionRepository = offerPromotionRepository;
+        this.promotionRepository = promotionRepository1;
+        this.discountPromotionRepository = discountPromotionRepository;
         this.productDTOUtil = productDTOUtil;
     }
 
@@ -26,7 +31,7 @@ public class PromotionServiceImpl implements PromotionService {
         discountPromotion.setProduct(product);
         discountPromotion.setCommerce(product.getCommerce());
 
-        return (Promotion) this.promotionRepository.save(discountPromotion);
+        return this.discountPromotionRepository.save(discountPromotion);
     }
 
     @Override
@@ -35,6 +40,11 @@ public class PromotionServiceImpl implements PromotionService {
         offerPromotion.setProduct(product);
         offerPromotion.setCommerce(product.getCommerce());
 
-        return (Promotion) this.promotionRepository.save(offerPromotion);
+        return this.offerPromotionRepository.save(offerPromotion);
+    }
+
+    @Override
+    public List<Promotion> getCommercePromotions(Commerce commerce) {
+        return this.promotionRepository.findAllByCommerce(commerce);
     }
 }

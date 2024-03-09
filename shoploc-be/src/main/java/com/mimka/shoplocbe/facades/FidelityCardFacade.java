@@ -1,6 +1,6 @@
 package com.mimka.shoplocbe.facades;
 
-import com.mimka.shoplocbe.dto.fidelityCard.*;
+import com.mimka.shoplocbe.dto.fidelity.*;
 import com.mimka.shoplocbe.entities.BalanceTransaction;
 import com.mimka.shoplocbe.entities.Customer;
 import com.mimka.shoplocbe.entities.FidelityCard;

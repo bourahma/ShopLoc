@@ -27,15 +27,12 @@ public class PromotionFacadeImpl implements PromotionFacade {
 
     private final ProductDTOUtil productDTOUtil;
 
-    private final PromotionRepository promotionRepository;
-
     @Autowired
-    public PromotionFacadeImpl(PromotionService promotionService, ProductService productService, CommerceService commerceService, ProductDTOUtil productDTOUtil, PromotionRepository promotionRepository) {
+    public PromotionFacadeImpl(PromotionService promotionService, ProductService productService, CommerceService commerceService, ProductDTOUtil productDTOUtil) {
         this.promotionService = promotionService;
         this.productService = productService;
         this.commerceService = commerceService;
         this.productDTOUtil = productDTOUtil;
-        this.promotionRepository = promotionRepository;
     }
 
     @Override
@@ -57,7 +54,7 @@ public class PromotionFacadeImpl implements PromotionFacade {
     @Override
     public List<PromotionDTO> getCommercePromotions(Long commerceId) throws CommerceNotFoundException {
         Commerce commerce = this.commerceService.getCommerce(commerceId);
-        List<Promotion> promotions = this.promotionRepository.findAllByCommerce(commerce);
+        List<Promotion> promotions = this.promotionService.getCommercePromotions(commerce);
 
         return promotions
                 .stream()

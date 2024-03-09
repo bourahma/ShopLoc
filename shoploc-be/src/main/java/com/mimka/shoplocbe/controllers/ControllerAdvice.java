@@ -60,25 +60,25 @@ public class ControllerAdvice {
 
     @ExceptionHandler(value = CommerceTypeNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public Map<String, String> CommerceTypeNotFoundExceptionHandler(CommerceTypeNotFoundException exception) {
+    public Map<String, String> commerceTypeNotFoundExceptionHandler(CommerceTypeNotFoundException exception) {
         return Map.of(message, exception.getMessage());
     }
 
     @ExceptionHandler(value = InsufficientFundsException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public Map<String, String> InsufficientFundsExceptionHandler(InsufficientFundsException exception) {
+    public Map<String, String> insufficientFundsExceptionHandler(InsufficientFundsException exception) {
         return Map.of(message, exception.getMessage());
     }
 
     @ExceptionHandler(value = InvalidCreditAmountException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public Map<String, String> InvalidCreditAmountExceptionHandler(InvalidCreditAmountException exception) {
+    public Map<String, String> invalidCreditAmountExceptionHandler(InvalidCreditAmountException exception) {
         return Map.of(message, exception.getMessage());
     }
 
     @ExceptionHandler(value = ProductCategoryNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public Map<String, String> ProductCategoryNotFoundExceptionHandler(ProductCategoryNotFoundException exception) {
+    public Map<String, String> productCategoryNotFoundExceptionHandler(ProductCategoryNotFoundException exception) {
         return Map.of(message, exception.getMessage());
     }
 
