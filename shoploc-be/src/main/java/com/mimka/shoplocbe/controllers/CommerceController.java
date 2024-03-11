@@ -10,9 +10,11 @@ import com.mimka.shoplocbe.facades.CommerceFacade;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Set;
@@ -86,11 +88,11 @@ public class CommerceController {
         return this.commerceFacade.updateCommerce(commerceDTO);
     }
 
-    @PostMapping("/")
+    @PostMapping(path = "/", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyAuthority('SCOPE_ADMINISTRATOR')")
-    public CommerceDTO createCommerce (@RequestBody @Valid CommerceDTO commerceDTO) throws CommerceTypeNotFoundException {
-        return this.commerceFacade.addCommerce(commerceDTO);
+    public CommerceDTO createCommerce (@RequestPart @Valid CommerceDTO commerceDTO, @RequestParam("multipartFile") MultipartFile multipartFile) throws CommerceTypeNotFoundException {
+        return this.commerceFacade.addCommerce(commerceDTO, multipartFile);
     }
 
     @DeleteMapping("/{commerceId}")

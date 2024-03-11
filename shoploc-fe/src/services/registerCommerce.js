@@ -8,6 +8,7 @@ const registerCommerce = async (credentials, token) => {
   const response = await axios.post(`${SERVER_URL}/${baseUrl}`, credentials, {
     headers: {
       Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
     },
   });
   return response.data;

@@ -13,6 +13,7 @@ import com.mimka.shoplocbe.exception.CommerceTypeNotFoundException;
 import com.mimka.shoplocbe.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Set;
@@ -55,7 +56,7 @@ public class CommerceFacadeImpl implements CommerceFacade {
     }
 
     @Override
-    public CommerceDTO addCommerce(CommerceDTO commerceDTO) throws CommerceTypeNotFoundException {
+    public CommerceDTO addCommerce(CommerceDTO commerceDTO, MultipartFile multipartFile) throws CommerceTypeNotFoundException {
         // Create commerce address
         Address address = this.addressService.createAddress(commerceDTO.getAddressDTO());
         // Get commerce type if it exists otherwise CommerceTypeNotFoundException is thrown.
@@ -65,7 +66,7 @@ public class CommerceFacadeImpl implements CommerceFacade {
         commerce.setCommerceType(commerceType);
         commerce.setAddress(address);
         // Save commerce image to amazon S3 bucket and get back the image url.
-        commerce.setImageUrl(this.imageAPI.uploadImage(commerceDTO.getMultipartFile()));
+        commerce.setImageUrl(this.imageAPI.uploadImage(multipartFile));
         commerce = this.commerceService.saveCommerce(commerce);
 
         return this.commerceDTOUtil.toCommerceDTO(commerce);
@@ -137,7 +138,7 @@ public class CommerceFacadeImpl implements CommerceFacade {
         // Update the address
         Commerce commerce = this.commerceService.updateCommerce(commerceDTO);
         // Update the commerce image if any
-        commerce.setImageUrl(this.imageAPI.uploadImage(commerceDTO.getMultipartFile()));
+        //commerce.setImageUrl(this.imageAPI.uploadImage(commerceDTO.getMultipartFile()));
         // Get commerce type.
         CommerceType commerceType = this.commerceTypeService.getCommerceTypeById(commerceDTO.getCommerceType().getCommerceTypeId());
         commerce.setAddress(address);

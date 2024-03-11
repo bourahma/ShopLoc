@@ -39,7 +39,7 @@ const MerchantRegistrationForm = () => {
   const navigate = useNavigate();
 
   const createMerchant = (values) => {
-    delete values.agree;
+    console.log(values);
     registerMerchantService
       .registerMerchant(
         {
@@ -47,6 +47,7 @@ const MerchantRegistrationForm = () => {
           lastname: values.lastname,
           firstname: values.firstname,
           password: values.password,
+          confirmedPassword: values.confirmedPassword,
           email: values.email,
           phoneNumber: values.phoneNumber,
           subscriptionDate: null,
@@ -112,8 +113,9 @@ const MerchantRegistrationForm = () => {
               .required("Champ requis"),
             commerceId: Yup.string().required("Champ requis"),
           })}
-          onSubmit={(values, { setSubmitting }) => {
+          onSubmit={(values, { setSubmitting, resetForm }) => {
             createMerchant(values);
+            resetForm();
             setSubmitting(false);
           }}
         >

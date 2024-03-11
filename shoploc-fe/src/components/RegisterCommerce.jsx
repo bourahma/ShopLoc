@@ -27,7 +27,7 @@ const CommerceRegistrationForm = () => {
     commerceName: "",
     openingHour: "",
     closingHour: "",
-    multipartFile: "",
+    multipartFile: null,
     street: "",
     city: "",
     postalCode: "",
@@ -37,28 +37,40 @@ const CommerceRegistrationForm = () => {
   const navigate = useNavigate();
 
   const registerCommerce = (values) => {
-    console.log(values);
-    registerCommerceService
-      .registerCommerce(
+    const formData = new FormData();
+    formData.append(
+      "commerceDTO",
+      new Blob(
+        [
+          JSON.stringify({
+            commerceName: values.commerceName,
+            openingHour: values.openingHour,
+            closingHour: values.closingHour,
+            disabled: false,
+            addressDTO: {
+              street: values.street,
+              city: values.city,
+              postalCode: values.postalCode,
+              latitude: 0.0,
+              longitude: 0.0,
+            },
+            commerceType: {
+              commerceTypeId: values.commerceType,
+            },
+          }),
+        ],
         {
-          commerceName: values.commerceName,
-          openingHour: values.openingHour,
-          closingHour: values.closingHour,
-          multipartFile: values.multipartFile,
-          addressDTO: {
-            street: values.street,
-            city: values.city,
-            postalCode: values.postalCode,
-            latitude: 0.0,
-            longitude: 0.0,
-          },
-          disabled: false,
-          commerceType: {
-            commerceTypeId: values.commerceType,
-          },
-        },
-        cleanedToken
+          type: "application/json",
+        }
       )
+    );
+    formData.append("multipartFile", values.multipartFile);
+
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ", " + pair[1]);
+    }
+    registerCommerceService
+      .registerCommerce(formData, cleanedToken)
       .then((data) => {
         console.log(data);
         navigate("/admin/home");
@@ -105,8 +117,9 @@ const CommerceRegistrationForm = () => {
             postalCode: Yup.string().required("Champ requis"),
             commerceType: Yup.string().required("Champ requis"),
           })}
-          onSubmit={(values, { setSubmitting }) => {
+          onSubmit={(values, { setSubmitting, resetForm }) => {
             registerCommerce(values);
+            resetForm();
             setSubmitting(false);
           }}
         >
@@ -117,6 +130,7 @@ const CommerceRegistrationForm = () => {
             handleChange,
             handleSubmit,
             isSubmitting,
+            setFieldValue,
           }) => (
             <form onSubmit={handleSubmit}>
               <div className="flex max-w-full w-full flex-col gap-4">
@@ -248,9 +262,7 @@ const CommerceRegistrationForm = () => {
                     fieldtouched={touched.commerceType?.toString()}
                     onChange={handleChange}
                   >
-                    <option value="" disabled>
-                      Choisir un type de commerce
-                    </option>
+                    <option value="">Choisir un type de commerce</option>
                     {commerceTypes.map((type) => (
                       <option
                         key={type.commerceTypeId}
@@ -276,10 +288,14 @@ const CommerceRegistrationForm = () => {
                     type="file"
                     placeholder="Image"
                     accept="image/*"
-                    value={values.multipartFile}
                     error={errors.multipartFile}
                     fieldtouched={touched.multipartFile?.toString()}
-                    onChange={handleChange}
+                    onChange={(event) => {
+                      setFieldValue(
+                        "multipartFile",
+                        event.currentTarget.files[0]
+                      );
+                    }}
                   />
                   <ErrorMessage
                     name="multipartFile"

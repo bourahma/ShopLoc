@@ -40,7 +40,7 @@ public class CommerceDTO {
 
     private String imageUrl;
 
-    private MultipartFile multipartFile;
+    //private MultipartFile multipartFile;
 
     private boolean disabled;
 

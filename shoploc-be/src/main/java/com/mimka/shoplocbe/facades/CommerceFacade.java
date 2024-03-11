@@ -6,6 +6,7 @@ import com.mimka.shoplocbe.dto.product.ProductCategoryDTO;
 import com.mimka.shoplocbe.dto.product.ProductDTO;
 import com.mimka.shoplocbe.exception.CommerceNotFoundException;
 import com.mimka.shoplocbe.exception.CommerceTypeNotFoundException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Set;
@@ -14,7 +15,7 @@ public interface CommerceFacade {
 
     CommerceDTO getCommerce (Long commerceId) throws CommerceNotFoundException;
 
-    CommerceDTO addCommerce (CommerceDTO commerceDTO) throws CommerceTypeNotFoundException;
+    CommerceDTO addCommerce (CommerceDTO commerceDTO, MultipartFile multipartFile) throws CommerceTypeNotFoundException;
 
     List<ProductDTO> getCommerceProducts (Long commerceId) throws CommerceNotFoundException;
 
