@@ -30,10 +30,12 @@ public class PromotionDTO {
     private Long commerceId;
 
     // Discount promotion fields
-    private int discountPercent;
+    private Integer discountPercent;
+
+    private String promotionType;
 
     // Offer promotion fields
-    private int requiredItems;
+    private Integer requiredItems;
 
-    private int offeredItems;
+    private Integer offeredItems;
 }

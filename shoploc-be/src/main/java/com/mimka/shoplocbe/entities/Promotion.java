@@ -11,8 +11,6 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Table(name = "Promotion")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
 @NoArgsConstructor
 public class Promotion {
 
@@ -31,6 +29,9 @@ public class Promotion {
     @Column(name = "description", nullable = false)
     private String description;
 
+    @Column(name = "type", nullable = false)
+    private String promotionType;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "commerce_id", referencedColumnName = "commerce_id")
     private Commerce commerce;
@@ -38,5 +39,14 @@ public class Promotion {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     private Product product;
+
+    @Column(name = "discount_percent")
+    private Integer discountPercent;
+
+    @Column(name = "required_items")
+    private Integer requiredItems;
+
+    @Column(name = "offered_items")
+    private Integer offeredItems;
 
 }

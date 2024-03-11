@@ -19,7 +19,6 @@ DROP TABLE IF EXISTS Benefit_History CASCADE;
 DROP TABLE IF EXISTS Gift_History CASCADE;
 DROP TABLE IF EXISTS Promotion CASCADE;
 DROP TABLE IF EXISTS Promotion_History CASCADE;
-
 DROP TABLE IF EXISTS VFP CASCADE;
 DROP TABLE IF EXISTS Commerce_Type CASCADE;
 DROP TABLE IF EXISTS Customer_Connection CASCADE;
@@ -29,6 +28,7 @@ DROP TABLE IF EXISTS Address CASCADE;
 DROP TABLE IF EXISTS QR_Code_Payment CASCADE;
 DROP TABLE IF EXISTS Product_Category CASCADE;
 
+DROP SEQUENCE IF EXISTS vfp_history_sequence CASCADE;
 DROP SEQUENCE IF EXISTS product_category_sequence CASCADE;
 DROP SEQUENCE IF EXISTS order_sequence CASCADE;
 DROP SEQUENCE IF EXISTS address_sequence CASCADE;
@@ -42,6 +42,13 @@ DROP SEQUENCE IF EXISTS promotion_sequence CASCADE;
 DROP SEQUENCE IF EXISTS gift_history_sequence CASCADE;
 DROP SEQUENCE IF EXISTS benefit_history_sequence CASCADE;
 DROP SEQUENCE IF EXISTS commerce_type_sequence CASCADE;
+
+CREATE SEQUENCE vfp_history_sequence
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
 
 CREATE SEQUENCE address_sequence
     INCREMENT 1
@@ -435,10 +442,10 @@ CREATE TABLE Gift_History
 -- Create VFP_History Table
 CREATE TABLE VFP_History
 (
-    vfp_update_id INT DEFAULT nextval('promotion_sequence') PRIMARY KEY,
-    customer_id INT UNIQUE NOT NULL,
+    vfp_history_id INT DEFAULT nextval('vfp_history_sequence') PRIMARY KEY,
+    customer_id INT NOT NULL,
     granted_date DATE,
-    validity_date DATE,
+    expiration_date DATE,
 
     FOREIGN KEY (customer_id) REFERENCES Customer(id)
 );

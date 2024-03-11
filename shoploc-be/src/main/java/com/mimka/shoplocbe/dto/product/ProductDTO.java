@@ -48,4 +48,6 @@ public class ProductDTO {
 
     private PromotionDTO promotion;
 
+    private Long promotionId;
+
 }
