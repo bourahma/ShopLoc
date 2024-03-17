@@ -3,8 +3,8 @@ INSERT INTO Fidelity_Card (fidelity_card_id, points, balance)
 VALUES
     ('123e4567-e89b-12d3-a456-426614174000', 54.50, 49.50),
     ('e89b-16l3-a858-723a4867-856918174111', 54.50, 49.50),
-    ('723a4867-e89b-16l3-a858-856918174111', 84.00, 19.50),
-    ('e89b-a858-723a-16l34867-856918174111', 84.00, 19.50);
+    ('723a4867-e89b-16l3-a858-856918174111', 8.00, 1.50),
+    ('e89b-a858-723a-16l34867-856918174111', 94.00, 97.50);
 
 -- Role's insert.
 INSERT INTO Role (role_id, role_name)
@@ -174,9 +174,9 @@ VALUES
 -- Sample data for Promotion table
 INSERT INTO Promotion (promotion_id,start_date, end_date, description, type, commerce_id, product_id, discount_percent, required_items, offered_items)
 VALUES
-    (nextval('promotion_sequence'), '2024-03-01', '2024-05-15', 'Vente de printemps', 'Discount', 8, 13, 20, NULL, NULL),
-    (nextval('promotion_sequence'), '2024-04-01', '2024-04-30', 'Achetez 3, obtenez-en 1 gratuitement', 'Offer', 1, 1, NULL, 3, 1),
-    (nextval('promotion_sequence'), '2024-05-01', '2024-05-15', 'Réduction d été', 'Discount', 6, 6, 15,  NULL, NULL);
+    (nextval('promotion_sequence'), '2024-03-01', '2024-05-15', 'Vente de printemps', 'DISCOUNT', 8, 13, 20, NULL, NULL),
+    (nextval('promotion_sequence'), '2024-04-01', '2024-04-30', 'Achetez 3, obtenez-en 1 gratuitement', 'OFFER', 1, 1, NULL, 3, 1),
+    (nextval('promotion_sequence'), '2024-05-01', '2024-05-15', 'Réduction d été', 'DISCOUNT', 6, 6, 15,  NULL, NULL);
 
 -- Sample data for Promotion table
 INSERT INTO Benefit (benefit_id, benefit_available, description)
@@ -198,3 +198,9 @@ VALUES
     (nextval('gift_history_sequence'), '2024-01-15', 2, 1),
     (nextval('gift_history_sequence'), '2024-02-15', 2, 2),
     (nextval('gift_history_sequence'), '2024-02-03', 2, 3);
+
+-- Sample data for VFP_History table
+INSERT INTO VFP_History (vfp_history_id, customer_id, granted_date, expiration_date)
+VALUES
+    (nextval('vfp_history_sequence'), 1, CURRENT_DATE - INTERVAL '30 DAY', CURRENT_DATE - INTERVAL '23 DAY'),
+    (nextval('vfp_history_sequence'), 2, CURRENT_DATE - INTERVAL '15 DAY', CURRENT_DATE - INTERVAL '8 DAY');

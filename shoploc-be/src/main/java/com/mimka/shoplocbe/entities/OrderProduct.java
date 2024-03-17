@@ -27,7 +27,6 @@ public class OrderProduct {
     @JoinColumn(name = "order_product_id")
     private Product product;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "promotion_id")
     private Promotion promotion;

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PromotionRepository<T extends Promotion> extends JpaRepository<T, Long> {
+public interface PromotionRepository extends JpaRepository<Promotion, Long> {
 
     List<Promotion> findAllByCommerce(Commerce commerce);
 }
