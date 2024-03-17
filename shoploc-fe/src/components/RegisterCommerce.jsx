@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Alert, Button, Label, Select, TextInput } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
-import registerCommerceService from "../services/registerCommerce";
+import commerceService from "../services/commerce";
 import fetchCommerceTypes from "../services/commerceTypesService";
 import { ErrorMessage, Formik } from "formik";
 import * as Yup from "yup";
@@ -66,10 +66,7 @@ const CommerceRegistrationForm = () => {
     );
     formData.append("multipartFile", values.multipartFile);
 
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ", " + pair[1]);
-    }
-    registerCommerceService
+    commerceService
       .registerCommerce(formData, cleanedToken)
       .then((data) => {
         console.log(data);

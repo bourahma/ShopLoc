@@ -7,10 +7,6 @@ import MerchantRegistrationForm from "./RegisterMerchant";
 const AdminHomeComponent = () => {
   const [task, setTask] = useState("createCommerce");
 
-  const handleCreateMerchant = () => {
-    // Logic for creating merchants
-  };
-
   const handleLaunchPromo = () => {
     // Logic for launching promos
   };

@@ -9,6 +9,7 @@ import LoginForm from "./components/LoginForm";
 import { PrivateRoute } from "./components/PrivateRoute";
 import { PublicRoute } from "./components/PublicRoute";
 import HomeComponent from "./components/HomeComponent";
+import MerchantHome from "./components/MerchantHome";
 import Template from "./components/Template";
 import FirstScreen from "./components/FirstScreen";
 import Cart from "./components/Cart";
@@ -79,6 +80,15 @@ function App() {
               <PrivateRoute>
                 <Header />
                 <AdminHomeComponent />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/merchant/home"
+            element={
+              <PrivateRoute>
+                <Header />
+                <MerchantHome />
               </PrivateRoute>
             }
           />
