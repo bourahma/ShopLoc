@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
 
 @Component
 @Slf4j
@@ -77,7 +76,7 @@ public class CustomerFacade {
         Token token = this.tokenService.createToken(customer);
 
         try {
-            this.mailServiceImpl.triggerEmailVerification(customer, token.getUuid().toString());
+            this.mailServiceImpl.triggerEmailVerification(customer, token.getUuid());
         } catch (MessagingException e) {
             log.warn("Sending email verification error : " + e.getMessage());
         }
