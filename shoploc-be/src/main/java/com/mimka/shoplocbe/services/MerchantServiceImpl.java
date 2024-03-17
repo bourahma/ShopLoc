@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
+import com.mimka.shoplocbe.configurations.CustomUserDetails;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -47,14 +48,16 @@ public class MerchantServiceImpl implements MerchantService, UserDetailsService 
 
         Set<GrantedAuthority> authorities = Set.of(new SimpleGrantedAuthority(user.getRole().getRoleName()));
 
-        return new org.springframework.security.core.userdetails.User(
+        return new CustomUserDetails(
                 user.getUsername(),
                 user.getPassword(),
                 user.getEnabled(),
                 true,
                 true,
                 true,
-                authorities);
+                authorities,
+                user.getId()
+                );
     }
 
     public boolean emailAndUsernameUniquenessValid(String email, String username) throws RegistrationException {
@@ -88,5 +91,13 @@ public class MerchantServiceImpl implements MerchantService, UserDetailsService 
             this.merchantRepository.save(merchant);
         }
         return merchant;
+    }
+
+    @Override
+    public Long getCommerceIdByMerchantId(Long merchantId) {
+        if (this.merchantRepository.findById(merchantId).isEmpty()) {
+            throw new IllegalArgumentException("Aucun commerçant n'est associé à cet identifiant.");
+        }
+        return this.merchantRepository.findById(merchantId).get().getCommerce().getCommerceId();
     }
 }

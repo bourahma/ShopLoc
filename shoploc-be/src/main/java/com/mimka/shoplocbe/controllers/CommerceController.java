@@ -81,6 +81,14 @@ public class CommerceController {
         return this.commerceFacade.getCommerceProducts(commerceId);
     }
 
+    @GetMapping("/merchant/{merchantId}/products")
+    @PreAuthorize("hasAnyAuthority('SCOPE_CUSTOMER', 'SCOPE_MERCHANT', 'SCOPE_ADMINISTRATOR')")
+    public List<ProductDTO> merchantProducts (@PathVariable("merchantId") Long merchantId) throws CommerceNotFoundException {
+        Long commerceId = this.commerceFacade.getCommerceIdByMerchantId(merchantId);
+        System.out.println("this is the commerce id " + commerceId);
+        return this.commerceFacade.getCommerceProducts(commerceId);
+    }
+
     @PutMapping("/{commerceId}")
     @PreAuthorize("hasAnyAuthority('SCOPE_MERCHANT')")
     public CommerceDTO updateCommerce (@PathVariable("commerceId") Long commerceId, @RequestBody @Valid CommerceDTO commerceDTO) throws CommerceNotFoundException, CommerceTypeNotFoundException {

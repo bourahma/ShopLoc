@@ -34,4 +34,6 @@ public interface CommerceFacade {
     CommerceDTO updateCommerce (CommerceDTO commerceDTO) throws CommerceNotFoundException, CommerceTypeNotFoundException;
 
     Set<ProductCategoryDTO> getCommerceProductCategories (Long commerceId) throws CommerceNotFoundException;
+
+    Long getCommerceIdByMerchantId(Long merchantId);
 }

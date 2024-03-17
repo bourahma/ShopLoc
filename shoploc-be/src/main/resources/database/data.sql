@@ -13,11 +13,6 @@ VALUES
     (2, 'ADMINISTRATOR'),
     (3, 'MERCHANT');
 
--- User's insert.
--- Decoded password : 12345678
-INSERT INTO Merchant (id, username, lastname, firstname, password, email, enabled, phone_number, role, subscription_date, commerce_id)
-VALUES
-    (3, 'Loris', 'Johnson', 'user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'michael.j@gmail.com', TRUE, '06 21 21 84 31', 3, '2024-01-24', NULL);
 
 INSERT INTO Customer (id, username, lastname, firstname, password, email, enabled, vfp_used, phone_number, role, is_vfp_membership, fidelity_card_id)
 VALUES
@@ -115,6 +110,14 @@ VALUES
     (11, 'Cappuccino', 'Espresso avec du lait mousseux', 3.50, 80, 3, TRUE, 1, 2, 10, 9),
     (12, 'Croissant', 'Pâtisserie feuilletée et beurrée', 1.99, 150, 1, TRUE, 1, 5, 11, 86),
     (13, 'Grains de café (250g)', 'Grains de café premium pour la préparation à la maison', 12.99, 50, 11, FALSE, 1, 8, 12, 12);
+
+
+-- User's insert.
+-- Decoded password : 12345678
+INSERT INTO Merchant (id, username, lastname, firstname, password, email, enabled, phone_number, role, subscription_date, commerce_id)
+VALUES
+    (3, 'Loris', 'Johnson', 'user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'michael.j@gmail.com', TRUE, '06 21 21 84 31', 3, '2024-01-24', 1);
+
 
 -- OrderStatus's data insertion :
 INSERT INTO Order_Status (order_status_id, label, description)

@@ -24,6 +24,8 @@ public class CommerceFacadeImpl implements CommerceFacade {
 
     private final CommerceService commerceService;
 
+    private final MerchantService merchantService;
+
     private final ProductService productService;
 
     private final ImageAPI imageAPI;
@@ -38,7 +40,7 @@ public class CommerceFacadeImpl implements CommerceFacade {
 
 
     @Autowired
-    public CommerceFacadeImpl(CommerceService commerceService, ProductService productService, ImageAPI imageAPI, CommerceTypeService commerceTypeService, CommerceDTOUtil commerceDTOUtil, ProductDTOUtil productDTOUtil, AddressService addressService) {
+    public CommerceFacadeImpl(CommerceService commerceService, ProductService productService, ImageAPI imageAPI, CommerceTypeService commerceTypeService, CommerceDTOUtil commerceDTOUtil, ProductDTOUtil productDTOUtil, AddressService addressService, MerchantService merchantService) {
         this.commerceService = commerceService;
         this.productService = productService;
         this.imageAPI = imageAPI;
@@ -46,6 +48,7 @@ public class CommerceFacadeImpl implements CommerceFacade {
         this.commerceDTOUtil = commerceDTOUtil;
         this.productDTOUtil = productDTOUtil;
         this.addressService = addressService;
+        this.merchantService = merchantService;
     }
 
     @Override
@@ -155,5 +158,10 @@ public class CommerceFacadeImpl implements CommerceFacade {
         return productCategorySet
                 .stream()
                 .map(productDTOUtil::toProductCategoryDTO).collect(Collectors.toSet());
+    }
+
+    @Override
+    public Long getCommerceIdByMerchantId(Long merchantId) {
+        return this.merchantService.getCommerceIdByMerchantId(merchantId);
     }
 }
