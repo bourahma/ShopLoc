@@ -8,6 +8,7 @@ import com.mimka.shoplocbe.exception.CommerceNotFoundException;
 import com.mimka.shoplocbe.exception.CommerceTypeNotFoundException;
 import com.mimka.shoplocbe.facades.CommerceFacade;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -90,16 +91,17 @@ public class CommerceController {
     }
 
     @PutMapping("/{commerceId}")
+    @PostMapping(path = "/{commerceId}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     @PreAuthorize("hasAnyAuthority('SCOPE_MERCHANT')")
-    public CommerceDTO updateCommerce (@PathVariable("commerceId") Long commerceId, @RequestBody @Valid CommerceDTO commerceDTO) throws CommerceNotFoundException, CommerceTypeNotFoundException {
+    public CommerceDTO updateCommerce (@RequestBody @Valid CommerceDTO commerceDTO, @RequestParam("multipartFile") MultipartFile multipartFile, @PathVariable("commerceId") Long commerceId) throws CommerceNotFoundException, CommerceTypeNotFoundException {
         commerceDTO.setCommerceId(commerceId);
-        return this.commerceFacade.updateCommerce(commerceDTO);
+        return this.commerceFacade.updateCommerce(commerceDTO, multipartFile);
     }
 
     @PostMapping(path = "/", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyAuthority('SCOPE_ADMINISTRATOR')")
-    public CommerceDTO createCommerce (@RequestPart @Valid CommerceDTO commerceDTO, @RequestParam("multipartFile") MultipartFile multipartFile) throws CommerceTypeNotFoundException {
+    public CommerceDTO createCommerce (@RequestPart @Valid @NotNull CommerceDTO commerceDTO, @RequestParam("multipartFile") MultipartFile multipartFile) throws CommerceTypeNotFoundException {
         return this.commerceFacade.addCommerce(commerceDTO, multipartFile);
     }
 

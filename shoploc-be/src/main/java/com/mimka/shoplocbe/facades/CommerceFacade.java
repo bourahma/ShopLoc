@@ -31,7 +31,7 @@ public interface CommerceFacade {
 
     CommerceTypeDTO createCommerceType (CommerceTypeDTO commerceTypeDTO);
 
-    CommerceDTO updateCommerce (CommerceDTO commerceDTO) throws CommerceNotFoundException, CommerceTypeNotFoundException;
+    CommerceDTO updateCommerce (CommerceDTO commerceDTO, MultipartFile multipartFile) throws CommerceNotFoundException, CommerceTypeNotFoundException;
 
     Set<ProductCategoryDTO> getCommerceProductCategories (Long commerceId) throws CommerceNotFoundException;
 
