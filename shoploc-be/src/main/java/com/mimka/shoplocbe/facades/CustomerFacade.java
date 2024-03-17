@@ -50,6 +50,10 @@ public class CustomerFacade {
         this.vfpDTOUtil = vfpDTOUtil;
     }
 
+    public CustomerDTO getCustomer (String customerUsername) {
+        return this.dtoUtil.toCustomerDTO(this.customerService.getCustomerByUsername(customerUsername));
+    }
+
 
     public CustomerDTO registerCustomer(CustomerDTO customerDTO) throws RegistrationException {
         FidelityCard fidelityCard = this.fidelityCardService.createFidelityCard();

@@ -132,13 +132,13 @@ public class CommerceFacadeImpl implements CommerceFacade {
     }
 
     @Override
-    public CommerceDTO updateCommerce(CommerceDTO commerceDTO) throws CommerceNotFoundException, CommerceTypeNotFoundException {
+    public CommerceDTO updateCommerce(CommerceDTO commerceDTO, MultipartFile multipartFile) throws CommerceNotFoundException, CommerceTypeNotFoundException {
         // Create the new address if any.
         Address address = this.addressService.createAddress(commerceDTO.getAddressDTO());
         // Update the address
         Commerce commerce = this.commerceService.updateCommerce(commerceDTO);
         // Update the commerce image if any
-        //commerce.setImageUrl(this.imageAPI.uploadImage(commerceDTO.getMultipartFile()));
+        commerce.setImageUrl(this.imageAPI.uploadImage(multipartFile));
         // Get commerce type.
         CommerceType commerceType = this.commerceTypeService.getCommerceTypeById(commerceDTO.getCommerceType().getCommerceTypeId());
         commerce.setAddress(address);
