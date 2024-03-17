@@ -2,27 +2,13 @@ import React, { useState } from "react";
 import { Sidebar } from "flowbite-react";
 import { HiArrowSmRight } from "react-icons/hi";
 import AddProduct from "./AddProduct";
-import Product from "./Products";
+import MerchantProducts from "./merchantProducts";
 
 const MerchantHome = () => {
   const [task, setTask] = useState("produits");
 
-  const jwt = require("jsonwebtoken");
-
-  // Assuming you have the token
-  let token = window.localStorage.getItem("userToken");
-  let cleanedToken = token ? token.replace(/['"]+/g, "") : null;
-
-  // Decode the token
-  let decoded = jwt.decode(cleanedToken);
-
-  // Get the merchant ID
-  let merchantId = decoded.merchantId;
-
-  console.log(merchantId);
-
   return (
-    <div className="flex flex-wrap">
+    <div className="flex flex-wrap flex-row">
       <Sidebar
         aria-label="Main navigation"
         className="bg-gray-800 text-gray-400 shadow-lg"
@@ -60,7 +46,7 @@ const MerchantHome = () => {
               onClick={() => setTask("ajouterProduit")}
               icon={HiArrowSmRight}
               className={`hover:bg-gray-700 hover:cursor-pointer hover:text-white ${
-                task === "commandes" ? "bg-gray-700 text-white" : ""
+                task === "ajouterProduit" ? "bg-gray-700 text-white" : ""
               }`}
             >
               Ajouter un produit
@@ -68,20 +54,21 @@ const MerchantHome = () => {
           </Sidebar.ItemGroup>
         </Sidebar.Items>
       </Sidebar>
+      <div className="flex-1 p-4">
+        {task === "produits" && <MerchantProducts />}
 
-      {task === "produits" && <Product merchantId={merchantId} />}
-
-      {task === "cadeaux" && (
-        <div>
-          <h1>Cadeaux</h1>
-        </div>
-      )}
-      {task === "commandes" && (
-        <div>
-          <h1>Commandes du jour</h1>
-        </div>
-      )}
-      {task === "ajouterProduit" && <AddProduct />}
+        {task === "cadeaux" && (
+          <div>
+            <h1>Cadeaux</h1>
+          </div>
+        )}
+        {task === "commandes" && (
+          <div>
+            <h1>Commandes du jour</h1>
+          </div>
+        )}
+        {task === "ajouterProduit" && <AddProduct />}
+      </div>
     </div>
   );
 };

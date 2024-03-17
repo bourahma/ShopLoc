@@ -45,6 +45,28 @@ const fetchProducts = async (token, commerceId) => {
   }
 };
 
-const commerceService = { registerCommerce, addProduct, fetchProducts };
+const fetchMerchantProducts = async (token, merchantId) => {
+  try {
+    const response = await axios.get(
+      `${SERVER_URL}/${baseUrl}/merchant/${merchantId}/products`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching merchant products: ", error);
+    throw error;
+  }
+};
+
+const commerceService = {
+  registerCommerce,
+  addProduct,
+  fetchProducts,
+  fetchMerchantProducts,
+};
 
 export default commerceService;

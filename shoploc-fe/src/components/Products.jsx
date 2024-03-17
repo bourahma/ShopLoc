@@ -5,8 +5,8 @@ import fetchCommercant from "../services/fetchCommerce";
 import productSample from "../images/productSample.png";
 import { useCart } from "./CartContext";
 
-const Product = (merchantId = null) => {
-  const { commercantId } = useParams() || merchantId;
+const Product = () => {
+  const { commercantId } = useParams();
   const navigate = useNavigate();
   const [commerce, setCommerce] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");

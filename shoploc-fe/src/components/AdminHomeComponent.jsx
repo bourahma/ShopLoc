@@ -46,24 +46,6 @@ const AdminHomeComponent = () => {
             >
               Lancer une promotion
             </Sidebar.Item>
-            <Sidebar.Item
-              onClick={() => setTask("viewMerchants")}
-              icon={HiUser}
-              className={`hover:bg-gray-700 hover:cursor-pointer hover:text-white ${
-                task === "viewMerchants" ? "bg-gray-700 text-white" : ""
-              }`}
-            >
-              Commerçants
-            </Sidebar.Item>
-            <Sidebar.Item
-              onClick={() => setTask("viewCommerces")}
-              icon={HiViewGrid}
-              className={`hover:bg-gray-700 hover:cursor-pointer hover:text-white ${
-                task === "viewCommerces" ? "bg-gray-700 text-white" : ""
-              }`}
-            >
-              Commerces
-            </Sidebar.Item>
           </Sidebar.ItemGroup>
         </Sidebar.Items>
       </Sidebar>
