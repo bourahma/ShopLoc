@@ -9,6 +9,7 @@ import LoginForm from "./components/LoginForm";
 import { PrivateRoute } from "./components/PrivateRoute";
 import { PublicRoute } from "./components/PublicRoute";
 import HomeComponent from "./pages/HomeComponent";
+import MerchantHome from "./components/MerchantHome";
 import Template from "./components/Template";
 import FirstScreen from "./pages/FirstScreen";
 import Cart from "./pages/Cart";
@@ -36,15 +37,6 @@ function App() {
                           <PrivateRoute>
                               <Header />
                               <HomeComponent />
-                          </PrivateRoute>
-                      }
-                  />
-                  <Route
-                      path="/profile"
-                      element={
-                          <PrivateRoute>
-                              <Header />
-                              <Profile />
                           </PrivateRoute>
                       }
                   />
@@ -85,6 +77,25 @@ function App() {
                       }
                   />
                   <Route
+                      path="/admin/home"
+                      element={
+                          <PrivateRoute>
+                              <Header />
+                              <AdminHomeComponent />
+                          </PrivateRoute>
+                      }
+                  />
+                  <Route
+                      path="/profile"
+                      element={
+                          <PrivateRoute>
+                              <Header />
+                              <Profile />
+                          </PrivateRoute>
+                      }
+                  />
+
+                  <Route
                       path="/checkout"
                       element={
                           <PrivateRoute>
@@ -94,11 +105,11 @@ function App() {
                       }
                   />
                   <Route
-                      path="/admin/home"
+                      path="/merchant/home"
                       element={
                           <PrivateRoute>
                               <Header />
-                              <AdminHomeComponent />
+                              <MerchantHome />
                           </PrivateRoute>
                       }
                   />

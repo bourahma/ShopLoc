@@ -5,12 +5,11 @@ import com.mimka.shoplocbe.dto.order.OrderDTOUtil;
 import com.mimka.shoplocbe.dto.order.OrderProductDTO;
 import com.mimka.shoplocbe.entities.*;
 import com.mimka.shoplocbe.exception.CommerceNotFoundException;
-import com.mimka.shoplocbe.repositories.OrderRepository;
-import com.mimka.shoplocbe.repositories.ProductRepository;
-import com.mimka.shoplocbe.repositories.PromotionHistoryRepository;
+import com.mimka.shoplocbe.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Optional;
@@ -37,6 +36,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order createOrder(Customer customer, OrderDTO orderDTO) throws CommerceNotFoundException {
         Order order = new Order();
+
         order.setCustomer(customer);
         order.setCommerce(this.commerceService.getCommerce(orderDTO.getCommerceId()));
         order.setOrderDate(LocalDate.now());
@@ -69,26 +69,32 @@ public class OrderServiceImpl implements OrderService {
     public Order payOrder(Long orderId) {
         Optional<Order> optionalOrder = this.orderRepository.findById(orderId);
         optionalOrder.ifPresent(order -> {
-            if (order.getOrderStatus().equals(OrderStatus.PENDING.name())) {
-                for (OrderProduct orderProduct : order.getOrderProducts()) {
+            if (order.getOrderStatus().equals(OrderStatus.PENDING.name()))
+            {
+                for (OrderProduct orderProduct : order.getOrderProducts())
+                {
                     Product product = orderProduct.getProduct();
                     Promotion promotion = product.getPromotion();
-
-                    if (promotion instanceof OfferPromotion offerPromotion) {
-
-                        int quantity = (int) Math.floor(((double) (orderProduct.getQuantity() * (offerPromotion.getOfferedItems())) / (offerPromotion.getRequiredItems())));
-                        orderProduct.setQuantity(orderProduct.getQuantity() + quantity);
+                    if (promotion == null)
+                    {
+                        product.setQuantity(product.getQuantity() - orderProduct.getQuantity());
+                        this.productRepository.save(product);
+                    }
+                    else if (promotion.getPromotionType().equals(PromotionType.OFFER.name()))
+                    {
+                        orderProduct.setQuantity(orderProduct.getQuantity());
                         orderProduct.setPurchasePrice(product.getPrice());
                         product.setQuantity(product.getQuantity() - orderProduct.getQuantity());
-
                         this.productRepository.save(product);
-
-                        PromotionHistory promotionHistory = this.getOfferPromotionHistory(offerPromotion, promotion, product);
+                        PromotionHistory promotionHistory = this.getPromotionHistory(promotion, product);
                         this.promotionHistoryRepository.save(promotionHistory);
-
-                    } else if (promotion instanceof DiscountPromotion discountPromotion) {
-                        PromotionHistory promotionHistory = this.getDiscountPromotionHistory(discountPromotion, promotion, product);
+                    }
+                    else if (promotion.getPromotionType().equals(PromotionType.DISCOUNT.name()))
+                    {
+                        PromotionHistory promotionHistory = this.getPromotionHistory(promotion, product);
                         this.promotionHistoryRepository.save(promotionHistory);
+                        product.setQuantity(product.getQuantity() - orderProduct.getQuantity());
+                        this.productRepository.save(product);
                     }
                 }
                 order.setOrderStatus(OrderStatus.PAID.name());
@@ -105,53 +111,42 @@ public class OrderServiceImpl implements OrderService {
 
     public double getOrderTotal(Long orderId, boolean usePointsPrice) {
         Order order = orderRepository.findByOrderIdAndOrderStatus(orderId, OrderStatus.PENDING.name());
-
         if (order == null) {
             return 0.0;
         }
-
         double totalOrderPrice = 0.0;
-
         for (OrderProduct orderProduct : order.getOrderProducts()) {
             double productPrice = usePointsPrice ? orderProduct.getProduct().getRewardPointsPrice() : orderProduct.getProduct().getPrice();
             Promotion promotion = orderProduct.getProduct().getPromotion();
-
-            if (promotion instanceof DiscountPromotion discountPromotion) {
-                totalOrderPrice += orderProduct.getQuantity() * productPrice * (1 - (discountPromotion.getDiscountPercent() / 100.0));
-            } else if (promotion instanceof OfferPromotion offerPromotion && orderProduct.getQuantity() >= (offerPromotion.getRequiredItems())) {
-                totalOrderPrice += orderProduct.getQuantity() * productPrice;
-
-                int additionalQuantity = (int) Math.floor(((double) (orderProduct.getQuantity() * (offerPromotion.getOfferedItems())) / (offerPromotion.getRequiredItems())));
-                orderProduct.setQuantity(orderProduct.getQuantity() + additionalQuantity);
-            } else {
+            if (promotion == null) {
                 totalOrderPrice += orderProduct.getQuantity() * productPrice;
             }
+            else if (promotion.getPromotionType().equals(PromotionType.DISCOUNT.name())) {
+                totalOrderPrice += orderProduct.getQuantity() * productPrice * (1 - (promotion.getDiscountPercent() / 100.0));
+            }
+            else if (promotion.getPromotionType().equals(PromotionType.OFFER.name())) {
+                DecimalFormat df = new DecimalFormat("#.##");
+                totalOrderPrice += Double.parseDouble(df.format(orderProduct.getQuantity() * productPrice));
+                int additionalQuantity = (int) Math.floor(((double) (orderProduct.getQuantity() * (promotion.getOfferedItems())) / (promotion.getRequiredItems())));
+                orderProduct.setQuantity(orderProduct.getQuantity() + additionalQuantity);
+            }
         }
-
+        System.out.println("total : " + totalOrderPrice);
         return totalOrderPrice;
     }
 
 
-    private PromotionHistory getDiscountPromotionHistory(DiscountPromotion discountPromotion, Promotion promotion, Product product) {
+    private PromotionHistory getPromotionHistory(Promotion promotion, Product product) {
         PromotionHistory promotionHistory = new PromotionHistory();
         promotionHistory.setPromotionHistoryId(promotion.getPromotionId());
         promotionHistory.setDescription(promotion.getDescription());
         promotionHistory.setProduct(product);
         promotionHistory.setCommerce(promotion.getCommerce());
         promotionHistory.setEndDate(promotion.getEndDate());
-        promotionHistory.setDiscountPercent(discountPromotion.getDiscountPercent());
-        return promotionHistory;
-    }
+        promotionHistory.setDiscountPercent(promotion.getDiscountPercent() != null ? promotion.getDiscountPercent() : 0);
+        promotionHistory.setOfferedItems(promotion.getOfferedItems() != null ? promotion.getOfferedItems() : 0);
+        promotionHistory.setRequiredItems(promotion.getRequiredItems() != null ? promotion.getRequiredItems() : 0);
 
-    private PromotionHistory getOfferPromotionHistory(OfferPromotion offerPromotion, Promotion promotion, Product product) {
-        PromotionHistory promotionHistory = new PromotionHistory();
-        promotionHistory.setPromotionHistoryId(promotion.getPromotionId());
-        promotionHistory.setDescription(promotion.getDescription());
-        promotionHistory.setProduct(product);
-        promotionHistory.setCommerce(promotion.getCommerce());
-        promotionHistory.setEndDate(promotion.getEndDate());
-        promotionHistory.setOfferedItems(offerPromotion.getOfferedItems());
-        promotionHistory.setRequiredItems(offerPromotion.getRequiredItems());
         return promotionHistory;
     }
 }

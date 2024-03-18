@@ -1,7 +1,10 @@
 package com.mimka.shoplocbe.services;
 
+import com.mimka.shoplocbe.configurations.CustomUserDetails;
 import com.mimka.shoplocbe.dto.DtoUtil;
 import com.mimka.shoplocbe.dto.user.CustomerDTO;
+import com.mimka.shoplocbe.dto.vfp.VfpDTO;
+import com.mimka.shoplocbe.dto.vfp.VfpDTOUtil;
 import com.mimka.shoplocbe.entities.*;
 import com.mimka.shoplocbe.exception.RegistrationException;
 import com.mimka.shoplocbe.exception.RegistrationTokenInvalidException;
@@ -57,14 +60,16 @@ public class CustomerServiceImpl implements CustomerService, UserDetailsService 
 
         Set<GrantedAuthority> authorities = Set.of(new SimpleGrantedAuthority(user.getRole().getRoleName()));
 
-        return new org.springframework.security.core.userdetails.User(
+        return new CustomUserDetails(
                 user.getUsername(),
                 user.getPassword(),
                 user.getEnabled(),
                 true,
                 true,
                 true,
-                authorities);
+                authorities,
+                user.getId()
+        );
     }
 
     public boolean emailAndUsernameUniquenessValid(String email, String username) throws RegistrationException {

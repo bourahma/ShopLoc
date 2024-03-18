@@ -41,7 +41,6 @@ public class OrderFacadeImpl implements OrderFacade {
     public OrderDTO createOrder(String customerUsername, OrderDTO orderDTO) throws CommerceNotFoundException {
         Customer customer = this.customerService.getCustomerByUsername(customerUsername);
         Order order = this.orderService.createOrder(customer, orderDTO);
-
         return this.orderDTOUtil.toOrderDTO(order);
     }
 

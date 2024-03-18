@@ -1,5 +1,6 @@
 package com.mimka.shoplocbe.controllerIT;
 
+import com.mimka.shoplocbe.api.supabase.ImageAPI;
 import com.mimka.shoplocbe.dto.commerce.AddressDTO;
 import com.mimka.shoplocbe.dto.commerce.CommerceDTO;
 import com.mimka.shoplocbe.dto.commerce.CommerceTypeDTO;
@@ -7,7 +8,11 @@ import com.mimka.shoplocbe.dto.product.ProductDTO;
 import jakarta.transaction.Transactional;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -15,10 +20,17 @@ import java.time.LocalTime;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+@RunWith(MockitoJUnitRunner.class)
 class CommerceControllerIT extends ControllerIT {
+
+    @Mock
+    private ImageAPI imageAPI;
+
     @Test
     void testGetAllCommerce_ReturnOK () throws Exception {
         mockMvc.perform(get("/commerce/")
@@ -86,12 +98,22 @@ class CommerceControllerIT extends ControllerIT {
     @Transactional
     @Rollback
     void testCreateCommerce_WhenAllFieldsFormAreValid_ReturnCreated () throws Exception {
+        when(imageAPI.uploadImage(any())).thenReturn("https://supabase.bucket.com/image.jpg");
+        MockMultipartFile mockFile = new MockMultipartFile(
+                "multipartFile", "filename.txt", "text/plain", "some xml".getBytes()
+        );
+
         CommerceDTO commerceDTO = this.getCommerceDTO();
 
-        mockMvc.perform(post("/commerce/")
-                        .header("Authorization", "Bearer " + administratorJWTToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(this.objectMapper.writeValueAsString(commerceDTO)))
+        mockMvc.perform(
+                        multipart("/commerce/")
+                                .file(mockFile)
+                                .file(new MockMultipartFile(
+                                        "commerceDTO", "commerceDTO.json", "application/json",
+                                        objectMapper.writeValueAsString(commerceDTO).getBytes()
+                                ))
+                                .header("Authorization", "Bearer " + merchantJWTToken)
+                                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE))
                 .andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.commerceId").value(not(0)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.commerceName").value("Boulangerie du Coin"))
@@ -109,12 +131,22 @@ class CommerceControllerIT extends ControllerIT {
     @Transactional
     @Rollback
     void testUpdateCommerce_WhenAllFieldsFormAreValid_ReturnOk () throws Exception {
+        when(imageAPI.uploadImage(any())).thenReturn("https://supabase.bucket.com/image.jpg");
+        MockMultipartFile mockFile = new MockMultipartFile(
+                "multipartFile", "filename.txt", "text/plain", "some xml".getBytes()
+        );
+
         CommerceDTO commerceDTO = this.getCommerceDTO();
 
-        mockMvc.perform(put("/commerce/1")
-                        .header("Authorization", "Bearer " + merchantJWTToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(this.objectMapper.writeValueAsString(commerceDTO)))
+        mockMvc.perform(
+                        multipart("/commerce/1")
+                                .file(mockFile)
+                                .file(new MockMultipartFile(
+                                        "commerceDTO", "commerceDTO.json", "application/json",
+                                        objectMapper.writeValueAsString(commerceDTO).getBytes()
+                                ))
+                                .header("Authorization", "Bearer " + merchantJWTToken)
+                                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.commerceId").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.commerceName").value("Boulangerie du Coin"))
@@ -130,12 +162,24 @@ class CommerceControllerIT extends ControllerIT {
 
     @Test
     void testUpdateCommerce_WhenInvalidCommerce_ReturnNoContent () throws Exception {
-        CommerceDTO commerceDTO = this.getCommerceDTO();
+        when(imageAPI.uploadImage(any())).thenReturn("https://supabase.bucket.com/image.jpg");
 
-        mockMvc.perform(put("/commerce/100")
-                        .header("Authorization", "Bearer " + merchantJWTToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(this.objectMapper.writeValueAsString(commerceDTO)))
+        MockMultipartFile mockFile = new MockMultipartFile(
+                "multipartFile", "filename.txt", "text/plain", "some xml".getBytes()
+        );
+
+        CommerceDTO commerceDTO = this.getCommerceDTO();
+        commerceDTO.setCommerceId(100L);
+
+        mockMvc.perform(
+                        multipart("/commerce/100")
+                                .file(mockFile)
+                                .file(new MockMultipartFile(
+                                        "commerceDTO", "commerceDTO.json", "application/json",
+                                        objectMapper.writeValueAsString(commerceDTO).getBytes()
+                                ))
+                                .header("Authorization", "Bearer " + merchantJWTToken)
+                                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE))
                 .andExpect(status().isNoContent());
     }
 
@@ -163,78 +207,141 @@ class CommerceControllerIT extends ControllerIT {
 
     @Test
     void testCreateCommerce_WithBlankCommerceName_ReturnBadRequest () throws Exception {
+        when(imageAPI.uploadImage(any())).thenReturn("https://supabase.bucket.com/image.jpg");
+        MockMultipartFile mockFile = new MockMultipartFile(
+                "multipartFile", "filename.txt", "text/plain", "some xml".getBytes()
+        );
+
         CommerceDTO commerceDTO = this.getCommerceDTO();
         commerceDTO.setCommerceName(" ");
 
-        mockMvc.perform(post("/commerce/")
-                        .header("Authorization", "Bearer " + administratorJWTToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(this.objectMapper.writeValueAsString(commerceDTO)))
+        mockMvc.perform(
+                        multipart("/commerce/")
+                                .file(mockFile)
+                                .file(new MockMultipartFile(
+                                        "commerceDTO", "commerceDTO.json", "application/json",
+                                        objectMapper.writeValueAsString(commerceDTO).getBytes()
+                                ))
+                                .header("Authorization", "Bearer " + administratorJWTToken)
+                                .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Le nom du commerce est requis"));
     }
 
 
     @Test
-    void testCreateCommerce_WithInvalidOpeningHour_ReturnBadRequest () throws Exception {
+    void testCreateCommerce_WithInvalidOpeningHour_ReturnBadRequest() throws Exception {
+        when(imageAPI.uploadImage(any())).thenReturn("https://supabase.bucket.com/image.jpg");
+        MockMultipartFile mockFile = new MockMultipartFile(
+                "multipartFile", "filename.txt", "text/plain", "some xml".getBytes()
+        );
+
         CommerceDTO commerceDTO = this.getCommerceDTO();
         commerceDTO.setOpeningHour(null);
 
-        mockMvc.perform(post("/commerce/")
-                        .header("Authorization", "Bearer " + administratorJWTToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(this.objectMapper.writeValueAsString(commerceDTO)))
+        mockMvc.perform(
+                        multipart("/commerce/")
+                                .file(mockFile)
+                                .file(new MockMultipartFile(
+                                        "commerceDTO", "commerceDTO.json", "application/json",
+                                        objectMapper.writeValueAsString(commerceDTO).getBytes()
+                                ))
+                                .header("Authorization", "Bearer " + administratorJWTToken)
+                                .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("L'heure d'ouverture est requise"));
     }
+
+
     @Test
     void testCreateCommerce_WithInvalidclosingHour_ReturnBadRequest () throws Exception {
+        when(imageAPI.uploadImage(any())).thenReturn("https://supabase.bucket.com/image.jpg");
+        MockMultipartFile mockFile = new MockMultipartFile(
+                "multipartFile", "filename.txt", "text/plain", "some xml".getBytes()
+        );
+
         CommerceDTO commerceDTO = this.getCommerceDTO();
         commerceDTO.setClosingHour(null);
 
-        mockMvc.perform(post("/commerce/")
-                        .header("Authorization", "Bearer " + administratorJWTToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(this.objectMapper.writeValueAsString(commerceDTO)))
+        mockMvc.perform(
+                        multipart("/commerce/")
+                                .file(mockFile)
+                                .file(new MockMultipartFile(
+                                        "commerceDTO", "commerceDTO.json", "application/json",
+                                        objectMapper.writeValueAsString(commerceDTO).getBytes()
+                                ))
+                                .header("Authorization", "Bearer " + administratorJWTToken)
+                                .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("L'heure de fermeture est requise"));
     }
 
     @Test
     void testCreateCommerce_WithInvalidaddressDTO_ReturnBadRequest () throws Exception {
+        when(imageAPI.uploadImage(any())).thenReturn("https://supabase.bucket.com/image.jpg");
+        MockMultipartFile mockFile = new MockMultipartFile(
+                "multipartFile", "filename.txt", "text/plain", "some xml".getBytes()
+        );
+
         CommerceDTO commerceDTO = this.getCommerceDTO();
         commerceDTO.setAddressDTO(null);
 
-        mockMvc.perform(post("/commerce/")
-                        .header("Authorization", "Bearer " + administratorJWTToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(this.objectMapper.writeValueAsString(commerceDTO)))
+        mockMvc.perform(
+                        multipart("/commerce/")
+                                .file(mockFile)
+                                .file(new MockMultipartFile(
+                                        "commerceDTO", "commerceDTO.json", "application/json",
+                                        objectMapper.writeValueAsString(commerceDTO).getBytes()
+                                ))
+                                .header("Authorization", "Bearer " + administratorJWTToken)
+                                .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Les informations d'adresse sont requises"));
     }
 
     @Test
     void testCreateCommerce_WithInvalidaddressDTOstreet_ReturnBadRequest () throws Exception {
+        when(imageAPI.uploadImage(any())).thenReturn("https://supabase.bucket.com/image.jpg");
+        MockMultipartFile mockFile = new MockMultipartFile(
+                "multipartFile", "filename.txt", "text/plain", "some xml".getBytes()
+        );
+
         CommerceDTO commerceDTO = this.getCommerceDTO();
         commerceDTO.getAddressDTO().setStreet(null);
 
-        mockMvc.perform(post("/commerce/")
-                        .header("Authorization", "Bearer " + administratorJWTToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(this.objectMapper.writeValueAsString(commerceDTO)))
+        mockMvc.perform(
+                        multipart("/commerce/")
+                                .file(mockFile)
+                                .file(new MockMultipartFile(
+                                        "commerceDTO", "commerceDTO.json", "application/json",
+                                        objectMapper.writeValueAsString(commerceDTO).getBytes()
+                                ))
+                                .header("Authorization", "Bearer " + administratorJWTToken)
+                                .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Le nom de la rue est requis"));
     }
 
     @Test
     void testCreateCommerce_WithInvalidaddressDTOcity_ReturnBadRequest () throws Exception {
+        when(imageAPI.uploadImage(any())).thenReturn("https://supabase.bucket.com/image.jpg");
+        MockMultipartFile mockFile = new MockMultipartFile(
+                "multipartFile", "filename.txt", "text/plain", "some xml".getBytes()
+        );
+
         CommerceDTO commerceDTO = this.getCommerceDTO();
         commerceDTO.getAddressDTO().setCity(null);
 
-        mockMvc.perform(post("/commerce/")
-                        .header("Authorization", "Bearer " + administratorJWTToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(this.objectMapper.writeValueAsString(commerceDTO)))
+        mockMvc.perform(
+                        multipart("/commerce/")
+                                .file(mockFile)
+                                .file(new MockMultipartFile(
+                                        "commerceDTO", "commerceDTO.json", "application/json",
+                                        objectMapper.writeValueAsString(commerceDTO).getBytes()
+                                ))
+                                .header("Authorization", "Bearer " + administratorJWTToken)
+                                .contentType(MediaType.MULTIPART_FORM_DATA)
+                )
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("La ville est requise"));
     }
