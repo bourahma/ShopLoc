@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -38,7 +36,7 @@ public class Product {
     private double rewardPointsPrice;
 
     @Column(name = "is_gift", nullable = false)
-    private boolean isGift;
+    private boolean gift;
 
     @Column(name = "discount_id")
     private Long discountId;

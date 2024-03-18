@@ -1,6 +1,6 @@
 package com.mimka.shoplocbe.controllerIT;
 
-import com.mimka.shoplocbe.dto.fidelityCard.CreditBalanceDTO;
+import com.mimka.shoplocbe.dto.fidelity.CreditBalanceDTO;
 import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class FidelityCardControllerIT extends AuthenticationControllerIT {
+class FidelityCardControllerIT extends ControllerIT {
     @Test
     void testGetCustomerFidelityCard_ReturnOK () throws Exception {
         mockMvc.perform(get("/fidelity-card/")

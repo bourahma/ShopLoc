@@ -8,5 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter@AllArgsConstructor@NoArgsConstructor
 public class Geometry {
+
     private double[] coordinates;
 }

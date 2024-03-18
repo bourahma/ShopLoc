@@ -267,6 +267,8 @@ CREATE TABLE Customer
     role INT NOT NULL,
     is_vfp_membership BOOLEAN DEFAULT false,
     fidelity_card_id VARCHAR(255),
+    subscription_date DATE,
+    vfp_used BOOLEAN DEFAULT false,
 
     FOREIGN KEY (fidelity_card_id) REFERENCES Fidelity_Card (fidelity_card_id),
     FOREIGN KEY (role) REFERENCES Role (role_id)
@@ -295,8 +297,6 @@ CREATE TABLE Merchant
     enabled BOOLEAN NOT NULL,
     phone_number VARCHAR(20),
     role INT NOT NULL,
-
-    -- Merchant attributes
     subscription_date DATE,
     commerce_id INT,
 
@@ -394,24 +394,31 @@ CREATE TABLE Order_Product
     FOREIGN KEY (order_product_id) REFERENCES Product(product_id)
 );
 
--- Create Benefits Table :
+-- Create Benefit Table :
 CREATE TABLE Benefit
 (
     benefit_id INT DEFAULT nextval('benefit_sequence') PRIMARY KEY,
-    description VARCHAR(255)
+    benefit_available BOOLEAN,
+    image_url VARCHAR(255),
+    description VARCHAR(255),
+    license_plate_number VARCHAR(10)
 );
 
--- Create BenefitHistory Table :
+-- Create Benefit_History Table :
 CREATE TABLE Benefit_History
 (
     benefit_history_id INT DEFAULT nextval('benefit_history_sequence') PRIMARY KEY,
-    dateAcquisition DATE,
+    qr_code VARCHAR(255) NOT NULL,
+    acquisition_date DATE,
+    acquisition_time TIMESTAMP,
     customer_id INT,
     benefit_id INT,
+    license_plate_number VARCHAR(10),
 
     FOREIGN KEY (customer_id) REFERENCES Customer(id),
     FOREIGN KEY (benefit_id) REFERENCES Benefit(benefit_id)
 );
+
 
 -- Create GiftHistory Table :
 CREATE TABLE Gift_History
@@ -458,80 +465,86 @@ CREATE SEQUENCE BATCH_JOB_EXECUTION_SEQ MAXVALUE 9223372036854775807 NO CYCLE;
 CREATE SEQUENCE BATCH_JOB_SEQ MAXVALUE 9223372036854775807 NO CYCLE;
 
 DROP TABLE IF EXISTS BATCH_JOB_INSTANCE CASCADE;
-CREATE TABLE BATCH_JOB_INSTANCE  (
-                                     JOB_INSTANCE_ID BIGINT  NOT NULL PRIMARY KEY ,
-                                     VERSION BIGINT ,
-                                     JOB_NAME VARCHAR(100) NOT NULL,
-                                     JOB_KEY VARCHAR(32) NOT NULL,
-                                     constraint JOB_INST_UN unique (JOB_NAME, JOB_KEY)
+CREATE TABLE BATCH_JOB_INSTANCE
+(
+    JOB_INSTANCE_ID BIGINT  NOT NULL PRIMARY KEY ,
+    VERSION BIGINT ,
+    JOB_NAME VARCHAR(100) NOT NULL,
+    JOB_KEY VARCHAR(32) NOT NULL,
+    constraint JOB_INST_UN unique (JOB_NAME, JOB_KEY)
 ) ;
 
 DROP TABLE IF EXISTS BATCH_JOB_EXECUTION CASCADE;
-CREATE TABLE BATCH_JOB_EXECUTION  (
-                                      JOB_EXECUTION_ID BIGINT  NOT NULL PRIMARY KEY ,
-                                      VERSION BIGINT  ,
-                                      JOB_INSTANCE_ID BIGINT NOT NULL,
-                                      CREATE_TIME TIMESTAMP NOT NULL,
-                                      START_TIME TIMESTAMP DEFAULT NULL ,
-                                      END_TIME TIMESTAMP DEFAULT NULL ,
-                                      STATUS VARCHAR(10) ,
-                                      EXIT_CODE VARCHAR(2500) ,
-                                      EXIT_MESSAGE VARCHAR(2500) ,
-                                      LAST_UPDATED TIMESTAMP,
-                                      constraint JOB_INST_EXEC_FK foreign key (JOB_INSTANCE_ID)
-                                          references BATCH_JOB_INSTANCE(JOB_INSTANCE_ID)
+CREATE TABLE BATCH_JOB_EXECUTION
+(
+    JOB_EXECUTION_ID BIGINT  NOT NULL PRIMARY KEY ,
+    VERSION BIGINT  ,
+    JOB_INSTANCE_ID BIGINT NOT NULL,
+    CREATE_TIME TIMESTAMP NOT NULL,
+    START_TIME TIMESTAMP DEFAULT NULL ,
+    END_TIME TIMESTAMP DEFAULT NULL ,
+    STATUS VARCHAR(10) ,
+    EXIT_CODE VARCHAR(2500) ,
+    EXIT_MESSAGE VARCHAR(2500) ,
+    LAST_UPDATED TIMESTAMP,
+    constraint JOB_INST_EXEC_FK foreign key (JOB_INSTANCE_ID)
+        references BATCH_JOB_INSTANCE(JOB_INSTANCE_ID)
 ) ;
 
 DROP TABLE IF EXISTS BATCH_JOB_EXECUTION_PARAMS CASCADE;
-CREATE TABLE BATCH_JOB_EXECUTION_PARAMS  (
-                                             JOB_EXECUTION_ID BIGINT NOT NULL ,
-                                             PARAMETER_NAME VARCHAR(100) NOT NULL ,
-                                             PARAMETER_TYPE VARCHAR(100) NOT NULL ,
-                                             PARAMETER_VALUE VARCHAR(2500) ,
-                                             IDENTIFYING CHAR(1) NOT NULL ,
-                                             constraint JOB_EXEC_PARAMS_FK foreign key (JOB_EXECUTION_ID)
-                                                 references BATCH_JOB_EXECUTION(JOB_EXECUTION_ID)
+CREATE TABLE BATCH_JOB_EXECUTION_PARAMS
+(
+    JOB_EXECUTION_ID BIGINT NOT NULL ,
+    PARAMETER_NAME VARCHAR(100) NOT NULL ,
+    PARAMETER_TYPE VARCHAR(100) NOT NULL ,
+    PARAMETER_VALUE VARCHAR(2500) ,
+    IDENTIFYING CHAR(1) NOT NULL ,
+    constraint JOB_EXEC_PARAMS_FK foreign key (JOB_EXECUTION_ID)
+        references BATCH_JOB_EXECUTION(JOB_EXECUTION_ID)
 ) ;
 
 DROP TABLE IF EXISTS BATCH_STEP_EXECUTION CASCADE;
-CREATE TABLE BATCH_STEP_EXECUTION  (
-                                       STEP_EXECUTION_ID BIGINT  NOT NULL PRIMARY KEY ,
-                                       VERSION BIGINT NOT NULL,
-                                       STEP_NAME VARCHAR(100) NOT NULL,
-                                       JOB_EXECUTION_ID BIGINT NOT NULL,
-                                       CREATE_TIME TIMESTAMP NOT NULL,
-                                       START_TIME TIMESTAMP DEFAULT NULL ,
-                                       END_TIME TIMESTAMP DEFAULT NULL ,
-                                       STATUS VARCHAR(10) ,
-                                       COMMIT_COUNT BIGINT ,
-                                       READ_COUNT BIGINT ,
-                                       FILTER_COUNT BIGINT ,
-                                       WRITE_COUNT BIGINT ,
-                                       READ_SKIP_COUNT BIGINT ,
-                                       WRITE_SKIP_COUNT BIGINT ,
-                                       PROCESS_SKIP_COUNT BIGINT ,
-                                       ROLLBACK_COUNT BIGINT ,
-                                       EXIT_CODE VARCHAR(2500) ,
-                                       EXIT_MESSAGE VARCHAR(2500) ,
-                                       LAST_UPDATED TIMESTAMP,
-                                       constraint JOB_EXEC_STEP_FK foreign key (JOB_EXECUTION_ID)
-                                           references BATCH_JOB_EXECUTION(JOB_EXECUTION_ID)
+CREATE TABLE BATCH_STEP_EXECUTION
+(
+    STEP_EXECUTION_ID BIGINT  NOT NULL PRIMARY KEY ,
+    VERSION BIGINT NOT NULL,
+    STEP_NAME VARCHAR(100) NOT NULL,
+    JOB_EXECUTION_ID BIGINT NOT NULL,
+    CREATE_TIME TIMESTAMP NOT NULL,
+    START_TIME TIMESTAMP DEFAULT NULL ,
+    END_TIME TIMESTAMP DEFAULT NULL ,
+    STATUS VARCHAR(10) ,
+    COMMIT_COUNT BIGINT ,
+    READ_COUNT BIGINT ,
+    FILTER_COUNT BIGINT ,
+    WRITE_COUNT BIGINT ,
+    READ_SKIP_COUNT BIGINT ,
+    WRITE_SKIP_COUNT BIGINT ,
+    PROCESS_SKIP_COUNT BIGINT ,
+    ROLLBACK_COUNT BIGINT ,
+    EXIT_CODE VARCHAR(2500) ,
+    EXIT_MESSAGE VARCHAR(2500) ,
+    LAST_UPDATED TIMESTAMP,
+    constraint JOB_EXEC_STEP_FK foreign key (JOB_EXECUTION_ID)
+        references BATCH_JOB_EXECUTION(JOB_EXECUTION_ID)
 ) ;
 
 DROP TABLE IF EXISTS BATCH_STEP_EXECUTION_CONTEXT CASCADE;
-CREATE TABLE BATCH_STEP_EXECUTION_CONTEXT  (
-                                               STEP_EXECUTION_ID BIGINT NOT NULL PRIMARY KEY,
-                                               SHORT_CONTEXT VARCHAR(2500) NOT NULL,
-                                               SERIALIZED_CONTEXT TEXT ,
-                                               constraint STEP_EXEC_CTX_FK foreign key (STEP_EXECUTION_ID)
-                                                   references BATCH_STEP_EXECUTION(STEP_EXECUTION_ID)
+CREATE TABLE BATCH_STEP_EXECUTION_CONTEXT
+(
+    STEP_EXECUTION_ID BIGINT NOT NULL PRIMARY KEY,
+    SHORT_CONTEXT VARCHAR(2500) NOT NULL,
+    SERIALIZED_CONTEXT TEXT ,
+    constraint STEP_EXEC_CTX_FK foreign key (STEP_EXECUTION_ID)
+        references BATCH_STEP_EXECUTION(STEP_EXECUTION_ID)
 ) ;
 
 DROP TABLE IF EXISTS BATCH_JOB_EXECUTION_CONTEXT CASCADE;
-CREATE TABLE BATCH_JOB_EXECUTION_CONTEXT  (
-                                              JOB_EXECUTION_ID BIGINT NOT NULL PRIMARY KEY,
-                                              SHORT_CONTEXT VARCHAR(2500) NOT NULL,
-                                              SERIALIZED_CONTEXT TEXT ,
-                                              constraint JOB_EXEC_CTX_FK foreign key (JOB_EXECUTION_ID)
-                                                  references BATCH_JOB_EXECUTION(JOB_EXECUTION_ID)
+CREATE TABLE BATCH_JOB_EXECUTION_CONTEXT
+(
+    JOB_EXECUTION_ID BIGINT NOT NULL PRIMARY KEY,
+    SHORT_CONTEXT VARCHAR(2500) NOT NULL,
+    SERIALIZED_CONTEXT TEXT ,
+    constraint JOB_EXEC_CTX_FK foreign key (JOB_EXECUTION_ID)
+        references BATCH_JOB_EXECUTION(JOB_EXECUTION_ID)
 ) ;

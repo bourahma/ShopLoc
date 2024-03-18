@@ -1,6 +1,5 @@
 package com.mimka.shoplocbe.controllerIT;
 
-import com.mimka.shoplocbe.dto.product.ProductCategoryDTO;
 import com.mimka.shoplocbe.dto.product.PromotionDTO;
 import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class PromotionControllerIT extends AuthenticationControllerIT {
+class PromotionControllerIT extends ControllerIT {
 
     @Test
     void testGetAllCommercePromotions_ReturnOK () throws Exception {

@@ -34,22 +34,22 @@ public class ProductDTOUtil {
         return productCategoryDTO;
     }
 
-    public ProductCategory toProductCategory (ProductCategoryDTO productCategoryDTO) {
-        ProductCategory productCategory = this.modelMapper.map(productCategoryDTO, ProductCategory.class);
+    public GiftHistoryDTO toGiftHistoryDTO (GiftHistory giftHistory) {
+        GiftHistoryDTO giftHistoryDTO = this.modelMapper.map(giftHistory, GiftHistoryDTO.class);
 
-        return productCategory;
+        return giftHistoryDTO;
+    }
+
+    public ProductCategory toProductCategory (ProductCategoryDTO productCategoryDTO) {
+        return this.modelMapper.map(productCategoryDTO, ProductCategory.class);
     }
 
     public OfferPromotion toOfferPromotion (PromotionDTO promotionDTO) {
-        OfferPromotion offerPromotion = this.modelMapper.map(promotionDTO, OfferPromotion.class);
-
-        return offerPromotion;
+        return this.modelMapper.map(promotionDTO, OfferPromotion.class);
     }
 
     public DiscountPromotion toDiscountPromotion (PromotionDTO promotionDTO) {
-        DiscountPromotion discountPromotion = this.modelMapper.map(promotionDTO, DiscountPromotion.class);
-
-        return discountPromotion;
+        return this.modelMapper.map(promotionDTO, DiscountPromotion.class);
     }
 
     public PromotionDTO toPromotionDTO(Promotion promotion) {
@@ -62,11 +62,9 @@ public class ProductDTOUtil {
         promotionDTO.setEndDate(promotion.getEndDate());
         promotionDTO.setDescription(promotion.getDescription());
         promotionDTO.setProductId(promotion.getProduct().getProductId());
-        if (promotion instanceof DiscountPromotion) {
-            DiscountPromotion discountPromotion = (DiscountPromotion) promotion;
+        if (promotion instanceof DiscountPromotion discountPromotion) {
             promotionDTO.setDiscountPercent(discountPromotion.getDiscountPercent());
-        } else if (promotion instanceof OfferPromotion) {
-            OfferPromotion offerPromotion = (OfferPromotion) promotion;
+        } else if (promotion instanceof OfferPromotion offerPromotion) {
             promotionDTO.setRequiredItems(offerPromotion.getRequiredItems());
             promotionDTO.setOfferedItems(offerPromotion.getOfferedItems());
         }

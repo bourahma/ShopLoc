@@ -22,7 +22,6 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final CommerceService commerceService;
-
     private final PromotionHistoryRepository promotionHistoryRepository;
     private final OrderDTOUtil orderDTOUtil;
 
@@ -75,24 +74,20 @@ public class OrderServiceImpl implements OrderService {
                     Product product = orderProduct.getProduct();
                     Promotion promotion = product.getPromotion();
 
-                    if (promotion instanceof OfferPromotion && promotion != null) {
-                        int quantity = (int) Math.floor((double) (orderProduct.getQuantity() * ((OfferPromotion) promotion).getOfferedItems()) / ((OfferPromotion) promotion).getRequiredItems());
+                    if (promotion instanceof OfferPromotion offerPromotion) {
+
+                        int quantity = (int) Math.floor(((double) (orderProduct.getQuantity() * (offerPromotion.getOfferedItems())) / (offerPromotion.getRequiredItems())));
                         orderProduct.setQuantity(orderProduct.getQuantity() + quantity);
                         orderProduct.setPurchasePrice(product.getPrice());
                         product.setQuantity(product.getQuantity() - orderProduct.getQuantity());
-                        this.productRepository.save(product);
-                    }
-                    if (promotion != null) {
-                        PromotionHistory promotionHistory = new PromotionHistory();
-                        promotionHistory.setPromotionHistoryId(promotion.getPromotionId());
-                        promotionHistory.setDescription(promotion.getDescription());
-                        promotionHistory.setProduct(product);
-                        promotionHistory.setCommerce(promotion.getCommerce());
-                        promotionHistory.setEndDate(promotion.getEndDate());
-                        promotionHistory.setDiscountPercent(10);//promotion.getDiscountPercent());
-                        promotionHistory.setOfferedItems(10);//(promotion.getOfferedItems());
-                        promotionHistory.setRequiredItems(10);//(promotion.getRequiredItems());
 
+                        this.productRepository.save(product);
+
+                        PromotionHistory promotionHistory = this.getOfferPromotionHistory(offerPromotion, promotion, product);
+                        this.promotionHistoryRepository.save(promotionHistory);
+
+                    } else if (promotion instanceof DiscountPromotion discountPromotion) {
+                        PromotionHistory promotionHistory = this.getDiscountPromotionHistory(discountPromotion, promotion, product);
                         this.promotionHistoryRepository.save(promotionHistory);
                     }
                 }
@@ -109,39 +104,54 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public double getOrderTotal(Long orderId, boolean usePointsPrice) {
-        Order order = this.orderRepository.findById(orderId).orElse(null);
+        Order order = orderRepository.findByOrderIdAndOrderStatus(orderId, OrderStatus.PENDING.name());
 
-        if (order == null || !order.getOrderStatus().equals(OrderStatus.PENDING.name())) {
+        if (order == null) {
             return 0.0;
         }
 
         double totalOrderPrice = 0.0;
 
         for (OrderProduct orderProduct : order.getOrderProducts()) {
-            Product product = orderProduct.getProduct();
-            Promotion promotion = product.getPromotion();
+            double productPrice = usePointsPrice ? orderProduct.getProduct().getRewardPointsPrice() : orderProduct.getProduct().getPrice();
+            Promotion promotion = orderProduct.getProduct().getPromotion();
 
-            double productPrice = 0.0;
-
-            if (promotion instanceof DiscountPromotion && promotion != null) {
-                productPrice = usePointsPrice ? orderProduct.getProduct().getRewardPointsPrice()
-                        : orderProduct.getProduct().getPrice();
-                totalOrderPrice += orderProduct.getQuantity() * (productPrice * ((double) ((DiscountPromotion) promotion).getDiscountPercent() / 100));
-
-            } else if (promotion != null && promotion instanceof OfferPromotion && orderProduct.getQuantity() >= ((OfferPromotion) promotion).getRequiredItems()) {
-                productPrice = usePointsPrice ? orderProduct.getProduct().getRewardPointsPrice()
-                        : orderProduct.getProduct().getPrice();
+            if (promotion instanceof DiscountPromotion discountPromotion) {
+                totalOrderPrice += orderProduct.getQuantity() * productPrice * (1 - (discountPromotion.getDiscountPercent() / 100.0));
+            } else if (promotion instanceof OfferPromotion offerPromotion && orderProduct.getQuantity() >= (offerPromotion.getRequiredItems())) {
                 totalOrderPrice += orderProduct.getQuantity() * productPrice;
 
-                int quantity = (int) Math.floor((double) (orderProduct.getQuantity() * ((OfferPromotion) promotion).getOfferedItems()) / ((OfferPromotion) promotion).getRequiredItems());
-                orderProduct.setQuantity(orderProduct.getQuantity() + quantity);
+                int additionalQuantity = (int) Math.floor(((double) (orderProduct.getQuantity() * (offerPromotion.getOfferedItems())) / (offerPromotion.getRequiredItems())));
+                orderProduct.setQuantity(orderProduct.getQuantity() + additionalQuantity);
             } else {
-                productPrice = usePointsPrice ? orderProduct.getProduct().getRewardPointsPrice()
-                        : orderProduct.getProduct().getPrice();
                 totalOrderPrice += orderProduct.getQuantity() * productPrice;
             }
         }
 
         return totalOrderPrice;
+    }
+
+
+    private PromotionHistory getDiscountPromotionHistory(DiscountPromotion discountPromotion, Promotion promotion, Product product) {
+        PromotionHistory promotionHistory = new PromotionHistory();
+        promotionHistory.setPromotionHistoryId(promotion.getPromotionId());
+        promotionHistory.setDescription(promotion.getDescription());
+        promotionHistory.setProduct(product);
+        promotionHistory.setCommerce(promotion.getCommerce());
+        promotionHistory.setEndDate(promotion.getEndDate());
+        promotionHistory.setDiscountPercent(discountPromotion.getDiscountPercent());
+        return promotionHistory;
+    }
+
+    private PromotionHistory getOfferPromotionHistory(OfferPromotion offerPromotion, Promotion promotion, Product product) {
+        PromotionHistory promotionHistory = new PromotionHistory();
+        promotionHistory.setPromotionHistoryId(promotion.getPromotionId());
+        promotionHistory.setDescription(promotion.getDescription());
+        promotionHistory.setProduct(product);
+        promotionHistory.setCommerce(promotion.getCommerce());
+        promotionHistory.setEndDate(promotion.getEndDate());
+        promotionHistory.setOfferedItems(offerPromotion.getOfferedItems());
+        promotionHistory.setRequiredItems(offerPromotion.getRequiredItems());
+        return promotionHistory;
     }
 }

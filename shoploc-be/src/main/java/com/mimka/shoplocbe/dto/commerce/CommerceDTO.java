@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalTime;
+
 @Getter
 @Setter
 @Validated
@@ -29,12 +30,6 @@ public class CommerceDTO {
     @NotNull(message = "L'heure de fermeture est requise")
     private LocalTime closingHour;
 
-    private String imageUrl;
-
-    private MultipartFile multipartFile;
-
-    private boolean disabled;
-
     @Valid
     @NotNull(message = "Les informations d'adresse sont requises")
     private AddressDTO addressDTO;
@@ -42,4 +37,11 @@ public class CommerceDTO {
     @Valid
     @NotNull(message = "Le type du commerce est requis")
     private CommerceTypeDTO commerceType;
+
+    private String imageUrl;
+
+    private MultipartFile multipartFile;
+
+    private boolean disabled;
+
 }

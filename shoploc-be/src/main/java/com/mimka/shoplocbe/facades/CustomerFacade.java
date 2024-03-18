@@ -1,5 +1,6 @@
 package com.mimka.shoplocbe.facades;
 
+import com.mimka.shoplocbe.dto.DtoUtil;
 import com.mimka.shoplocbe.dto.user.CustomerDTO;
 import com.mimka.shoplocbe.entities.Customer;
 import com.mimka.shoplocbe.entities.FidelityCard;
@@ -24,21 +25,24 @@ public class CustomerFacade {
 
     private final TokenService tokenService;
 
+    private final DtoUtil dtoUtil;
+
     @Autowired
-    public CustomerFacade(CustomerService createCustomer, FidelityCardService fidelityCardService, MailServiceImpl mailServiceImpl, TokenService tokenService) {
+    public CustomerFacade(CustomerService createCustomer, FidelityCardService fidelityCardService, MailServiceImpl mailServiceImpl, TokenService tokenService, DtoUtil dtoUtil) {
         this.customerService = createCustomer;
         this.fidelityCardService = fidelityCardService;
         this.mailServiceImpl = mailServiceImpl;
         this.tokenService = tokenService;
+        this.dtoUtil = dtoUtil;
     }
 
 
-    public Customer registerCustomer(CustomerDTO customerDTO) throws RegistrationException {
+    public CustomerDTO registerCustomer(CustomerDTO customerDTO) throws RegistrationException {
         FidelityCard fidelityCard = this.fidelityCardService.createFidelityCard();
         Customer customer = this.customerService.createCustomer(customerDTO, fidelityCard);
         this.sendVerificationEmail(customer);
 
-        return customer;
+        return this.dtoUtil.toCustomerDTO(customer);
     }
 
     public void confirmCustomerRegistration(String uuid) throws RegistrationTokenInvalidException {

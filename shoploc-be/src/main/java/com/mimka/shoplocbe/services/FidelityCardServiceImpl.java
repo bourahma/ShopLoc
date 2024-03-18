@@ -8,7 +8,6 @@ import com.mimka.shoplocbe.repositories.CommerceRepository;
 import com.mimka.shoplocbe.repositories.FidelityCardRepository;
 import com.mimka.shoplocbe.repositories.PointTransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,9 +25,9 @@ public class FidelityCardServiceImpl implements FidelityCardService {
     private final CommerceRepository commerceRepository;
     private final FidelityCardRepository fidelityCardRepository;
 
-    private double maxAmountCreditValueAllowed = 50.00;
+    private static final double MAXIMUMAMOUNTCREDITALLOWED = 50.00;
 
-    private double minAmountCreditValueAllowed = 1.0;
+    private static final double MINIMUMAMOUNTCREDITALLOWED = 1.0;
 
     @Autowired
     public FidelityCardServiceImpl(PointTransactionRepository pointTransactionRepository, BalanceTransactionRepository balanceTransactionRepository, CommerceRepository commerceRepository, FidelityCardRepository fidelityCardRepository) {
@@ -110,13 +109,18 @@ public class FidelityCardServiceImpl implements FidelityCardService {
 
     @Override
     public FidelityCard creditFidelityCardBalance(String fidelityCardId, double amount) throws InvalidCreditAmountException {
-        if (amount < this.minAmountCreditValueAllowed || amount > this.maxAmountCreditValueAllowed) {
+        if (amount < FidelityCardServiceImpl.MINIMUMAMOUNTCREDITALLOWED || amount > FidelityCardServiceImpl.MAXIMUMAMOUNTCREDITALLOWED) {
             throw new InvalidCreditAmountException("le montant de crédit doit être compris entre 1€ et 50€.");
         }
-        FidelityCard fidelityCard = this.fidelityCardRepository.findById(fidelityCardId).get();
-        createBalanceTransaction(fidelityCard, 0, amount, TransactionType.CREDIT);
+        Optional<FidelityCard> optionalFidelityCard = this.fidelityCardRepository.findById(fidelityCardId);
+        if (optionalFidelityCard.isPresent()) {
+            FidelityCard fidelityCard = this.fidelityCardRepository.findById(fidelityCardId).get();
+            createBalanceTransaction(fidelityCard, 0, amount, TransactionType.CREDIT);
 
-        return this.fidelityCardRepository.save(fidelityCard);
+            return this.fidelityCardRepository.save(fidelityCard);
+        } else {
+            throw new InvalidCreditAmountException ("Aucune carte de fidélité avec l'id : " + fidelityCardId);
+        }
     }
 
     @Override

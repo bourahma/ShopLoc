@@ -1,8 +1,5 @@
 package com.mimka.shoplocbe.dto.product;
 
-import com.mimka.shoplocbe.entities.Product;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -40,6 +40,10 @@ public class CommerceDTOUtil {
         return modelMapper.map(address, AddressDTO.class);
     }
 
-    public CommerceType toCommerceType (CommerceTypeDTO commerceTypeDTO) {return  modelMapper.map(commerceTypeDTO, CommerceType.class);}
-    public CommerceTypeDTO toCommerceTypeDTO (CommerceType commerceType) {return  modelMapper.map(commerceType, CommerceTypeDTO.class);}
+    public CommerceType toCommerceType (CommerceTypeDTO commerceTypeDTO) {
+        return  modelMapper.map(commerceTypeDTO, CommerceType.class);
+    }
+    public CommerceTypeDTO toCommerceTypeDTO (CommerceType commerceType) {
+        return  modelMapper.map(commerceType, CommerceTypeDTO.class);
+    }
 }

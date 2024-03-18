@@ -1,25 +1,36 @@
 package com.mimka.shoplocbe.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.List;
+import java.time.LocalDate;
 
+@Getter
+@Setter
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "Gift_History")
 public class GiftHistory {
 
     @Id
+    @Column(name = "gift_history_id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gift_history_sequence")
     @SequenceGenerator(name = "gift_history_sequence", sequenceName = "gift_history_seq", allocationSize = 1, initialValue = 50)
-    private Long id;
+    private Long giftHistoryId;
 
-    @Column(name = "date_acquisition")
-    private String acquisitionDate;
+    @Column(name = "purchase_date")
+    private LocalDate purchaseDate;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "customer_id")
-    private List<Customer> customerId;
+    @ManyToOne
+    @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
+    private Customer customer;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "product_id")
-    private List<Product> products;
+    @ManyToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "product_id", nullable = false)
+    private Product product;
 
 }

@@ -11,6 +11,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Embeddable
 public class OrderProductId implements Serializable {
+
     @Column(name = "order_id")
     private Long orderId;
 

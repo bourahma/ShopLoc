@@ -1,12 +1,13 @@
 package com.mimka.shoplocbe.controllers;
 
-import com.mimka.shoplocbe.dto.fidelityCard.BalanceTransactionDTO;
-import com.mimka.shoplocbe.dto.fidelityCard.CreditBalanceDTO;
-import com.mimka.shoplocbe.dto.fidelityCard.FidelityCardDTO;
-import com.mimka.shoplocbe.dto.fidelityCard.PointTransactionDTO;
+import com.mimka.shoplocbe.dto.fidelity.BalanceTransactionDTO;
+import com.mimka.shoplocbe.dto.fidelity.CreditBalanceDTO;
+import com.mimka.shoplocbe.dto.fidelity.FidelityCardDTO;
+import com.mimka.shoplocbe.dto.fidelity.PointTransactionDTO;
 import com.mimka.shoplocbe.exception.InvalidCreditAmountException;
 import com.mimka.shoplocbe.facades.FidelityCardFacade;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,7 @@ import java.util.Set;
 public class FidelityCardController {
     private final FidelityCardFacade fidelityCardFacade;
 
+    @Autowired
     public FidelityCardController(FidelityCardFacade fidelityCardFacade) {
         this.fidelityCardFacade = fidelityCardFacade;
     }

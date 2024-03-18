@@ -26,7 +26,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager merchantAuthenticationManager;
 
     @Autowired
-    public AuthenticationServiceImpl(JwtEncoder jwtEncoder, @Qualifier("customerAuthenticationManager") AuthenticationManager customerAuthenticationManager,
+    public AuthenticationServiceImpl(JwtEncoder jwtEncoder,
+                                     @Qualifier("customerAuthenticationManager") AuthenticationManager customerAuthenticationManager,
                                      @Qualifier("administratorAuthenticationManager") AuthenticationManager administratorAuthenticationManager,
                                      @Qualifier("merchantAuthenticationManager") AuthenticationManager merchantAuthenticationManager) {
         this.jwtEncoder = jwtEncoder;
