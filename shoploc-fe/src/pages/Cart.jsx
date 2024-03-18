@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "flowbite-react";
-import { useCart } from "./CartContext";
+import { useCart } from "../services/CartContext";
 import productSample from "../images/productSample.png";
 import deleteicon from "../images/delete.png";
 import paymentMethods from "../images/paymentMethods.png"; 

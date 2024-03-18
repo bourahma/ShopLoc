@@ -1,5 +1,5 @@
-import NewsSlider from "./NewsSlider";
-import Map from "./Map";
+import NewsSlider from "../components/NewsSlider";
+import Map from "../components/Map";
 import offre_img from "../images/offre-bienvenue.png";
 
 function FirstScreen() {

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import fetchProducts from "../services/fetchProducts";
 import fetchCommercant  from "../services/fetchCommerce";
 import productSample from "../images/productSample.png";
-import { useCart } from "./CartContext";
+import { useCart } from "../services/CartContext";
 
 const Product = () => {
     const { commercantId } = useParams();
