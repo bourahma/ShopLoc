@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import CommerceCard from "./CommerceCard";
+import CommerceCard from "../components/CommerceCard";
 import fetchCommercants from "../services/fetchCommerces";
-import NewsSlider from "./NewsSlider";
-import Map from "./Map";
-import CommerceFilters from "./CommerceFilters";
+import NewsSlider from "../components/NewsSlider";
+import Map from "../components/Map";
+import CommerceFilters from "../components/CommerceFilters";
 import moment from "moment";
 
 function HomeComponent() {
