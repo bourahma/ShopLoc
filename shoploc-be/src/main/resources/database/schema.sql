@@ -28,6 +28,7 @@ DROP TABLE IF EXISTS Address CASCADE;
 DROP TABLE IF EXISTS QR_Code_Payment CASCADE;
 DROP TABLE IF EXISTS Product_Category CASCADE;
 
+DROP SEQUENCE IF EXISTS customer_connection_sequence CASCADE;
 DROP SEQUENCE IF EXISTS vfp_history_sequence CASCADE;
 DROP SEQUENCE IF EXISTS product_category_sequence CASCADE;
 DROP SEQUENCE IF EXISTS order_sequence CASCADE;
@@ -128,6 +129,13 @@ CREATE SEQUENCE balance_transaction_sequence
     CACHE 1;
 
 CREATE SEQUENCE order_sequence
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+CREATE SEQUENCE customer_connection_sequence
     INCREMENT 1
     START 1
     MINVALUE 1
@@ -284,7 +292,7 @@ CREATE TABLE Customer
 -- Create Customer_Connection Table :
 CREATE TABLE Customer_Connection
 (
-    connection_id VARCHAR(255) PRIMARY KEY,
+    connection_id INT DEFAULT nextval('customer_connection_sequence') PRIMARY KEY,
     connect_time TIME,
     disconnect_time TIME,
     customer_id INT,
@@ -425,7 +433,6 @@ CREATE TABLE Benefit_History
     FOREIGN KEY (customer_id) REFERENCES Customer(id),
     FOREIGN KEY (benefit_id) REFERENCES Benefit(benefit_id)
 );
-
 
 -- Create GiftHistory Table :
 CREATE TABLE Gift_History

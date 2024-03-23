@@ -28,6 +28,7 @@ DROP TABLE IF EXISTS Address CASCADE;
 DROP TABLE IF EXISTS QR_Code_Payment CASCADE;
 DROP TABLE IF EXISTS Product_Category CASCADE;
 
+DROP SEQUENCE IF EXISTS customer_connection_sequence CASCADE;
 DROP SEQUENCE IF EXISTS vfp_history_sequence CASCADE;
 DROP SEQUENCE IF EXISTS product_category_sequence CASCADE;
 DROP SEQUENCE IF EXISTS order_sequence CASCADE;
@@ -42,6 +43,13 @@ DROP SEQUENCE IF EXISTS promotion_sequence CASCADE;
 DROP SEQUENCE IF EXISTS gift_history_sequence CASCADE;
 DROP SEQUENCE IF EXISTS benefit_history_sequence CASCADE;
 DROP SEQUENCE IF EXISTS commerce_type_sequence CASCADE;
+
+CREATE SEQUENCE customer_connection_sequence
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
 
 CREATE SEQUENCE vfp_history_sequence
     INCREMENT 1
@@ -284,7 +292,7 @@ CREATE TABLE Customer
 -- Create Customer_Connection Table :
 CREATE TABLE Customer_Connection
 (
-    connection_id INT PRIMARY KEY,
+    connection_id INT DEFAULT nextval('customer_connection_sequence') PRIMARY KEY,
     connect_time TIME,
     disconnect_time TIME,
     customer_id INT,
@@ -339,7 +347,7 @@ CREATE TABLE Order_Status
 -- Create Orders Table
 CREATE TABLE Orders
 (
-    order_id INT DEFAULT nextval('order_sequence') PRIMARY KEY,
+    order_id INT PRIMARY KEY,
     customer_id INT NOT NULL,
     commerce_id INT NOT NULL,
     order_date DATE,
@@ -393,7 +401,7 @@ CREATE TABLE Order_Product
     order_id INT NOT NULL,
     quantity INT NOT NULL CHECK (quantity > 0),
     promotion_id INT,
-    purchase_price NUMERIC(4,2),
+    purchase_price NUMERIC(4,10),
 
     PRIMARY KEY (order_product_id, order_id),
     FOREIGN KEY (order_id) REFERENCES Orders(order_id),

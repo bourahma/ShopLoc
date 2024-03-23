@@ -11,7 +11,6 @@ import org.springframework.test.context.TestPropertySource;
 class ShoplocBeApplicationTests {
 
 	@Test
-
 	void contextLoads() {
 
 	}

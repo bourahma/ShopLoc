@@ -24,4 +24,13 @@ public class Customer extends User {
 
     @Column(name = "vfp_used")
     private boolean vfpUsed;
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "isVfpMembership=" + isVfpMembership +
+                ", subscriptionDate=" + subscriptionDate +
+                ", vfpUsed=" + vfpUsed +
+                '}';
+    }
 }
