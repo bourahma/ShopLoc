@@ -1,16 +1,10 @@
 package com.mimka.shoplocbe;
 
-import com.mimka.shoplocbe.batch.order.OrderDAO;
 import com.mimka.shoplocbe.entities.*;
 import com.mimka.shoplocbe.repositories.*;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDate;
@@ -35,7 +29,7 @@ public class ShoplocBeApplication {
 		return args -> {
 
 			// Customer connections
-			/*for (Customer customer : customerRepository.findAll())
+			for (Customer customer : customerRepository.findAll())
 			{
 				LocalDate subscriptionDate = customer.getSubscriptionDate();
 				LocalDate today = LocalDate.now();
@@ -63,7 +57,7 @@ public class ShoplocBeApplication {
 					}
 					subscriptionDate = subscriptionDate.plusDays(1);
 				}
-			}*/
+			}
 
 			// Customer orders
 			for (Customer customer : customerRepository.findAll()) {
