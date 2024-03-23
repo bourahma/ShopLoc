@@ -60,7 +60,8 @@ public class SecurityConfig {
                 // These requests do not need authentication.
                 .authorizeHttpRequests(requests -> requests.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console"),
                         AntPathRequestMatcher.antMatcher("/authentication/**"),
-                                AntPathRequestMatcher.antMatcher("/swagger-ui/**"),
+                        AntPathRequestMatcher.antMatcher("/swagger-ui/**"),
+                        AntPathRequestMatcher.antMatcher("/v3/api-docs/**"),
                         AntPathRequestMatcher.antMatcher("/registration/**")).permitAll())
                 // All the others requests must be authenticated.
                 .authorizeHttpRequests(ar->ar.anyRequest().authenticated())
