@@ -175,7 +175,6 @@ public class ShoplocBeApplication {
 							} else {
 								orderProduct.setQuantity(random.nextInt(7) + 1);
 							}
-							//orderProduct.setPurchasePrice(product.getPrice());
 							orderProduct.setPromotion(null);
 							orderProductRepository.save(orderProduct);
 						}
