@@ -136,7 +136,7 @@ public class BiOrderComponent {
                 orderProductRepository.save(orderProduct);
             }
 
-            this.savePointTransaction(customer, commerce, LocalDateTime.now(), totalOrder);
+            this.savePointTransaction(customer, commerce,orderDate.atTime(1, 59) , totalOrder);
         }
     }
 

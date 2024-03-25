@@ -25,9 +25,10 @@ public class ShoplocBeApplication {
 			//biCustomerConnectionComponent.process();
 
 			// Customer Orders
-			//biOrderComponent.process();
+			biOrderComponent.process();
 
 			// Customer gift
+			System.out.println("------------------------------------------------>");
 			biGiftComponent.process();
 		};
 	}
