@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -16,28 +17,35 @@ public class BiOrderComponent {
     private final CustomerRepository customerRepository;
     private final CommerceRepository commerceRepository;
     private final VfpHistoryRepository vfpHistoryRepository;
+    private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
     private final OrderProductRepository orderProductRepository;
     private final PointTransactionRepository pointTransactionRepository;
     private final BenefitHistoryRepository benefitHistoryRepository;
     private final BenefitRepository benefitRepository;
+    private final GiftHistoryRepository giftHistoryRepository;
     private final Random random = new Random();
     @Autowired
     public BiOrderComponent(CustomerRepository customerRepository,
                             CommerceRepository commerceRepository,
                             VfpHistoryRepository vfpHistoryRepository,
-                            OrderRepository orderRepository,
+                            ProductRepository productRepository, OrderRepository orderRepository,
                             OrderProductRepository orderProductRepository,
                             PointTransactionRepository pointTransactionRepository,
-                            BenefitHistoryRepository benefitHistoryRepository, BenefitRepository benefitRepository) {
+                            BenefitHistoryRepository benefitHistoryRepository,
+                            BenefitRepository benefitRepository,
+                            GiftHistoryRepository giftHistoryRepository)
+    {
         this.customerRepository = customerRepository;
         this.commerceRepository = commerceRepository;
         this.vfpHistoryRepository = vfpHistoryRepository;
+        this.productRepository = productRepository;
         this.orderRepository = orderRepository;
         this.orderProductRepository = orderProductRepository;
         this.pointTransactionRepository = pointTransactionRepository;
         this.benefitHistoryRepository = benefitHistoryRepository;
         this.benefitRepository = benefitRepository;
+        this.giftHistoryRepository = giftHistoryRepository;
     }
 
     public void process () {
@@ -56,6 +64,7 @@ public class BiOrderComponent {
                 int action = random.nextInt(3);
 
                 if (action == 2) {
+                    processSingleOrder(customer, commerces, processDate);
                     processSingleOrder(customer, commerces, processDate);
                 } else if (action == 1 && random.nextInt(2) == 1) {
                     processMultipleOrders(customer, commerces, processDate);
@@ -90,6 +99,10 @@ public class BiOrderComponent {
             if (randomProduct == 0) {
                 acquireBenefit(customer, checkDate.plusDays(1));
             }
+            randomProduct = random.nextInt(2);
+            if (randomProduct == 0) {
+                acquireGift(customer, checkDate.plusDays(1));
+            }
             checkDate = checkDate.plusDays(1);
         }
     }
@@ -106,13 +119,11 @@ public class BiOrderComponent {
             order.setOrderDate(orderDate);
             order.setOrderStatus(OrderStatus.PAID.name());
             order.setCommerce(commerce);
-            order = orderRepository.save(order);
+            //order = orderRepository.save(order);
 
-            for (int i = 0; i < orderCount; i++) {
-                if (commerce.getProducts().isEmpty()) {
-                    continue;
-                }
+            if (!commerce.getProducts().isEmpty()) {
                 int randomProduct = random.nextInt(commerce.getProducts().size());
+                order = orderRepository.save(order);
                 Product product = commerce.getProducts().get(randomProduct == 0 ? 1 : randomProduct);
                 OrderProduct orderProduct = new OrderProduct();
                 orderProduct.setProduct(product);
@@ -124,7 +135,8 @@ public class BiOrderComponent {
                 orderProductRepository.save(orderProduct);
             }
 
-            this.savePointTransaction(customer, commerce, LocalDateTime.now(), totalOrder);
+
+            this.savePointTransaction(customer, commerce,orderDate.atTime(1, 59) , totalOrder);
         }
     }
 
@@ -139,6 +151,7 @@ public class BiOrderComponent {
         vfpHistory.setGrantedDate(grantedDate);
         vfpHistory.setCustomer(customer);
         vfpHistory.setExpirationDate(grantedDate.plusDays(7));
+
         vfpHistoryRepository.save(vfpHistory);
     }
 
@@ -166,7 +179,26 @@ public class BiOrderComponent {
         benefitHistory.setQrCode(UUID.randomUUID().toString());
 
         benefitHistoryRepository.save(benefitHistory);
+    }
 
+    private void acquireGift (Customer customer, LocalDate acquireDate) {
+        List<Product> gifts = productRepository.findByGiftIsTrue();
+        List<Order> customerOrders = orderRepository.findByCustomerAndAndOrderDateAfterAndAndOrderStatus(customer, acquireDate, OrderStatus.PAID.name());
+
+        for (Product gift : gifts) {
+            for (Order order : customerOrders) {
+                if (Objects.equals(gift.getCommerce().getCommerceId(), order.getCommerce().getCommerceId())) {
+                    GiftHistory giftHistory = new GiftHistory();
+                    giftHistory.setCustomer(customer);
+                    giftHistory.setProduct(gift);
+                    giftHistory.setPurchaseDate(acquireDate);
+                    //if (customer.getFidelityCard().getPoints() >= gift.getRewardPointsPrice()) {
+                    giftHistoryRepository.save(giftHistory);
+                    break;
+                    //}
+                }
+            }
+        }
     }
 
 }
