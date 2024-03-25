@@ -755,6 +755,11 @@ VALUES
 (66, 'Boutique Sport Extrême', '7:00:00', '19:00:00', '', 22, 66, False),
 (67, 'Magasin de Bricolage BuildIt', '8:00:00', '20:00:00', '', 23, 67, False);
 
+INSERT INTO Merchant (id, username, lastname, firstname, password, email, enabled, phone_number, role, subscription_date, commerce_id)
+VALUES
+    (1, 'xlegrand', 'Martins', 'Denis', '!rE2g%vGM7CV', 'zacharie55@orange.fr', True, '06 33 25 74 02', 3, '2023-01-13',1),
+    (2, 'lgerard', 'Dupuy', 'Suzanne', '^9K1J7LsXW%V', 'martine00@tiscali.fr', True, '06 79 20 48 30', 3,  '2022-06-16',1);
+
 INSERT INTO Product_Category (product_category_id, commerce_id, label, description)
 VALUES
     (1, 1, 'Pain', 'Variété de pains frais et croustillants'),
