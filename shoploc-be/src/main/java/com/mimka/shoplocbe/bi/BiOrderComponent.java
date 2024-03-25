@@ -139,6 +139,7 @@ public class BiOrderComponent {
         vfpHistory.setGrantedDate(grantedDate);
         vfpHistory.setCustomer(customer);
         vfpHistory.setExpirationDate(grantedDate.plusDays(7));
+
         vfpHistoryRepository.save(vfpHistory);
     }
 
@@ -166,7 +167,6 @@ public class BiOrderComponent {
         benefitHistory.setQrCode(UUID.randomUUID().toString());
 
         benefitHistoryRepository.save(benefitHistory);
-
     }
 
 }
