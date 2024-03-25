@@ -21,6 +21,7 @@ public class BiOrderComponent {
     private final PointTransactionRepository pointTransactionRepository;
     private final BenefitHistoryRepository benefitHistoryRepository;
     private final BenefitRepository benefitRepository;
+    private final GiftHistoryRepository giftHistoryRepository;
     private final Random random = new Random();
     @Autowired
     public BiOrderComponent(CustomerRepository customerRepository,
@@ -29,7 +30,10 @@ public class BiOrderComponent {
                             OrderRepository orderRepository,
                             OrderProductRepository orderProductRepository,
                             PointTransactionRepository pointTransactionRepository,
-                            BenefitHistoryRepository benefitHistoryRepository, BenefitRepository benefitRepository) {
+                            BenefitHistoryRepository benefitHistoryRepository,
+                            BenefitRepository benefitRepository,
+                            GiftHistoryRepository giftHistoryRepository)
+    {
         this.customerRepository = customerRepository;
         this.commerceRepository = commerceRepository;
         this.vfpHistoryRepository = vfpHistoryRepository;
@@ -38,6 +42,7 @@ public class BiOrderComponent {
         this.pointTransactionRepository = pointTransactionRepository;
         this.benefitHistoryRepository = benefitHistoryRepository;
         this.benefitRepository = benefitRepository;
+        this.giftHistoryRepository = giftHistoryRepository;
     }
 
     public void process () {
