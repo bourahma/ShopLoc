@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -16,6 +17,7 @@ public class BiOrderComponent {
     private final CustomerRepository customerRepository;
     private final CommerceRepository commerceRepository;
     private final VfpHistoryRepository vfpHistoryRepository;
+    private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
     private final OrderProductRepository orderProductRepository;
     private final PointTransactionRepository pointTransactionRepository;
@@ -27,7 +29,7 @@ public class BiOrderComponent {
     public BiOrderComponent(CustomerRepository customerRepository,
                             CommerceRepository commerceRepository,
                             VfpHistoryRepository vfpHistoryRepository,
-                            OrderRepository orderRepository,
+                            ProductRepository productRepository, OrderRepository orderRepository,
                             OrderProductRepository orderProductRepository,
                             PointTransactionRepository pointTransactionRepository,
                             BenefitHistoryRepository benefitHistoryRepository,
@@ -37,6 +39,7 @@ public class BiOrderComponent {
         this.customerRepository = customerRepository;
         this.commerceRepository = commerceRepository;
         this.vfpHistoryRepository = vfpHistoryRepository;
+        this.productRepository = productRepository;
         this.orderRepository = orderRepository;
         this.orderProductRepository = orderProductRepository;
         this.pointTransactionRepository = pointTransactionRepository;
@@ -94,6 +97,10 @@ public class BiOrderComponent {
             int randomProduct = random.nextInt(2);
             if (randomProduct == 0) {
                 acquireBenefit(customer, checkDate.plusDays(1));
+            }
+            randomProduct = random.nextInt(2);
+            if (randomProduct == 0) {
+                acquireGift(customer, checkDate.plusDays(1));
             }
             checkDate = checkDate.plusDays(1);
         }
@@ -172,6 +179,26 @@ public class BiOrderComponent {
         benefitHistory.setQrCode(UUID.randomUUID().toString());
 
         benefitHistoryRepository.save(benefitHistory);
+    }
+
+    private void acquireGift (Customer customer, LocalDate acquireDate) {
+        List<Product> gifts = productRepository.findByGiftIsTrue();
+        List<Order> customerOrders = orderRepository.findByCustomerAndAndOrderDateAfterAndAndOrderStatus(customer, acquireDate, OrderStatus.PAID.name());
+
+        for (Product gift : gifts) {
+            for (Order order : customerOrders) {
+                if (Objects.equals(gift.getCommerce().getCommerceId(), order.getCommerce().getCommerceId())) {
+                    GiftHistory giftHistory = new GiftHistory();
+                    giftHistory.setCustomer(customer);
+                    giftHistory.setProduct(gift);
+                    giftHistory.setPurchaseDate(acquireDate);
+                    //if (customer.getFidelityCard().getPoints() >= gift.getRewardPointsPrice()) {
+                        giftHistoryRepository.save(giftHistory);
+                        break;
+                    //}
+                }
+            }
+        }
     }
 
 }

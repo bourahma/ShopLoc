@@ -1,6 +1,7 @@
 package com.mimka.shoplocbe;
 
 import com.mimka.shoplocbe.bi.BiCustomerConnectionComponent;
+import com.mimka.shoplocbe.bi.BiGiftComponent;
 import com.mimka.shoplocbe.bi.BiOrderComponent;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,14 +17,18 @@ public class ShoplocBeApplication {
 
 	@Bean
 	CommandLineRunner commandLineRunner (BiCustomerConnectionComponent biCustomerConnectionComponent,
-										 BiOrderComponent biOrderComponent) {
+										 BiOrderComponent biOrderComponent,
+										 BiGiftComponent biGiftComponent) {
 		return args -> {
 
 			// Customer connections
-			biCustomerConnectionComponent.process();
+			//biCustomerConnectionComponent.process();
 
 			// Customer Orders
-			biOrderComponent.process();
+			//biOrderComponent.process();
+
+			// Customer gift
+			biGiftComponent.process();
 		};
 	}
 }
