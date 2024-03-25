@@ -20,7 +20,7 @@ public class ShoplocBeApplication {
 		return args -> {
 
 			// Customer connections
-			//biCustomerConnectionComponent.process();
+			biCustomerConnectionComponent.process();
 
 			// Customer Orders
 			biOrderComponent.process();
