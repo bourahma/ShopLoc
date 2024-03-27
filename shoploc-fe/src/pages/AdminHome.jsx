@@ -12,10 +12,10 @@ const AdminHome = () => {
   };
 
   return (
-    <div className="flex flex-wrap">
+    <div className="flex flex-col sm:flex-row">
       <Sidebar
         aria-label="Main navigation"
-        className="bg-gray-800 text-gray-400 shadow-lg"
+        className="bg-gray-800 text-gray-400 shadow-lg flex-none"
       >
         <Sidebar.Items>
           <Sidebar.ItemGroup>
@@ -50,26 +50,16 @@ const AdminHome = () => {
         </Sidebar.Items>
       </Sidebar>
 
-      {task === "createCommerce" && <CommerceRegistrationForm />}
-
-      {task === "createMerchant" && <MerchantRegistrationForm />}
-      {task === "launchPromo" && (
-        <div>
-          <h1>Lancer une promotion</h1>
-          <button onClick={handleLaunchPromo}>Lancer</button>
-        </div>
-      )}
-
-      {task === "viewMerchants" && (
-        <div>
-          <h1>Commerçants</h1>
-        </div>
-      )}
-      {task === "viewCommerces" && (
-        <div>
-          <h1>Commerces</h1>
-        </div>
-      )}
+      <div className="flex-grow">
+        {task === "createCommerce" && <CommerceRegistrationForm />}
+        {task === "createMerchant" && <MerchantRegistrationForm />}
+        {task === "launchPromo" && (
+          <div>
+            <h1>Lancer une promotion</h1>
+            <button onClick={handleLaunchPromo}>Lancer</button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

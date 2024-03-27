@@ -51,6 +51,13 @@ public class CommerceController {
         return this.commerceFacade.createCommerceType(commerceTypeDTO);
     }
 
+
+    @GetMapping("/merchant/{merchantId}")
+    @PreAuthorize("hasAnyAuthority('SCOPE_MERCHANT')")
+    public Long commerceIdByMerchant (@PathVariable Long merchantId) {
+        return this.commerceFacade.getCommerceIdByMerchantId(merchantId);
+    }
+
     @GetMapping("/types")
     @PreAuthorize("hasAnyAuthority('SCOPE_CUSTOMER', 'SCOPE_MERCHANT', 'SCOPE_ADMINISTRATOR')")
     public List<CommerceTypeDTO> commerceTypes ( ) {

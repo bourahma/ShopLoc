@@ -18,6 +18,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -32,13 +33,17 @@ public class CustomerServiceImpl implements CustomerService, UserDetailsService 
 
     private final RoleRepository roleRepository;
 
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
     private final TokenRepository tokenRepository;
     @Autowired
-    public CustomerServiceImpl(CustomerRepository customerRepository, DtoUtil dtoUtil, RoleRepository roleRepository, TokenRepository tokenRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, DtoUtil dtoUtil, RoleRepository roleRepository,
+                               TokenRepository tokenRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.customerRepository = customerRepository;
         this.dtoUtil = dtoUtil;
         this.roleRepository = roleRepository;
         this.tokenRepository = tokenRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
 
@@ -97,6 +102,7 @@ public class CustomerServiceImpl implements CustomerService, UserDetailsService 
             customer.setRole(this.roleRepository.findByRoleId(1L));
             customer.setEnabled(false);
             customer.setSubscriptionDate(LocalDate.now());
+            customer.setPassword(this.bCryptPasswordEncoder.encode(customer.getPassword()));
             this.customerRepository.save(customer);
         }
 

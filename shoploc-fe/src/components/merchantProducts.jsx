@@ -1,12 +1,10 @@
-import { useEffect, useState } from "react";
-import commerceService from "../services/commerce";
-import productSample from "../images/productSample.png";
+import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import { Card, Button, Dropdown } from "flowbite-react";
+import { Checkbox, Table, TextInput } from "flowbite-react";
+import useMerchantProducts from "../hooks/useMerchantProducts";
 
 const MerchantProducts = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [products, setProducts] = useState([]);
   const token = localStorage.getItem("userToken");
   const cleanedToken = token ? token.replace(/['"]+/g, "") : null;
 
@@ -16,81 +14,73 @@ const MerchantProducts = () => {
   // Get the merchant ID
   let merchantId = decoded.userId;
 
-  useEffect(() => {
-    commerceService
-      .fetchMerchantProducts(cleanedToken, merchantId)
-      .then((data) => {
-        setProducts(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching merchant products: ", error);
-      });
-  }, [cleanedToken, merchantId]);
-
-  const filteredProducts = products.filter((product) =>
-    product.productName.toLowerCase().includes(searchQuery.toLowerCase())
+  const { isLoading, isError, error, data } = useMerchantProducts(
+    cleanedToken,
+    merchantId
   );
 
   return (
-    // list all the products
-    <div>
-      <div className="flex flex-wrap gap-4">
-        <input
-          type="text"
-          placeholder="Rechercher un produit"
-          className="border-2 border-gray-300 p-2"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </div>
-      <div className="flex flex-col w-2/3 gap-4">
-        {filteredProducts.map((product) => (
-          //put them inside card components with edit details and delete buttons
-          <Card
-            key={product.productId}
-            className="bg-gray-100 max-w-sm"
-            imgAlt="product image"
-            imgSrc={productSample}
-          >
-            <div className="flex justify-end px-4 pt-4">
-              <Dropdown inline label="">
-                <Dropdown.Item>
+    <div className="overflow-x-auto">
+      {isError && <div>Error: {error.message}</div>}
+      {isLoading && <div>Loading...</div>}
+
+      <TextInput
+        className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        placeholder="Rechercher un produit ..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      ></TextInput>
+
+      <Table hoverable>
+        <Table.Head>
+          <Table.HeadCell className="p-4">
+            <Checkbox />
+          </Table.HeadCell>
+          <Table.HeadCell>Nom du produit</Table.HeadCell>
+          <Table.HeadCell>Catégorie</Table.HeadCell>
+          <Table.HeadCell>Cadeau</Table.HeadCell>
+          <Table.HeadCell>Promotion</Table.HeadCell>
+          <Table.HeadCell>Prix</Table.HeadCell>
+          <Table.HeadCell>
+            <span className="sr-only">Edit</span>
+          </Table.HeadCell>
+        </Table.Head>
+        <Table.Body className="divide-y">
+          {data
+            ?.filter((product) =>
+              product.productName
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase())
+            )
+            .map((product) => (
+              <Table.Row
+                className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                key={product.productId}
+              >
+                <Table.Cell className="p-4">
+                  <Checkbox />
+                </Table.Cell>
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  {product.productName}
+                </Table.Cell>
+                <Table.Cell>{product.productCategoryLabel}</Table.Cell>
+                <Table.Cell>{product.gift ? "Oui" : "Non"}</Table.Cell>
+                <Table.Cell>
+                  {product.promotion?.discountPercent || 0} %
+                </Table.Cell>
+                <Table.Cell>{product.price} €</Table.Cell>
+                <Table.Cell>
                   <a
                     href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                    className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
                   >
                     Modifier
                   </a>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
-                  >
-                    Détails
-                  </a>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
-                  >
-                    Supprimer
-                  </a>
-                </Dropdown.Item>
-              </Dropdown>
-            </div>
-            <h5>
-              <b>{product.productName}</b>
-            </h5>
-            <h6>{product.price} €</h6>
-            <h6>{product.quantity} produits restants</h6>
-            <p className="font-normal text-gray-700 dark:text-gray-400">
-              {product.description}
-            </p>
-          </Card>
-        ))}
-      </div>
+                </Table.Cell>
+              </Table.Row>
+            ))}
+        </Table.Body>
+      </Table>
     </div>
   );
 };

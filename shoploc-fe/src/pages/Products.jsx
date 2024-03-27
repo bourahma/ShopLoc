@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import fetchProducts from "../services/fetchProducts";
-import fetchCommercant from "../services/fetchCommerce";
+import commerceService from "../services/commerce";
 import productSample from "../images/productSample.png";
 import { useCart } from "../services/CartContext";
 
@@ -19,11 +18,14 @@ const Product = () => {
     const fetchData = async () => {
       try {
         // fetchCommerce
-        const commerceData = await fetchCommercant(cleanedToken, commercantId);
+        const commerceData = await commerceService.fetchCommerce(
+          cleanedToken,
+          commercantId
+        );
         setCommerce(commerceData);
 
         // Fetch products
-        const commerceProducts = await fetchProducts(
+        const commerceProducts = await commerceService.fetchProducts(
           cleanedToken,
           commercantId
         );

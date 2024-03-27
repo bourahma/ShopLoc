@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Button, Label, Select, TextInput } from "flowbite-react";
+import {
+  Alert,
+  Button,
+  Label,
+  Select,
+  TextInput,
+  FileInput,
+} from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import commerceService from "../services/commerce";
 import fetchCommerceTypes from "../services/commerceTypesService";
@@ -8,6 +15,7 @@ import * as Yup from "yup";
 
 const CommerceRegistrationForm = () => {
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const [commerceTypes, setCommerceTypes] = useState([]);
   const token = localStorage.getItem("userToken");
   const cleanedToken = token ? token.replace(/['"]+/g, "") : null;
@@ -70,6 +78,7 @@ const CommerceRegistrationForm = () => {
       .registerCommerce(formData, cleanedToken)
       .then((data) => {
         console.log(data);
+        setSuccess("Commerce inscrit avec succès");
         navigate("/admin/home");
       })
       .catch((error) => {
@@ -88,10 +97,17 @@ const CommerceRegistrationForm = () => {
     }, 5000);
   }
 
+  if (success) {
+    setTimeout(() => {
+      setSuccess(null);
+    }, 5000);
+  }
+
   return (
-    <>
+    <div>
       {error && <Alert color="failure">{error.message}</Alert>}
-      <div className="flex flex-wrap justify-center my-6 mx-12">
+      {success && <Alert color="success">{success}</Alert>}
+      <div>
         <Formik
           initialValues={initialCommerce}
           validationSchema={Yup.object({
@@ -129,8 +145,11 @@ const CommerceRegistrationForm = () => {
             isSubmitting,
             setFieldValue,
           }) => (
-            <form onSubmit={handleSubmit}>
-              <div className="flex max-w-full w-full flex-col gap-4">
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col md:flex-row md:space-x-4 my-6 mx-12"
+            >
+              <div className="flex-1">
                 <div>
                   <div className="mb-2 block">
                     <Label htmlFor="commerceName">Nom du commerce</Label>
@@ -188,7 +207,34 @@ const CommerceRegistrationForm = () => {
                     className="text-red-500 text-xs"
                   />
                 </div>
-
+                <div>
+                  <div className="mb-2 block">
+                    <Label htmlFor="commerceType">Type de commerce</Label>
+                  </div>
+                  <Select
+                    id="commerceType"
+                    error={errors.commerceType}
+                    fieldtouched={touched.commerceType?.toString()}
+                    onChange={handleChange}
+                  >
+                    <option value="">Choix du type de commerce</option>
+                    {commerceTypes.map((type) => (
+                      <option
+                        key={type.commerceTypeId}
+                        value={type.commerceTypeId}
+                      >
+                        {type.label}
+                      </option>
+                    ))}
+                  </Select>
+                  <ErrorMessage
+                    name="commerceType"
+                    component="div"
+                    className="text-red-500 text-xs"
+                  />
+                </div>
+              </div>
+              <div className="flex-1">
                 <div>
                   <div className="mb-2 block">
                     <Label htmlFor="street">Rue</Label>
@@ -208,7 +254,6 @@ const CommerceRegistrationForm = () => {
                     className="text-red-500 text-xs"
                   />
                 </div>
-
                 <div>
                   <div className="mb-2 block">
                     <Label htmlFor="city">Ville</Label>
@@ -228,7 +273,6 @@ const CommerceRegistrationForm = () => {
                     className="text-red-500 text-xs"
                   />
                 </div>
-
                 <div>
                   <div className="mb-2 block">
                     <Label htmlFor="postalCode">Code postal</Label>
@@ -248,39 +292,11 @@ const CommerceRegistrationForm = () => {
                     className="text-red-500 text-xs"
                   />
                 </div>
-
-                <div>
-                  <div className="mb-2 block">
-                    <Label htmlFor="commerceType">Type de commerce</Label>
-                  </div>
-                  <Select
-                    id="commerceType"
-                    error={errors.commerceType}
-                    fieldtouched={touched.commerceType?.toString()}
-                    onChange={handleChange}
-                  >
-                    <option value="">Choisir un type de commerce</option>
-                    {commerceTypes.map((type) => (
-                      <option
-                        key={type.commerceTypeId}
-                        value={type.commerceTypeId}
-                      >
-                        {type.label}
-                      </option>
-                    ))}
-                  </Select>
-                  <ErrorMessage
-                    name="commerceType"
-                    component="div"
-                    className="text-red-500 text-xs"
-                  />
-                </div>
-
                 <div>
                   <div className="mb-2 block">
                     <Label htmlFor="multipartFile">Image</Label>
                   </div>
-                  <TextInput
+                  <FileInput
                     id="multipartFile"
                     type="file"
                     placeholder="Image"
@@ -301,7 +317,7 @@ const CommerceRegistrationForm = () => {
                   />
                 </div>
                 <Button
-                  className="mb-2 block bg-shopred w-full justify-center items-center"
+                  className="mt-2 bg-shopred w-full justify-center items-center"
                   type="submit"
                   disabled={isSubmitting}
                 >
@@ -312,7 +328,7 @@ const CommerceRegistrationForm = () => {
           )}
         </Formik>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -3,6 +3,8 @@ import { Sidebar } from "flowbite-react";
 import { HiArrowSmRight } from "react-icons/hi";
 import AddProduct from "../components/AddProduct";
 import MerchantProducts from "../components/merchantProducts";
+import AddPromotion from "../components/AddPromotion";
+import AddCategory from "../components/AddCategory";
 
 const MerchantHome = () => {
   const [task, setTask] = useState("produits");
@@ -24,24 +26,7 @@ const MerchantHome = () => {
             >
               Produits
             </Sidebar.Item>
-            <Sidebar.Item
-              onClick={() => setTask("cadeaux")}
-              icon={HiArrowSmRight}
-              className={`hover:bg-gray-700 hover:cursor-pointer hover:text-white ${
-                task === "cadeaux" ? "bg-gray-700 text-white" : ""
-              }`}
-            >
-              Cadeaux
-            </Sidebar.Item>
-            <Sidebar.Item
-              onClick={() => setTask("commandes")}
-              icon={HiArrowSmRight}
-              className={`hover:bg-gray-700 hover:cursor-pointer hover:text-white ${
-                task === "commandes" ? "bg-gray-700 text-white" : ""
-              }`}
-            >
-              Commandes du jour
-            </Sidebar.Item>
+
             <Sidebar.Item
               onClick={() => setTask("ajouterProduit")}
               icon={HiArrowSmRight}
@@ -51,23 +36,32 @@ const MerchantHome = () => {
             >
               Ajouter un produit
             </Sidebar.Item>
+            <Sidebar.Item
+              onClick={() => setTask("promotion")}
+              icon={HiArrowSmRight}
+              className={`hover:bg-gray-700 hover:cursor-pointer hover:text-white ${
+                task === "promotion" ? "bg-gray-700 text-white" : ""
+              }`}
+            >
+              Ajouter une promotion
+            </Sidebar.Item>
+            <Sidebar.Item
+              onClick={() => setTask("addCategory")}
+              icon={HiArrowSmRight}
+              className={`hover:bg-gray-700 hover:cursor-pointer hover:text-white ${
+                task === "addCategory" ? "bg-gray-700 text-white" : ""
+              }`}
+            >
+              Ajouter une catégorie
+            </Sidebar.Item>
           </Sidebar.ItemGroup>
         </Sidebar.Items>
       </Sidebar>
       <div className="flex-1 p-4">
         {task === "produits" && <MerchantProducts />}
-
-        {task === "cadeaux" && (
-          <div>
-            <h1>Cadeaux</h1>
-          </div>
-        )}
-        {task === "commandes" && (
-          <div>
-            <h1>Commandes du jour</h1>
-          </div>
-        )}
         {task === "ajouterProduit" && <AddProduct />}
+        {task === "promotion" && <AddPromotion />}
+        {task === "addCategory" && <AddCategory />}
       </div>
     </div>
   );

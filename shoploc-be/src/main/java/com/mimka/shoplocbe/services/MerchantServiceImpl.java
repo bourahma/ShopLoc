@@ -15,6 +15,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import com.mimka.shoplocbe.configurations.CustomUserDetails;
 
@@ -30,11 +31,15 @@ public class MerchantServiceImpl implements MerchantService, UserDetailsService 
 
     private final DtoUtil dtoUtil;
 
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Autowired
-    public MerchantServiceImpl(MerchantRepository merchantRepository, RoleRepository roleRepository, DtoUtil dtoUtil) {
+    public MerchantServiceImpl(MerchantRepository merchantRepository, RoleRepository roleRepository, DtoUtil dtoUtil,
+                               BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.merchantRepository = merchantRepository;
         this.roleRepository = roleRepository;
         this.dtoUtil = dtoUtil;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -87,6 +92,8 @@ public class MerchantServiceImpl implements MerchantService, UserDetailsService 
             merchant.setEnabled(true);
             merchant.setCommerce(commerce);
             merchant.setSubscriptionDate(LocalDate.now());
+            merchant.setPassword(this.bCryptPasswordEncoder.encode(merchantDTO.getPassword()));
+
             // Merchant is saved.
             this.merchantRepository.save(merchant);
         }
