@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Sidebar } from "flowbite-react";
 import { HiArrowSmRight } from "react-icons/hi";
-import AddProduct from "./AddProduct";
-import MerchantProducts from "./merchantProducts";
+import AddProduct from "../components/AddProduct";
+import MerchantProducts from "../components/merchantProducts";
 
 const MerchantHome = () => {
   const [task, setTask] = useState("produits");

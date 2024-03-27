@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Sidebar } from "flowbite-react";
-import { HiArrowSmRight, HiUser, HiViewGrid } from "react-icons/hi";
-import CommerceRegistrationForm from "./RegisterCommerce";
-import MerchantRegistrationForm from "./RegisterMerchant";
+import { HiArrowSmRight } from "react-icons/hi";
+import CommerceRegistrationForm from "../components/RegisterCommerce";
+import MerchantRegistrationForm from "../components/RegisterMerchant";
 
-const AdminHomeComponent = () => {
+const AdminHome = () => {
   const [task, setTask] = useState("createCommerce");
 
   const handleLaunchPromo = () => {
@@ -74,4 +74,4 @@ const AdminHomeComponent = () => {
   );
 };
 
-export default AdminHomeComponent;
+export default AdminHome;
