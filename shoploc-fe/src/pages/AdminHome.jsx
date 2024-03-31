@@ -49,7 +49,6 @@ const AdminHome = () => {
           </Sidebar.ItemGroup>
         </Sidebar.Items>
       </Sidebar>
-
       <div className="flex-grow">
         {task === "createCommerce" && <CommerceRegistrationForm />}
         {task === "createMerchant" && <MerchantRegistrationForm />}

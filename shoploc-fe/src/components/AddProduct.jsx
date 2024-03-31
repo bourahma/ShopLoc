@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import commerceService from "../services/commerce";
 import { Formik, ErrorMessage } from "formik";
@@ -11,15 +11,19 @@ import {
   Alert,
   Textarea,
 } from "flowbite-react";
+import useProducts from "../hooks/useProducts";
 
-const AddProduct = () => {
+const AddProduct = ({ commerceId }) => {
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [loading, setLoading] = useState(false);
   const token = localStorage.getItem("userToken");
   const cleanedToken = token ? token.replace(/['"]+/g, "") : null;
 
-  useEffect(() => {
-    // need to fetch the categories and promotions from the server
-  }, [cleanedToken]);
+  const commerceCategoriesResponse = useProducts.useProductsCategories(
+    cleanedToken,
+    commerceId
+  );
 
   const initialProduct = {
     productName: "",
@@ -28,49 +32,30 @@ const AddProduct = () => {
     quantity: 0,
     rewardPointsPrice: 0,
     gift: false,
-    productCategoryLabel: "",
-    multipartFile: null,
     productCategoryId: "",
-    commerceId: "",
-    discountId: "",
-    promotion: "",
-    promotionId: "",
   };
 
   const navigate = useNavigate();
 
   const registerProduct = (values) => {
-    const formData = new FormData();
-    formData.append(
-      "productDto",
-      new Blob(
-        [
-          JSON.stringify({
-            productName: values.productName,
-            description: values.description,
-            price: values.price,
-            quantity: values.quantity,
-            rewardPointsPrice: values.rewardPointsPrice,
-            gift: values.gift,
-            productCategoryLabel: values.productCategoryLabel,
-            productCategoryId: values.productCategoryId,
-            commerceId: values.commerceId,
-            discountId: values.discountId,
-            promotion: values.promotion,
-            promotionId: values.promotionId,
-          }),
-        ],
-        {
-          type: "application/json",
-        }
-      )
-    );
-    formData.append("multipartFile", values.multipartFile);
-
     commerceService
-      .addProduct(formData, cleanedToken, values.commerceId)
+      .addProduct(
+        {
+          productName: values.productName,
+          description: values.description,
+          price: values.price,
+          quantity: values.quantity,
+          rewardPointsPrice: values.rewardPointsPrice,
+          gift: values.gift,
+          productCategoryId: values.productCategoryId,
+          commerceId: commerceId,
+        },
+        cleanedToken,
+        commerceId
+      )
       .then((data) => {
         console.log(data);
+        setSuccess("Produit ajouté avec succès");
         navigate("/merchant/home");
       })
       .catch((error) => {
@@ -89,26 +74,34 @@ const AddProduct = () => {
     }, 5000);
   }
 
+  if (success) {
+    setTimeout(() => {
+      setSuccess(null);
+    }, 5000);
+  }
+
   return (
-    <>
+    <div>
       {error && <Alert color="failure">{error.message}</Alert>}
-      <div className="flex flex-wrap justify-center my-6 mx-12">
+      {success && <Alert color="success">{success}</Alert>}
+      {loading && <Alert color="info">Chargement...</Alert>}
+      <div>
         <Formik
           initialValues={initialProduct}
           validationSchema={Yup.object({
-            productName: Yup.string().required("Required"),
-            description: Yup.string().required("Required"),
-            price: Yup.number().required("Required"),
-            quantity: Yup.number().required("Required"),
-            rewardPointsPrice: Yup.number().required("Required"),
-            gift: Yup.boolean().required("Required"),
-            productCategoryLabel: Yup.string().required("Required"),
-            productCategoryId: Yup.string().required("Required"),
-            commerceId: Yup.string().required("Required"),
-            discountId: Yup.string().required("Required"),
-            promotion: Yup.string().required("Required"),
-            promotionId: Yup.string().required("Required"),
-            multipartFile: Yup.mixed().required("Required"),
+            productName: Yup.string().required("Requis"),
+            description: Yup.string().required("Requis"),
+            price: Yup.number()
+              .required("Requis")
+              .positive("Le prix doit être positif"),
+            quantity: Yup.number()
+              .required("Required")
+              .positive("La quantité doit être positive"),
+            rewardPointsPrice: Yup.number()
+              .required("Required")
+              .positive("Le prix en points de récompense doit être positif"),
+            gift: Yup.boolean().required("Requis"),
+            productCategoryId: Yup.string().required("Requis"),
           })}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             registerProduct(values);
@@ -123,293 +116,176 @@ const AddProduct = () => {
             handleChange,
             handleSubmit,
             isSubmitting,
-            setFieldValue,
           }) => (
-            <form onSubmit={handleSubmit}>
-              <div className="flex flex-wrap flex-row gap-4">
-                <div className="flex max-w-md w-full flex-col gap-4">
-                  <div>
-                    <div className="mb-2 block">
-                      <Label htmlFor="productName">Nom du produit</Label>
-                    </div>
-                    <TextInput
-                      id="productName"
-                      type="text"
-                      placeholder="Nom du produit"
-                      value={values.productName}
-                      error={errors.productName}
-                      fieldtouched={touched.productName?.toString()}
-                      onChange={handleChange}
-                    />
-                    <ErrorMessage
-                      name="productName"
-                      component="div"
-                      className="text-red-500 text-xs"
-                    />
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col md:flex-row md:space-x-4 my-6 mx-12"
+            >
+              <div className="flex-1">
+                <div>
+                  <div className="mb-2 block">
+                    <Label htmlFor="productName">Nom du produit</Label>
                   </div>
-                  <div>
-                    <div className="mb-2 block">
-                      <Label htmlFor="quantity">Quantité</Label>
-                    </div>
-                    <TextInput
-                      id="quantity"
-                      type="number"
-                      placeholder="Quantité"
-                      value={values.quantity}
-                      error={errors.quantity}
-                      fieldtouched={touched.quantity?.toString()}
-                      onChange={handleChange}
-                    />
-                    <ErrorMessage
-                      name="quantity"
-                      component="div"
-                      className="text-red-500 text-xs"
-                    />
+                  <TextInput
+                    id="productName"
+                    type="text"
+                    placeholder="Nom du produit"
+                    value={values.productName}
+                    error={errors.productName}
+                    fieldtouched={touched.productName?.toString()}
+                    onChange={handleChange}
+                  />
+                  <ErrorMessage
+                    name="productName"
+                    component="div"
+                    className="text-red-500 text-xs"
+                  />
+                </div>
+                <div>
+                  <div className="mb-2 block">
+                    <Label htmlFor="quantity">Quantité</Label>
                   </div>
-                  <div>
-                    <div className="mb-2 block">
-                      <Label htmlFor="price">Prix</Label>
-                    </div>
-                    <TextInput
-                      id="price"
-                      type="number"
-                      placeholder="Prix"
-                      value={values.price}
-                      error={errors.price}
-                      fieldtouched={touched.price?.toString()}
-                      onChange={handleChange}
-                    />
-                    <ErrorMessage
-                      name="price"
-                      component="div"
-                      className="text-red-500 text-xs"
-                    />
+                  <TextInput
+                    id="quantity"
+                    type="number"
+                    placeholder="Quantité"
+                    value={values.quantity}
+                    error={errors.quantity}
+                    fieldtouched={touched.quantity?.toString()}
+                    onChange={handleChange}
+                  />
+                  <ErrorMessage
+                    name="quantity"
+                    component="div"
+                    className="text-red-500 text-xs"
+                  />
+                </div>
+                <div>
+                  <div className="mb-2 block">
+                    <Label htmlFor="price">Prix</Label>
                   </div>
-
-                  <div>
-                    <div className="mb-2 block">
-                      <Label htmlFor="description">Description</Label>
-                    </div>
-                    <Textarea
-                      id="description"
-                      type="text"
-                      placeholder="Description"
-                      value={values.description}
-                      error={errors.description}
-                      fieldtouched={touched.description?.toString()}
-                      onChange={handleChange}
-                    />
-                    <ErrorMessage
-                      name="description"
-                      component="div"
-                      className="text-red-500 text-xs"
-                    />
-                  </div>
-
-                  <div>
-                    <div className="mb-2 block">
-                      <Label htmlFor="multipartFile">Image</Label>
-                    </div>
-                    <TextInput
-                      id="multipartFile"
-                      type="file"
-                      placeholder="Image"
-                      accept="image/*"
-                      error={errors.multipartFile}
-                      fieldtouched={touched.multipartFile?.toString()}
-                      onChange={(event) => {
-                        setFieldValue(
-                          "multipartFile",
-                          event.currentTarget.files[0]
-                        );
-                      }}
-                    />
-                    <ErrorMessage
-                      name="multipartFile"
-                      component="div"
-                      className="text-red-500 text-xs"
-                    />
-                  </div>
-
-                  <div>
-                    <div className="mb-2 block">
-                      <Label htmlFor="rewardPointsPrice">
-                        Prix en points de récompense
-                      </Label>
-                    </div>
-                    <TextInput
-                      id="rewardPointsPrice"
-                      type="number"
-                      placeholder="Prix en points de récompense"
-                      value={values.rewardPointsPrice}
-                      error={errors.rewardPointsPrice}
-                      fieldtouched={touched.rewardPointsPrice?.toString()}
-                      onChange={handleChange}
-                    />
-                    <ErrorMessage
-                      name="rewardPointsPrice"
-                      component="div"
-                      className="text-red-500 text-xs"
-                    />
-                  </div>
-
-                  <div>
-                    <div className="mb-2 block">
-                      <Label htmlFor="gift">Cadeau</Label>
-                    </div>
-                    <Select
-                      id="gift"
-                      value={values.gift}
-                      error={errors.gift}
-                      fieldtouched={touched.gift?.toString()}
-                      onChange={handleChange}
-                    >
-                      <option value="true">Oui</option>
-                      <option value="false">Non</option>
-                    </Select>
-                    <ErrorMessage
-                      name="gift"
-                      component="div"
-                      className="text-red-500 text-xs"
-                    />
-                  </div>
+                  <TextInput
+                    id="price"
+                    type="number"
+                    placeholder="Prix"
+                    value={values.price}
+                    error={errors.price}
+                    fieldtouched={touched.price?.toString()}
+                    onChange={handleChange}
+                  />
+                  <ErrorMessage
+                    name="price"
+                    component="div"
+                    className="text-red-500 text-xs"
+                  />
                 </div>
 
-                <div className="flex max-w-md w-full flex-col gap-4">
-                  <div>
-                    <div className="mb-2 block">
-                      <Label htmlFor="productCategoryLabel">Catégorie</Label>
-                    </div>
-                    <TextInput
-                      id="productCategoryLabel"
-                      type="text"
-                      placeholder="Catégorie"
-                      value={values.productCategoryLabel}
-                      error={errors.productCategoryLabel}
-                      fieldtouched={touched.productCategoryLabel?.toString()}
-                      onChange={handleChange}
-                    />
-                    <ErrorMessage
-                      name="productCategoryLabel"
-                      component="div"
-                      className="text-red-500 text-xs"
-                    />
+                <div>
+                  <div className="mb-2 block">
+                    <Label htmlFor="description">Description</Label>
                   </div>
+                  <Textarea
+                    id="description"
+                    type="text"
+                    placeholder="Description"
+                    value={values.description}
+                    error={errors.description}
+                    fieldtouched={touched.description?.toString()}
+                    onChange={handleChange}
+                  />
+                  <ErrorMessage
+                    name="description"
+                    component="div"
+                    className="text-red-500 text-xs"
+                  />
+                </div>
+              </div>
 
-                  <div>
-                    <div className="mb-2 block">
-                      <Label htmlFor="productCategoryId">ID Catégorie</Label>
-                    </div>
-                    <TextInput
-                      id="productCategoryId"
-                      type="text"
-                      placeholder="ID Catégorie"
-                      value={values.productCategoryId}
-                      error={errors.productCategoryId}
-                      fieldtouched={touched.productCategoryId?.toString()}
-                      onChange={handleChange}
-                    />
-                    <ErrorMessage
-                      name="productCategoryId"
-                      component="div"
-                      className="text-red-500 text-xs"
-                    />
+              <div className="flex-1">
+                <div>
+                  <div className="mb-2 block">
+                    <Label htmlFor="rewardPointsPrice">
+                      Prix en points de récompense
+                    </Label>
                   </div>
+                  <TextInput
+                    id="rewardPointsPrice"
+                    type="number"
+                    placeholder="Prix en points de récompense"
+                    value={values.rewardPointsPrice}
+                    error={errors.rewardPointsPrice}
+                    fieldtouched={touched.rewardPointsPrice?.toString()}
+                    onChange={handleChange}
+                  />
+                  <ErrorMessage
+                    name="rewardPointsPrice"
+                    component="div"
+                    className="text-red-500 text-xs"
+                  />
+                </div>
 
-                  <div>
-                    <div className="mb-2 block">
-                      <Label htmlFor="commerceId">ID Commerce</Label>
-                    </div>
-                    <TextInput
-                      id="commerceId"
-                      type="text"
-                      placeholder="ID Commerce"
-                      value={values.commerceId}
-                      error={errors.commerceId}
-                      fieldtouched={touched.commerceId?.toString()}
-                      onChange={handleChange}
-                    />
-                    <ErrorMessage
-                      name="commerceId"
-                      component="div"
-                      className="text-red-500 text-xs"
-                    />
+                <div>
+                  <div className="mb-2 block">
+                    <Label htmlFor="gift">Cadeau</Label>
                   </div>
-
-                  <div>
-                    <div className="mb-2 block">
-                      <Label htmlFor="discountId">ID Réduction</Label>
-                    </div>
-                    <TextInput
-                      id="discountId"
-                      type="text"
-                      placeholder="ID Réduction"
-                      value={values.discountId}
-                      error={errors.discountId}
-                      fieldtouched={touched.discountId?.toString()}
-                      onChange={handleChange}
-                    />
-                    <ErrorMessage
-                      name="discountId"
-                      component="div"
-                      className="text-red-500 text-xs"
-                    />
-                  </div>
-
-                  <div>
-                    <div className="mb-2 block">
-                      <Label htmlFor="promotion">Promotion</Label>
-                    </div>
-                    <TextInput
-                      id="promotion"
-                      type="text"
-                      placeholder="Promotion"
-                      value={values.promotion}
-                      error={errors.promotion}
-                      fieldtouched={touched.promotion?.toString()}
-                      onChange={handleChange}
-                    />
-                    <ErrorMessage
-                      name="promotion"
-                      component="div"
-                      className="text-red-500 text-xs"
-                    />
-                  </div>
-
-                  <div>
-                    <div className="mb-2 block">
-                      <Label htmlFor="promotionId">ID Promotion</Label>
-                    </div>
-                    <TextInput
-                      id="promotionId"
-                      type="text"
-                      placeholder="ID Promotion"
-                      value={values.promotionId}
-                      error={errors.promotionId}
-                      fieldtouched={touched.promotionId?.toString()}
-                      onChange={handleChange}
-                    />
-                    <ErrorMessage
-                      name="promotionId"
-                      component="div"
-                      className="text-red-500 text-xs"
-                    />
-                  </div>
-
-                  <Button
-                    className="mb-2 block bg-shopred w-full justify-center items-center"
-                    type="submit"
-                    disabled={isSubmitting}
+                  <Select
+                    id="gift"
+                    value={values.gift}
+                    error={errors.gift}
+                    fieldtouched={touched.gift?.toString()}
+                    onChange={handleChange}
                   >
-                    Ajouter
-                  </Button>
+                    <option value="true">Oui</option>
+                    <option value="false">Non</option>
+                  </Select>
+                  <ErrorMessage
+                    name="gift"
+                    component="div"
+                    className="text-red-500 text-xs"
+                  />
                 </div>
+
+                <div>
+                  <div className="mb-2 block">
+                    <Label htmlFor="productCategoryId">Catégorie</Label>
+                  </div>
+                  <Select
+                    id="productCategoryId"
+                    value={values.productCategoryId}
+                    error={errors.productCategoryId}
+                    fieldtouched={touched.productCategoryId?.toString()}
+                    onChange={handleChange}
+                  >
+                    <option value="">Choisir une catégorie</option>
+                    {commerceCategoriesResponse.data?.map((category) => (
+                      <option
+                        key={category.productCategoryId}
+                        value={category.productCategoryId}
+                      >
+                        {category.label}
+                      </option>
+                    ))}
+                  </Select>
+                  <ErrorMessage
+                    name="productCategoryId"
+                    component="div"
+                    className="text-red-500 text-xs"
+                  />
+                </div>
+
+                <Button
+                  className="mt-2 block bg-shopred w-full justify-center items-center"
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  Ajouter
+                </Button>
               </div>
             </form>
           )}
         </Formik>
       </div>
-    </>
+    </div>
   );
 };
 

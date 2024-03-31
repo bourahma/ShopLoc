@@ -21,7 +21,6 @@ const addProduct = async (product, token, commerceId) => {
     {
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data",
       },
     }
   );
@@ -76,6 +75,23 @@ const fetchCommerce = async (token, commerceId) => {
   }
 };
 
+const getCommerceId = async (token, merchantId) => {
+  try {
+    const response = await axios.get(
+      `${SERVER_URL}/${baseUrl}/merchant/${merchantId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching commerce: ", error);
+    throw error;
+  }
+};
+
 const fetchCommerces = async (token) => {
   try {
     const response = await axios.get(`${SERVER_URL}/${baseUrl}/`, {
@@ -97,6 +113,7 @@ const commerceService = {
   fetchMerchantProducts,
   fetchCommerce,
   fetchCommerces,
+  getCommerceId,
 };
 
 export default commerceService;

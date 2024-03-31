@@ -1,12 +1,21 @@
 import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { Checkbox, Table, TextInput } from "flowbite-react";
-import useMerchantProducts from "../hooks/useMerchantProducts";
+import useProducts from "../hooks/useProducts";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  useLocation,
+} from "react-router-dom";
+import ProductDetails from "./ProductDetails";
 
 const MerchantProducts = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const token = localStorage.getItem("userToken");
   const cleanedToken = token ? token.replace(/['"]+/g, "") : null;
+
+  let { pathname } = useLocation();
 
   // Decode the token
   let decoded = jwtDecode(cleanedToken);
@@ -14,7 +23,7 @@ const MerchantProducts = () => {
   // Get the merchant ID
   let merchantId = decoded.userId;
 
-  const { isLoading, isError, error, data } = useMerchantProducts(
+  const { isLoading, isError, error, data } = useProducts.useMerchantProducts(
     cleanedToken,
     merchantId
   );
@@ -70,17 +79,21 @@ const MerchantProducts = () => {
                 </Table.Cell>
                 <Table.Cell>{product.price} €</Table.Cell>
                 <Table.Cell>
-                  <a
-                    href="#"
+                  <Link
+                    to={`${url}/${product.productId}`}
                     className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
                   >
-                    Modifier
-                  </a>
+                    Détails
+                  </Link>
                 </Table.Cell>
               </Table.Row>
             ))}
         </Table.Body>
       </Table>
+
+      <Route path={`${path}/:productId`}>
+        <ProductDetails />
+      </Route>
     </div>
   );
 };

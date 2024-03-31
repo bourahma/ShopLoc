@@ -1,12 +1,16 @@
-import fetchCommerces from "../services/commerceService";
 import { useQuery } from "@tanstack/react-query";
+import commerceService from "../services/commerce";
 
-const useConcert = (id) => {
+const useCommerceId = (token, merchantId) => {
   return useQuery({
-    queryKey: ["concerts", id],
-    queryFn: () => concertService.getConcertById(id),
-    enabled: !!id,
+    queryKey: ["commerceId", merchantId, token],
+    queryFn: () => commerceService.getCommerceId(token, merchantId),
+    enabled: !!merchantId,
   });
 };
 
-export default useConcert;
+const useCommerces = {
+  useCommerceId,
+};
+
+export default useCommerces;

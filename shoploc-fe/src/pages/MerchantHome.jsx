@@ -5,15 +5,49 @@ import AddProduct from "../components/AddProduct";
 import MerchantProducts from "../components/merchantProducts";
 import AddPromotion from "../components/AddPromotion";
 import AddCategory from "../components/AddCategory";
+import useCommerces from "../hooks/useCommerces";
+import { jwtDecode } from "jwt-decode";
 
 const MerchantHome = () => {
   const [task, setTask] = useState("produits");
+  const [error, setError] = useState(null);
+
+  const token = localStorage.getItem("userToken");
+  const cleanedToken = token ? token.replace(/['"]+/g, "") : null;
+
+  const merchantId = jwtDecode(cleanedToken).userId;
+
+  const commerceIdResponse = useCommerces.useCommerceId(
+    cleanedToken,
+    merchantId
+  );
+
+  if (commerceIdResponse.isError) {
+    setError(commerceIdResponse.error);
+    console.log("Error fetching commerceId", commerceIdResponse.error);
+  }
+
+  if (commerceIdResponse.isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (commerceIdResponse.isSuccess) {
+    console.log("commerceId", commerceIdResponse.data);
+  }
+
+  if (error) {
+    setTimeout(() => {
+      setError(null);
+    }, 5000);
+  }
 
   return (
-    <div className="flex flex-wrap flex-row">
+    <div className="flex flex-col sm:flex-row">
+      {error && <div>Error: {error.message}</div>}
+
       <Sidebar
         aria-label="Main navigation"
-        className="bg-gray-800 text-gray-400 shadow-lg"
+        className="bg-gray-800 text-gray-400 shadow-lg flex-none"
       >
         <Sidebar.Items>
           <Sidebar.ItemGroup>
@@ -57,11 +91,17 @@ const MerchantHome = () => {
           </Sidebar.ItemGroup>
         </Sidebar.Items>
       </Sidebar>
-      <div className="flex-1 p-4">
+      <div className="flex-grow">
         {task === "produits" && <MerchantProducts />}
-        {task === "ajouterProduit" && <AddProduct />}
-        {task === "promotion" && <AddPromotion />}
-        {task === "addCategory" && <AddCategory />}
+        {task === "ajouterProduit" && commerceIdResponse.isSuccess && (
+          <AddProduct commerceId={commerceIdResponse.data} />
+        )}
+        {task === "promotion" && commerceIdResponse.isSuccess && (
+          <AddPromotion commerceId={commerceIdResponse.data} />
+        )}
+        {task === "addCategory" && commerceIdResponse.isSuccess && (
+          <AddCategory commerceId={commerceIdResponse.data} />
+        )}
       </div>
     </div>
   );
