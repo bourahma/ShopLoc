@@ -17,6 +17,7 @@ const CommerceCard = ({ commercant }) => {
                 className="h-48 w-full object-cover "
                 src={commercant.imageUrl}
                 alt={commercant.imageUrl}
+                width="100"
             />
             <div className="px-2 pt-4">
                 <div className="font-bold text-xl mb-2">

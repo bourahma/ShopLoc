@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "flowbite-react";
 import { useCart } from "../services/CartContext";
@@ -17,9 +16,7 @@ const Cart = () => {
         addToCart,
         decreaseQuantity,
     } = useCart();
-
-
-
+     
     return (
         <div className="container mx-auto my-8 px-12">
             <h2 className="text-3xl font-semibold mb-4">Panier</h2>
@@ -101,8 +98,11 @@ const Cart = () => {
                             </Button>
                         </div>
                         <div className="flex justify-center">
-
-                        <img src={paymentMethods} alt="" className="h-42 w-3/4 mt-20 mb-3" />
+                            <img
+                                src={paymentMethods}
+                                alt=""
+                                className="h-42 w-3/4 mt-20 mb-3"
+                            />
                         </div>
                         <Link to="/checkout" className="w-full">
                             <button className="bg-blue-500 text-white px-4 py-2 rounded mt-4 w-full">
