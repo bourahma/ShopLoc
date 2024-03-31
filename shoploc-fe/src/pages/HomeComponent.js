@@ -69,36 +69,19 @@ function HomeComponent() {
 
     // console.log(filteredCommercants);
     return (
-        <div className="grid md:grid-cols-12 grid-cols-3 md:gap-12 gap-4 my-12 mx-auto">
-            <div className="md:col-span-3 col-span-3 relative flex flex-col rounded">
+        <div className="grid md:grid-cols-12 grid-cols-3 md:gap-6 gap-4 my-12 mx-auto">
+            <div className="md:col-span-4 col-span-3 relative flex flex-col rounded">
+                <div className="rounded mb-3 pl-2">
+                    <Map height="400px" commerces={commercants} />
+                </div>
                 <NewsSlider />
             </div>
-            <div className="md:col-span-9 col-span-3 container px-4 mx-auto by-8">
-                <div className="grid md:grid-cols-4 gap-x-4 gap-y-8">
-                    <div className="md:col-span-4 rounded">
-                        <Map height="150px" commerces={commercants} />
-                    </div>
-                    <h1 className="md:col-span-4 text-xl font-bold mb-1">
-                        Les commerces
-                    </h1>
-                    <div className="md:col-span-4 mb w-full">
-                        <input
-                            type="text"
-                            placeholder="Rechercher un commerce..."
-                            className="p-2 border border-gray-300 rounded w-full"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                    </div>
-                    <div className="md:col-span-4 mb-4 w-full flex flex-1 items-center justify-between">
-                        <CommerceFilters
-                            distance={distance}
-                            onDistanceChange={setDistance}
-                            onOpenNowChange={setIsOpenNow}
-                        />
-                        <div className="md:col-span-4 mb-4 w-full flex flex-1 items-center justify-between">
+            <div className="md:col-span-8 col-span-3 container px-4 mx-auto by-8">
+                <div className="grid md:grid-cols-4 gap-x-4 gap-y-4">
+                    <div className="md:col-span-4 w-full flex items-center justify-between gap-4 ">
+                        <div className="md:col-span-4 w-full flex flex-1 items-center justify-between">
                             <select
-                                className="p-2 border border-gray-300 rounded"
+                                className="p-2 border border-shopred rounded bg-shopgray"
                                 value={selectedType}
                                 onChange={handleTypeChange}
                             >
@@ -115,6 +98,20 @@ function HomeComponent() {
                                 ))}
                             </select>
                         </div>
+                        <input
+                            type="text"
+                            placeholder="Rechercher un commerce..."
+                            className="px-2 border border-shopred rounded w-full bg-shopgray"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </div>
+                    <div className="md:col-span-4 mb-2 w-full flex flex-1 items-center justify-between">
+                        <CommerceFilters
+                            distance={distance}
+                            onDistanceChange={setDistance}
+                            onOpenNowChange={setIsOpenNow}
+                        />
                     </div>
 
                     {filteredCommercants.length === 0 ? (

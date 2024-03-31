@@ -58,10 +58,10 @@ const ProfilePage = () => {
 
     return (
         <div className="container mx-auto py-8">
-            <div className="max-w-md mx-auto bg-white rounded-lg overflow-hidden shadow-lg">
+            <div className="max-w-md mx-auto bg-shopgray  border border-shopred rounded-lg overflow-hidden">
                 <div className="p-4">
                     <div className="flex items-center justify-center">
-                        <FaUser className="text-4xl text-gray-600 mr-2" />
+                        <FaUser className="text-3xl text-shopred mr-2" />
                         <h2 className="text-2xl font-bold">
                             Profile Information
                         </h2>
@@ -69,16 +69,16 @@ const ProfilePage = () => {
                     {customerData && (
                         <div className="mt-4">
                             <p className="text-gray-800">
-                                <span className="font-semibold">Name:</span>
+                                <span className="font-semibold">Name :</span>
                                 {customerData.firstname} {customerData.lastname}
                             </p>
                             <p className="text-gray-800">
-                                <span className="font-semibold">Email:</span>
+                                <span className="font-semibold">Email :</span>
                                 {customerData.email}
                             </p>
                             <p className="text-gray-800">
                                 <span className="font-semibold">
-                                    Phone Number:
+                                    Phone Number :
                                 </span>
                                 {customerData.phoneNumber}
                             </p>
@@ -86,7 +86,7 @@ const ProfilePage = () => {
                     )}
                 </div>
             </div>
-            <div className="max-w-md mx-auto mt-8 bg-white rounded-lg overflow-hidden shadow-lg p-4">
+            <div className="max-w-md mx-auto mt-8 bg-shopgray  border border-shopred rounded-lg overflow-hidden p-4">
                 <div className="flex items-center justify-center mb-4">
                     <FaStar className="text-yellow-500 text-4xl mr-2" />
                     <h2 className="text-2xl font-bold">Loyalty Card</h2>
@@ -107,12 +107,12 @@ const ProfilePage = () => {
                     </div>
                 </div>
             </div>
-            <div className="max-w-md mx-auto mt-8 bg-white rounded-lg overflow-hidden shadow-lg">
+            <div className="max-w-md mx-auto mt-8 bg-shopgray  border border-shopred rounded-lg overflow-hidden">
                 <div className="p-4">
                     <div className="flex items-center justify-center">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            className="h-10 w-10 text-gray-600 mr-2"
+                            className="h-10 w-10 text-shopred mr-2"
                             viewBox="0 0 20 20"
                             fill="currentColor"
                         >
@@ -131,7 +131,7 @@ const ProfilePage = () => {
             </div>
 
             {showQRCode && (
-                <div className="max-w-md mx-auto mt-8 bg-white rounded-lg overflow-hidden shadow-lg">
+                <div className="max-w-md mx-auto mt-8 bg-shopgray  border border-shopred rounded-lg overflow-hidden">
                     <div className="p-4">
                         <div className="flex items-center justify-center">
                             <h2 className="text-2xl font-bold">QR Code</h2>
@@ -147,7 +147,7 @@ const ProfilePage = () => {
                     className={`py-2 px-4 rounded ${
                         showQRCode
                             ? "bg-gray-400 cursor-not-allowed"
-                            : "bg-blue-500 hover:bg-blue-700"
+                            : "bg-shopred hover:bg-red-700"
                     } text-white font-bold`}
                     onClick={handleGenerateQRCode}
                     disabled={showQRCode}

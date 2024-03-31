@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import commerceService from "../services/commerce";
 import productSample from "../images/productSample.png";
 import { useCart } from "../services/CartContext";
+import RatingStars from "../components/RatingStars";
 
 const Product = () => {
     const { commercantId } = useParams();
@@ -55,7 +56,7 @@ const Product = () => {
         );
     }
 
-    console.log(categories);
+    console.log(products);
 
     // Filter products based on the selected category
     const filteredProducts = products.filter((product) => {
@@ -82,10 +83,10 @@ const Product = () => {
     };
 
     return (
-        <div className="container mx-auto my-8 px-12">
-            <div className="flex items-center mb-4">
+        <div className="container grid grid-cols-12 gap-10 mx-auto my-8 px-12">
+            <div className="col-span-2">
                 <button
-                    className="bg-gray-800 text-white rounded-md border-r border-gray-100 py-2 hover:bg-red-700 hover:text-white px-3 mr-4"
+                    className="flex bg-shopred w-full text-center items-center text-white rounded-md border-r border-gray-100 py-2 hover:bg-red-700 hover:text-white px-3 mr-4"
                     onClick={handleBackButtonClick}
                 >
                     <svg
@@ -105,115 +106,141 @@ const Product = () => {
                 <img
                     src={commerce.imageUrl}
                     alt={commerce.commerceName}
-                    className="w-16 h-16 object-cover rounded-full mr-4"
+                    className="w-full object-cover mt-4"
                 />
                 <div>
-                    <h1 className="text-2xl font-semibold">
+                    <h1 className="text-lg font-bold text-center mt-3 bg-shopgray px-1 py-2">
                         {commerce.commerceName}
                     </h1>
                 </div>
-                <div className="px-6 flex-1">
-                    <input
-                        type="text"
-                        placeholder="Rechercher un produit..."
-                        className="p-2 border border-gray-300 rounded w-full"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
+                <div className="bg-shopgray px-1 py-2 mt-3">
+                    <RatingStars rating={4} />
                 </div>
-                <div className="px-6 flex-1">
-                    <select
-                        className="p-2 border border-gray-300 rounded"
-                        value={selectedCategory}
-                        onChange={(e) => setSelectedCategory(e.target.value)}
-                    >
-                        <option value="">Toutes les catégories</option>
-                        {categories.map((category) => (
-                            <option
-                                key={category.productCategoryId}
-                                value={category.label}
-                            >
-                                {category.label}
-                            </option>
-                        ))}
-                    </select>
+                <div className="bg-shopgray px-1 py-2 mt-3 text-sm font-semibold">
+                    <p>
+                        {commerce.addressDTO.street}, {commerce.addressDTO.city}
+                    </p>
+                    <p>
+                        {commerce.openingHour}-{commerce.closingHour}
+                    </p>
                 </div>
             </div>
-            <h2 className="text-xl font-semibold mb-4">Produits</h2>
-            <div className="grid md:grid-cols-4 gap-4">
-                {filteredProducts.length === 0 ? (
-                    <p className="text-red-500 font-bold">
-                        Aucun produit trouvé
-                    </p>
-                ) : (
-                    filteredProducts.map((produit) => (
-                        <div
-                            key={produit.productId}
-                            className="border border-gray-300 rounded overflow-hidden relative"
+            <div className="col-span-10">
+                <div className="flex items-center mb-4 flex-1 gap-6">
+                    <div className="">
+                        <select
+                            className="p-2 border border-shopred rounded bg-shopgray"
+                            value={selectedCategory}
+                            onChange={(e) =>
+                                setSelectedCategory(e.target.value)
+                            }
                         >
-                            <img
-                                src={productSample}
-                                alt={produit.productName}
-                                className="w-full h-48 object-cover"
-                            />
-                            {showOverlay && produit.promotion && (
-                                <div className="absolute inset-0 bg-red-500 opacity-75 flex items-center justify-center text-white">
-                                    <div className="text-center">
+                            <option value="">Toutes les catégories</option>
+                            {categories.map((category) => (
+                                <option
+                                    key={category.productCategoryId}
+                                    value={category.label}
+                                >
+                                    {category.label}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="flex-1">
+                        <input
+                            type="text"
+                            placeholder="Rechercher un produit..."
+                            className="p-2 border border-shopred rounded w-full bg-shopgray"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </div>
+                </div>
+                <div className="grid md:grid-cols-4 gap-4">
+                    {filteredProducts.length === 0 ? (
+                        <p className="text-red-500 font-bold">
+                            Aucun produit trouvé
+                        </p>
+                    ) : (
+                        filteredProducts.map((produit) => (
+                            <div
+                                key={produit.productId}
+                                className="border border-gray-300 rounded overflow-hidden relative "
+                            >
+                                <div className="relative">
+                                    <img
+                                        src={productSample}
+                                        alt={produit.productName}
+                                        className="w-full h-40 object-cover bg-shopgray"
+                                    />
+                                    {showOverlay && produit.promotion && (
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <div className="absolute inset-0 bg-yellow-500 opacity-75"></div>
+                                            <div className="relative text-white text-center">
+                                                <button
+                                                    className="absolute top-[-40px] right-0 m-2 text-white"
+                                                    onClick={toggleOverlay}
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        className="h-6 w-6"
+                                                        fill="none"
+                                                        viewBox="0 0 24 24"
+                                                        stroke="currentColor"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth={2}
+                                                            d="M6 18L18 6M6 6l12 12"
+                                                        />
+                                                    </svg>
+                                                </button>
+                                                <p className="text-lg font-bold mb-2">
+                                                    {
+                                                        produit.promotion
+                                                            .description
+                                                    }
+                                                </p>
+                                                <p className="text-sm">
+                                                    Fin de la promotion:{" "}
+                                                    {produit.promotion.endDate}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="px-4 py-2 mt-3 bg-shopgray">
+                                    <h3 className="text-lg font-semibold">
+                                        {produit.productName}
+                                    </h3>
+                                    <p className="text-gray-600">
+                                        {produit.description}
+                                    </p>
+                                    <p className="text-gray-700 mb-2">
+                                        {produit.quantity > 0
+                                            ? `${produit.quantity} produits restants`
+                                            : "Produit indisponible"}
+                                    </p>
+                                    <div className="flex items-center justify-between">
+                                        <p className="text-gray-700">
+                                            Prix: {produit.price.toFixed(2)} €
+                                        </p>
                                         <button
-                                            className="absolute top-0 right-0 m-2 text-white"
-                                            onClick={toggleOverlay}
+                                            className="bg-blue-500 text-white px-4 py-1 rounded-xs bg-shopred"
+                                            onClick={() =>
+                                                handleAddToCart(produit)
+                                            }
                                         >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                className="h-6 w-6"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    d="M6 18L18 6M6 6l12 12"
-                                                />
-                                            </svg>
+                                            Ajouter au panier
                                         </button>
-                                        <p className="text-lg font-bold mb-2">
-                                            {produit.promotion.description}
-                                        </p>
-                                        <p className="text-sm">
-                                            Fin de la promotion:{" "}
-                                            {produit.promotion.endDate}
-                                        </p>
                                     </div>
                                 </div>
-                            )}
-
-                            <div className="p-4">
-                                <h3 className="text-lg font-semibold mb-2">
-                                    {produit.productName}
-                                </h3>
-                                <p className="text-gray-600 mb-2">
-                                    {produit.description}
-                                </p>
-                                <p className="text-gray-700">
-                                    Prix: {produit.price.toFixed(2)} €
-                                </p>
-                                <p className="text-gray-700">
-                                    {produit.quantity > 0
-                                        ? `${produit.quantity} produits restants`
-                                        : "Produit indisponible"}
-                                </p>
-                                <button
-                                    className="bg-blue-500 mt-2 text-white px-4 py-2 rounded"
-                                    onClick={() => handleAddToCart(produit)}
-                                >
-                                    Ajouter au panier
-                                </button>
                             </div>
-                        </div>
-                    ))
-                )}
+                        ))
+                    )}
+                </div>
             </div>
         </div>
     );
