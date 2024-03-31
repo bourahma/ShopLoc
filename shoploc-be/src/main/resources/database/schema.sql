@@ -188,6 +188,26 @@ CREATE TABLE Product_Category
     FOREIGN KEY (commerce_id) REFERENCES Commerce (commerce_id)
 );
 
+-- Create Promotion Table :
+CREATE TABLE Promotion
+(
+    promotion_id INT DEFAULT nextval('promotion_sequence') PRIMARY KEY,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    type VARCHAR(255) NOT NULL,
+    commerce_id INT NOT NULL,
+
+    -- For discount promotion type :
+    discount_percent INT,
+
+    -- For Offer promotion type :
+    required_items INT,
+    offered_items INT,
+
+    FOREIGN KEY (commerce_id) REFERENCES Commerce (commerce_id)
+);
+
 -- Create the Product Table :
 CREATE TABLE Product
 (
@@ -198,36 +218,15 @@ CREATE TABLE Product
     quantity integer NOT NULL,
     reward_points_price NUMERIC(10,2),
     is_gift BOOLEAN NOT NULL,
-    discount_id INT,
+    promotion_id INT,
     commerce_id INT,
     view INT,
     image_url VARCHAR(255),
     product_category_id INT NOT NULL,
 
+    FOREIGN KEY (promotion_id) REFERENCES Promotion(promotion_id),
     FOREIGN KEY (product_category_id) REFERENCES Product_Category(product_category_id),
     FOREIGN KEY (commerce_id) REFERENCES Commerce(commerce_id)
-);
-
--- Create Promotion Table :
-CREATE TABLE Promotion
-(
-    promotion_id INT DEFAULT nextval('promotion_sequence') PRIMARY KEY,
-    start_date DATE NOT NULL,
-    end_date DATE NOT NULL,
-    description VARCHAR(255) NOT NULL,
-    type VARCHAR(255) NOT NULL,
-    commerce_id INT NOT NULL,
-    product_id INT UNIQUE,
-
-    -- For discount promotion type :
-    discount_percent INT,
-
-    -- For Offer promotion type :
-    required_items INT,
-    offered_items INT,
-
-    FOREIGN KEY (product_id) REFERENCES Product(product_id),
-    FOREIGN KEY (commerce_id) REFERENCES Commerce (commerce_id)
 );
 
 -- Create Promotion_History Table :
@@ -239,7 +238,6 @@ CREATE TABLE Promotion_History
     description VARCHAR(255) NOT NULL,
     type VARCHAR(255) NOT NULL,
     commerce_id INT,
-    product_id INT NOT NULL,
 
     -- For discount promotion type :
     discount_percent INT,
@@ -248,7 +246,6 @@ CREATE TABLE Promotion_History
     required_items INT,
     offered_items INT,
 
-    FOREIGN KEY (product_id) REFERENCES Product(product_id),
     FOREIGN KEY (commerce_id) REFERENCES Commerce (commerce_id)
 );
 

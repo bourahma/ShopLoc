@@ -94,21 +94,33 @@ VALUES
     (11, 5, 'Viennoiseries', 'Délicieuses viennoiseries.'),
     (12, 8, 'Graines', 'Sélection de grains de café.');
 
--- Product's insertion :
-INSERT INTO Product (product_id, product_name, description, price, quantity, reward_points_price, is_gift, discount_id, commerce_id, product_category_id, view)
+-- Sample data for Promotion_History table
+INSERT INTO Promotion_History (promotion_history_id, start_date, end_date, description, type, commerce_id, discount_percent, required_items, offered_items)
 VALUES
-    (1, 'Pain au levain', 'Délicieux pain croustillant', 3.50, 150, 3, TRUE, 0, 1, 1, 12),
-    (2, 'Croissant aux amandes', 'Feuilleté et garni d''amandes', 2.75, 100, 2, TRUE, 2, 8, 4, 45),
-    (3, 'Tarte aux fruits', 'Tarte aux fruits de saison', 12.99, 20, 12, TRUE, 1, 5, 5, 15),
-    (4, 'Baguette traditionnelle', 'Baguette française classique', 1.99, 200, 1, FALSE, 1, 1, 1, 12),
-    (5, 'Éclair au chocolat', 'Éclair garni de crème pâtissière au chocolat', 4.50, 50, 4, TRUE, 1, 5, 5, 35),
-    (6, 'Bouquet de Roses', 'Un assortiment de roses', 19.99, 50, 19, FALSE, 1, 6, 6, 56),
-    (7, 'Lys en Pot', 'Lys blanc dans un pot élégant', 24.99, 30, 24, TRUE, 1, 6, 7, 78),
-    (8, 'Bougeoir en Bois', 'Bougeoir fait à la main en bois', 29.99, 40, 20, FALSE, 1, 4, 7, 89),
-    (9, 'Plateau en Bois', 'Plateau élégant pour servir', 39.99, 25, 30, FALSE, 1, 7, 8, 78),
-    (10, 'Espresso', 'Café fort et concentré', 2.50, 100, 2, TRUE, 1, 2, 9, 78),
-    (11, 'Cappuccino', 'Espresso avec du lait mousseux', 3.50, 80, 3, TRUE, 1, 2, 10, 9),
-    (12, 'Croissant', 'Pâtisserie feuilletée et beurrée', 1.99, 150, 1, TRUE, 1, 5, 11, 86),
+    (nextval('promotion_sequence'), '2023-05-01', '2023-05-15', 'Réduction d été', 'Discount', 6, 20, NULL, NULL);
+
+-- Sample data for Promotion table
+INSERT INTO Promotion (promotion_id,start_date, end_date, description, type, commerce_id, discount_percent, required_items, offered_items)
+VALUES
+    (1, '2024-03-01', '2024-05-15', 'Vente de printemps', 'DISCOUNT', 8, 20, NULL, NULL),
+    (2, '2024-04-01', '2024-04-30', 'Achetez 3, obtenez-en 1 gratuitement', 'OFFER', 1, NULL, 3, 1),
+    (3, '2024-05-01', '2024-05-15', 'Réduction d été', 'DISCOUNT', 6, 15,  NULL, NULL);
+
+-- Product's insertion :
+INSERT INTO Product (product_id, product_name, description, price, quantity, reward_points_price, is_gift, promotion_id, commerce_id, product_category_id, view)
+VALUES
+    (1, 'Pain au levain', 'Délicieux pain croustillant', 3.50, 150, 3, TRUE, 2, 1, 1, 12),
+    (2, 'Croissant aux amandes', 'Feuilleté et garni d''amandes', 2.75, 100, 2, TRUE, NULL, 8, 4, 45),
+    (3, 'Tarte aux fruits', 'Tarte aux fruits de saison', 12.99, 20, 12, TRUE, NULL, 5, 5, 15),
+    (4, 'Baguette traditionnelle', 'Baguette française classique', 1.99, 200, 1, FALSE, NULL, 1, 1, 12),
+    (5, 'Éclair au chocolat', 'Éclair garni de crème pâtissière au chocolat', 4.50, 50, 4, TRUE, NULL, 5, 5, 35),
+    (6, 'Bouquet de Roses', 'Un assortiment de roses', 19.99, 50, 19, FALSE, 3, 6, 6, 56),
+    (7, 'Lys en Pot', 'Lys blanc dans un pot élégant', 24.99, 30, 24, TRUE, NULL, 6, 7, 78),
+    (8, 'Bougeoir en Bois', 'Bougeoir fait à la main en bois', 29.99, 40, 20, FALSE, NULL, 4, 7, 89),
+    (9, 'Plateau en Bois', 'Plateau élégant pour servir', 39.99, 25, 30, FALSE, NULL, 7, 8, 78),
+    (10, 'Espresso', 'Café fort et concentré', 2.50, 100, 2, TRUE, NULL, 2, 9, 78),
+    (11, 'Cappuccino', 'Espresso avec du lait mousseux', 3.50, 80, 3, TRUE, NULL, 2, 10, 9),
+    (12, 'Croissant', 'Pâtisserie feuilletée et beurrée', 1.99, 150, 1, TRUE, NULL, 5, 11, 86),
     (13, 'Grains de café (250g)', 'Grains de café premium pour la préparation à la maison', 12.99, 50, 11, FALSE, 1, 8, 12, 12);
 
 
@@ -169,17 +181,6 @@ VALUES
     (nextval('balance_transaction_sequence'), '123e4567-e89b-12d3-a456-426614174000', '2024-01-29', 'DEBIT', -5.50, 4),
     (nextval('balance_transaction_sequence'), '123e4567-e89b-12d3-a456-426614174000', '2024-01-30', 'CREDIT', 30.00, NULL);
 
--- Sample data for Promotion_History table
-INSERT INTO Promotion_History (promotion_history_id, start_date, end_date, description, type, commerce_id, product_id, discount_percent, required_items, offered_items)
-VALUES
-    (nextval('promotion_sequence'), '2023-05-01', '2023-05-15', 'Réduction d été', 'Discount', 6, 6, 20, NULL, NULL);
-
--- Sample data for Promotion table
-INSERT INTO Promotion (promotion_id,start_date, end_date, description, type, commerce_id, product_id, discount_percent, required_items, offered_items)
-VALUES
-    (nextval('promotion_sequence'), '2024-03-01', '2024-05-15', 'Vente de printemps', 'DISCOUNT', 8, 13, 20, NULL, NULL),
-    (nextval('promotion_sequence'), '2024-04-01', '2024-04-30', 'Achetez 3, obtenez-en 1 gratuitement', 'OFFER', 1, 1, NULL, 3, 1),
-    (nextval('promotion_sequence'), '2024-05-01', '2024-05-15', 'Réduction d été', 'DISCOUNT', 6, 6, 15,  NULL, NULL);
 
 -- Sample data for Promotion table
 INSERT INTO Benefit (benefit_id, benefit_available, description)

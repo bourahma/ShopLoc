@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.Rollback;
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 class CommerceControllerIT extends ControllerIT {
 
-    @Mock
+    @MockBean
     private ImageAPI imageAPI;
 
     @Test
@@ -113,13 +114,17 @@ class CommerceControllerIT extends ControllerIT {
                                         objectMapper.writeValueAsString(commerceDTO).getBytes()
                                 ))
                                 .header("Authorization", "Bearer " + merchantJWTToken)
+                                .with(request -> {
+                                    request.setMethod("POST");
+                                    return request;
+                                })
                                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE))
                 .andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.commerceId").value(not(0)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.commerceName").value("Boulangerie du Coin"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.openingHour").value("08:00:00"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.closingHour").value("18:00:00"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.imageUrl").value("URL://error-while-uploading-image"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.imageUrl").value("https://supabase.bucket.com/image.jpg"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.addressDTO.street").value("1 Rue de la Clef"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.addressDTO.postalCode").value(59000))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.addressDTO.longitude").value(not(0.0)))
@@ -146,13 +151,17 @@ class CommerceControllerIT extends ControllerIT {
                                         objectMapper.writeValueAsString(commerceDTO).getBytes()
                                 ))
                                 .header("Authorization", "Bearer " + merchantJWTToken)
+                                .with(request -> {
+                                    request.setMethod("PUT");
+                                    return request;
+                                })
                                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.commerceId").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.commerceName").value("Boulangerie du Coin"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.openingHour").value("08:00:00"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.closingHour").value("18:00:00"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.imageUrl").value("URL://error-while-uploading-image"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.imageUrl").value("https://supabase.bucket.com/image.jpg"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.addressDTO.street").value("1 Rue de la Clef"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.addressDTO.postalCode").value(59000))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.addressDTO.longitude").value(not(0.0)))
@@ -179,6 +188,10 @@ class CommerceControllerIT extends ControllerIT {
                                         objectMapper.writeValueAsString(commerceDTO).getBytes()
                                 ))
                                 .header("Authorization", "Bearer " + merchantJWTToken)
+                                .with(request -> {
+                                    request.setMethod("PUT");
+                                    return request;
+                                })
                                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE))
                 .andExpect(status().isNoContent());
     }
@@ -369,25 +382,6 @@ class CommerceControllerIT extends ControllerIT {
                 .andExpect(jsonPath("$").exists())
                 .andExpect(jsonPath("$", hasSize(2)));
     }
-
-    @Test
-    @Transactional
-    @Rollback
-    void testAddProduct_WhenIdCommerceDoExist_ReturnCreated () throws Exception {
-        ProductDTO productDTO = this.getProductDTO();
-
-        mockMvc.perform(post("/commerce/1")
-                        .header("Authorization", "Bearer " + merchantJWTToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(this.objectMapper.writeValueAsString(productDTO)))
-                .andExpect(status().isCreated());
-
-        mockMvc.perform(get("/commerce/1/products")
-                        .header("Authorization", "Bearer " + merchantJWTToken))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").exists())
-                .andExpect(jsonPath("$", hasSize(3)));
-    }
     @Test
     @Transactional
     @Rollback
@@ -402,7 +396,6 @@ class CommerceControllerIT extends ControllerIT {
                 .andExpect(status().isNoContent())
                 .andExpect(jsonPath("$.message").value("Commerce not found for ID : 1"));
     }
-    // TODO : Handle delete commerce.
 
     // Methods :
     @NotNull

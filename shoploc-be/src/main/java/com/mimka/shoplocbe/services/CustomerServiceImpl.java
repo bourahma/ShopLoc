@@ -102,6 +102,7 @@ public class CustomerServiceImpl implements CustomerService, UserDetailsService 
             customer.setRole(this.roleRepository.findByRoleId(1L));
             customer.setEnabled(false);
             customer.setSubscriptionDate(LocalDate.now());
+            customer.setFidelityCard(fidelityCard);
             customer.setPassword(this.bCryptPasswordEncoder.encode(customer.getPassword()));
             this.customerRepository.save(customer);
         }
