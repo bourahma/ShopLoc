@@ -76,9 +76,9 @@ public class CommerceFacadeImpl implements CommerceFacade {
     }
 
     @Override
-    public CommerceDTO addProduct(Long commerceId, ProductDTO productDTO) throws CommerceNotFoundException {
+    public CommerceDTO addProduct(Long commerceId, ProductDTO productDTO, MultipartFile multipartFile) throws CommerceNotFoundException {
         Product product = this.productService.createProduct(productDTO);
-        product.setImageUrl(this.imageAPI.uploadImage(productDTO.getMultipartFile()));
+        product.setImageUrl(this.imageAPI.uploadImage(multipartFile));
         Commerce commerce = this.commerceService.addProduct(product, commerceId);
 
         return this.commerceDTOUtil.toCommerceDTO(commerce);

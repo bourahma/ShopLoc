@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface PromotionService {
 
-    Promotion createDiscountPromotion(PromotionDTO promotionDTO, Product product);
+    Promotion createDiscountPromotion(PromotionDTO promotionDTO, Commerce commerce);
 
-    Promotion createOfferPromotion(PromotionDTO promotionDTO, Product product);
+    Promotion createOfferPromotion(PromotionDTO promotionDTO, Commerce commerce);
 
     List<Promotion> getCommercePromotions(Commerce commerce);
 

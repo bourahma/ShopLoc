@@ -1,45 +1,48 @@
 import React, { useState, useEffect } from "react";
-import { useCart } from "../services/CartContext"; 
+import { useCart } from "../services/CartContext";
 import { FaUser, FaStar } from "react-icons/fa";
 import QRCode from "react-qr-code";
+import axios from "axios";
+import { fetchCustomerProfile } from "../services/customer";
+import { fetchLoyaltyCard } from "../services/carteDeFidelite";
+
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 const ProfilePage = () => {
-    const { itemCount } = useCart(); 
+    const { itemCount } = useCart();
+    const [customerData, setCustomerData] = useState(null);
     const [loyaltyPoints, setLoyaltyPoints] = useState(0);
     const [loggedUser, setLoggedUser] = useState(null);
     const [showQRCode, setShowQRCode] = useState(false);
     const [timer, setTimer] = useState(0);
 
+    const token = localStorage.getItem("userToken");
+    const cleanedToken = token.replace(/['"]+/g, "");
+
     useEffect(() => {
-        const loggedUser = window.localStorage.getItem("loggedUser");
-        if (loggedUser) {
-            setLoggedUser(JSON.parse(loggedUser));
-            // Logic for fetching rest of infosss
-        }
+        const fetchProfileData = async () => {
+            const profileData = await fetchCustomerProfile(cleanedToken);
+            if (profileData) {
+                setCustomerData(profileData);
+            }
+        };
+
+        fetchProfileData();
+    }, [cleanedToken]);
+    // console.log(customerData);
+
+    useEffect(() => {
+        const fetchLoyalty = async () => {
+            const loyaltyCredit = await fetchLoyaltyCard(cleanedToken);
+             if (loyaltyCredit) {
+                 setLoyaltyPoints(loyaltyCredit);
+             }
+        };
+
+        fetchLoyalty();
     }, []);
 
-    // Mock function to fetch loyalty points from backend
-    const fetchLoyaltyPoints = async () => {
-        // try {
-        //     // Replace this with your actual API endpoint to fetch loyalty points
-        //     const response = await fetch("/api/loyalty-points", {
-        //         method: "GET",
-        //         headers: {
-        //             Authorization: `Bearer ${loggedUser.token}`,
-        //         },
-        //     });
-        //     const data = await response.json();
-        //     setLoyaltyPoints(data.points);
-        // } catch (error) {
-        //     console.error("Error fetching loyalty points:", error);
-        // }
-    };
-
-    useEffect(() => {
-        if (loggedUser) {
-            fetchLoyaltyPoints();
-        }
-    }, [loggedUser]);
+    console.log(loyaltyPoints)
 
     const handleGenerateQRCode = () => {
         setShowQRCode(true);
@@ -55,52 +58,61 @@ const ProfilePage = () => {
 
     return (
         <div className="container mx-auto py-8">
-            <div className="max-w-md mx-auto bg-white rounded-lg overflow-hidden shadow-lg">
+            <div className="max-w-md mx-auto bg-shopgray  border border-shopred rounded-lg overflow-hidden">
                 <div className="p-4">
                     <div className="flex items-center justify-center">
-                        <FaUser className="text-4xl text-gray-600 mr-2" />
+                        <FaUser className="text-3xl text-shopred mr-2" />
                         <h2 className="text-2xl font-bold">
                             Profile Information
                         </h2>
                     </div>
-                    {loggedUser && (
+                    {customerData && (
                         <div className="mt-4">
                             <p className="text-gray-800">
-                                <span className="font-semibold">Name:</span>{" "}
-                                {loggedUser}
+                                <span className="font-semibold">Name :</span>
+                                {customerData.firstname} {customerData.lastname}
                             </p>
                             <p className="text-gray-800">
-                                <span className="font-semibold">Email:</span>{" "}
-                                {loggedUser.email}
+                                <span className="font-semibold">Email :</span>
+                                {customerData.email}
                             </p>
-                            {/* Add more user information fields as needed */}
+                            <p className="text-gray-800">
+                                <span className="font-semibold">
+                                    Phone Number :
+                                </span>
+                                {customerData.phoneNumber}
+                            </p>
                         </div>
                     )}
                 </div>
             </div>
-            <div className="max-w-md mx-auto mt-8 bg-white rounded-lg overflow-hidden shadow-lg">
-                <div className="p-4">
-                    <div className="flex items-center justify-center">
-                        <FaStar className="text-yellow-500 text-4xl mr-2" />
-                        <h2 className="text-2xl font-bold">Loyalty Card</h2>
+            <div className="max-w-md mx-auto mt-8 bg-shopgray  border border-shopred rounded-lg overflow-hidden p-4">
+                <div className="flex items-center justify-center mb-4">
+                    <FaStar className="text-yellow-500 text-4xl mr-2" />
+                    <h2 className="text-2xl font-bold">Loyalty Card</h2>
+                </div>
+                <div className="flex items-center justify-center">
+                    <div className="text-gray-800 flex items-center justify-center">
+                        <span className="font-semibold text-2xl mr-2">
+                            {loyaltyPoints.points}
+                        </span>
+                        <span className="text-xl">points</span>
                     </div>
-                    <div className="mt-4">
-                        <p className="text-gray-800">
-                            <span className="font-semibold">
-                                Loyalty Points:
-                            </span>{" "}
-                            {loyaltyPoints}
-                        </p>
-                        {/* Add more loyalty card information as needed */}
+                    <div className="text-gray-600 mx-4">=</div>
+                    <div className="text-gray-800 flex items-center justify-center">
+                        <span className="font-semibold text-2xl mr-2">
+                            {(loyaltyPoints.points * 1).toFixed(2)}
+                        </span>
+                        <span className="text-xl">&euro;</span>
                     </div>
                 </div>
             </div>
-            <div className="max-w-md mx-auto mt-8 bg-white rounded-lg overflow-hidden shadow-lg">
+            <div className="max-w-md mx-auto mt-8 bg-shopgray  border border-shopred rounded-lg overflow-hidden">
                 <div className="p-4">
                     <div className="flex items-center justify-center">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            className="h-10 w-10 text-gray-600 mr-2"
+                            className="h-10 w-10 text-shopred mr-2"
                             viewBox="0 0 20 20"
                             fill="currentColor"
                         >
@@ -119,7 +131,7 @@ const ProfilePage = () => {
             </div>
 
             {showQRCode && (
-                <div className="max-w-md mx-auto mt-8 bg-white rounded-lg overflow-hidden shadow-lg">
+                <div className="max-w-md mx-auto mt-8 bg-shopgray  border border-shopred rounded-lg overflow-hidden">
                     <div className="p-4">
                         <div className="flex items-center justify-center">
                             <h2 className="text-2xl font-bold">QR Code</h2>
@@ -135,7 +147,7 @@ const ProfilePage = () => {
                     className={`py-2 px-4 rounded ${
                         showQRCode
                             ? "bg-gray-400 cursor-not-allowed"
-                            : "bg-blue-500 hover:bg-blue-700"
+                            : "bg-shopred hover:bg-red-700"
                     } text-white font-bold`}
                     onClick={handleGenerateQRCode}
                     disabled={showQRCode}
@@ -150,7 +162,3 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
-
-
-
-           

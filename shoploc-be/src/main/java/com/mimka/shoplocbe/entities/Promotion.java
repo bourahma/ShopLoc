@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
@@ -36,9 +37,8 @@ public class Promotion {
     @JoinColumn(name = "commerce_id", referencedColumnName = "commerce_id")
     private Commerce commerce;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @OneToMany(mappedBy = "promotion")
+    private List<Product> products;
 
     @Column(name = "discount_percent")
     private Integer discountPercent;

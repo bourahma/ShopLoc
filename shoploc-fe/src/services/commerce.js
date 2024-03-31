@@ -44,6 +44,25 @@ const fetchProducts = async (token, commerceId) => {
   }
 };
 
+
+const fetchProductsCategories = async (token, commerceId) => {
+    try {
+        const response = await axios.get(
+            `${SERVER_URL}/product/categories/${commerceId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching products categories: ", error);
+        throw error;
+    }
+};
+
+
 const fetchMerchantProducts = async (token, merchantId) => {
   try {
     const response = await axios.get(
@@ -107,6 +126,7 @@ const fetchCommerces = async (token) => {
 };
 
 const commerceService = {
+  fetchProductsCategories,
   registerCommerce,
   addProduct,
   fetchProducts,

@@ -16,18 +16,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PromotionControllerIT extends ControllerIT {
 
     @Test
-    void testGetAllCommercePromotions_ReturnOK () throws Exception {
-        mockMvc.perform(get("/promotion/6")
-                        .header("Authorization", "Bearer " + merchantJWTToken)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$", hasSize(1)));
-    }
-
-    @Test
     void testCreateOfferPromotion_ReturnCreated () throws Exception {
-        mockMvc.perform(post("/promotion/offer")
+        mockMvc.perform(post("/promotion/offer/8")
                         .header("Authorization", "Bearer " + merchantJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(this.getOfferPromotionDTO())))
@@ -36,11 +26,40 @@ class PromotionControllerIT extends ControllerIT {
 
     @Test
     void testCreateDiscountPromotion_ReturnCreated () throws Exception {
-        mockMvc.perform(post("/promotion/discount")
+        mockMvc.perform(get("/promotion/discount/8")
                         .header("Authorization", "Bearer " + merchantJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(this.getDiscountPromotionDTO())))
-                .andExpect(status().isCreated());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    @Test
+    void testGetOfferPromotions_ReturnOK () throws Exception {
+        mockMvc.perform(get("/promotion/offer/1")
+                        .header("Authorization", "Bearer " + merchantJWTToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+
+    @Test
+    void testGetDiscountPromotions_ReturnOK () throws Exception {
+        mockMvc.perform(get("/promotion/offer/8")
+                        .header("Authorization", "Bearer " + merchantJWTToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    @Test
+    void testGetPromotion_ReturnOk () throws Exception {
+        mockMvc.perform(get("/promotion/offer/1")
+                        .header("Authorization", "Bearer " + merchantJWTToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.promotionId").value(1))
+                .andExpect(jsonPath("$.productId").value(1))
+                .andExpect(jsonPath("$.productId").value(1))
+                .andExpect(jsonPath("$.productName").value("Pain au levain"));
     }
 
     @NotNull

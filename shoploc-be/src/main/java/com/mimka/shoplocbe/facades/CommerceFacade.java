@@ -19,7 +19,7 @@ public interface CommerceFacade {
 
     List<ProductDTO> getCommerceProducts (Long commerceId) throws CommerceNotFoundException;
 
-    CommerceDTO addProduct (Long commerceId, ProductDTO productDTO) throws CommerceNotFoundException;
+    CommerceDTO addProduct (Long commerceId, ProductDTO productDTO, MultipartFile multipartFile) throws CommerceNotFoundException;
 
     List<CommerceDTO> getCommerces ();
 

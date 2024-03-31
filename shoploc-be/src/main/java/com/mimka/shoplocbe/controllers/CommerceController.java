@@ -76,13 +76,6 @@ public class CommerceController {
         return this.commerceFacade.getCommerce (commerceId);
     }
 
-    @PostMapping("/{commerceId}")
-    @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAnyAuthority('SCOPE_MERCHANT')")
-    public CommerceDTO addProduct (@PathVariable("commerceId") Long commerceId, @RequestBody @Valid ProductDTO productDTO) throws CommerceNotFoundException {
-        return this.commerceFacade.addProduct (commerceId, productDTO);
-    }
-
     @GetMapping("/{commerceId}/products")
     @PreAuthorize("hasAnyAuthority('SCOPE_CUSTOMER', 'SCOPE_MERCHANT', 'SCOPE_ADMINISTRATOR')")
     public List<ProductDTO> commerceProducts (@PathVariable("commerceId") Long commerceId) throws CommerceNotFoundException {
@@ -97,10 +90,11 @@ public class CommerceController {
         return this.commerceFacade.getCommerceProducts(commerceId);
     }
 
-    @PutMapping("/{commerceId}")
-    @PostMapping(path = "/{commerceId}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PutMapping(path = "/{commerceId}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     @PreAuthorize("hasAnyAuthority('SCOPE_MERCHANT')")
-    public CommerceDTO updateCommerce (@RequestBody @Valid CommerceDTO commerceDTO, @RequestParam("multipartFile") MultipartFile multipartFile, @PathVariable("commerceId") Long commerceId) throws CommerceNotFoundException, CommerceTypeNotFoundException {
+    public CommerceDTO updateCommerce (@RequestPart @Valid CommerceDTO commerceDTO,
+                                       @RequestParam("multipartFile") MultipartFile multipartFile,
+                                       @PathVariable("commerceId") Long commerceId) throws CommerceNotFoundException, CommerceTypeNotFoundException {
         commerceDTO.setCommerceId(commerceId);
         return this.commerceFacade.updateCommerce(commerceDTO, multipartFile);
     }
@@ -108,7 +102,8 @@ public class CommerceController {
     @PostMapping(path = "/", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyAuthority('SCOPE_ADMINISTRATOR')")
-    public CommerceDTO createCommerce (@RequestPart @Valid @NotNull CommerceDTO commerceDTO, @RequestParam("multipartFile") MultipartFile multipartFile) throws CommerceTypeNotFoundException {
+    public CommerceDTO createCommerce (@RequestPart @Valid CommerceDTO commerceDTO,
+                                       @RequestParam("multipartFile") MultipartFile multipartFile) throws CommerceTypeNotFoundException {
         return this.commerceFacade.addCommerce(commerceDTO, multipartFile);
     }
 
