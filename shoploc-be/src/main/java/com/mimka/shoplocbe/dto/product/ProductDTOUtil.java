@@ -49,19 +49,7 @@ public class ProductDTOUtil {
     }
 
     public PromotionDTO toPromotionDTO(Promotion promotion) {
-        PromotionDTO promotionDTO = new PromotionDTO();
-        promotionDTO.setStartDate(promotion.getStartDate());
-        promotionDTO.setEndDate(promotion.getEndDate());
-        promotionDTO.setDescription(promotion.getDescription());
-        promotionDTO.setPromotionType(promotion.getPromotionType());
-        promotionDTO.setLabel(promotion.getLabel());
-        promotionDTO.setSent(promotionDTO.isSent());
-        // Set only the product ID in the PromotionDTO
-        //if (promotion.getProduct() != null) {
-          //  promotionDTO.setProductId(promotion.getProduct().getProductId());
-        //}
-
-        return promotionDTO;
+        return this.modelMapper.map(promotion, PromotionDTO.class);
     }
 
     private void configureMappings() {
