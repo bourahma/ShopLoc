@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import commerceService from "../services/commerce";
+import { useNavigate, useParams } from "react-router-dom";
 import { Formik, ErrorMessage } from "formik";
+import productServices from "../services/product";
 import * as Yup from "yup";
 import {
   Label,
@@ -10,15 +10,17 @@ import {
   Button,
   Alert,
   Textarea,
+  FileInput,
 } from "flowbite-react";
 import useProducts from "../hooks/useProducts";
 
-const AddProduct = ({ commerceId }) => {
+const AddProduct = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-  const [loading, setLoading] = useState(false);
   const token = localStorage.getItem("userToken");
   const cleanedToken = token ? token.replace(/['"]+/g, "") : null;
+
+  const commerceId = useParams().commerceId;
 
   const commerceCategoriesResponse = useProducts.useProductsCategories(
     cleanedToken,
@@ -31,32 +33,44 @@ const AddProduct = ({ commerceId }) => {
     price: 0,
     quantity: 0,
     rewardPointsPrice: 0,
+    view: 0,
     gift: false,
     productCategoryId: "",
+    multipartFile: null,
   };
 
   const navigate = useNavigate();
 
   const registerProduct = (values) => {
-    commerceService
-      .addProduct(
+    const formData = new FormData();
+    formData.append(
+      "productDTO",
+      new Blob(
+        [
+          JSON.stringify({
+            productName: values.productName,
+            description: values.description,
+            price: values.price,
+            quantity: values.quantity,
+            rewardPointsPrice: values.rewardPointsPrice,
+            gift: values.gift,
+            productCategoryId: values.productCategoryId,
+            view: 0,
+            commerceId: commerceId,
+          }),
+        ],
         {
-          productName: values.productName,
-          description: values.description,
-          price: values.price,
-          quantity: values.quantity,
-          rewardPointsPrice: values.rewardPointsPrice,
-          gift: values.gift,
-          productCategoryId: values.productCategoryId,
-          commerceId: commerceId,
-        },
-        cleanedToken,
-        commerceId
+          type: "application/json",
+        }
       )
+    );
+    formData.append("multipartFile", values.multipartFile);
+
+    productServices
+      .addProduct(formData, cleanedToken, commerceId)
       .then((data) => {
         console.log(data);
         setSuccess("Produit ajouté avec succès");
-        navigate("/merchant/home");
       })
       .catch((error) => {
         console.log(error);
@@ -84,7 +98,6 @@ const AddProduct = ({ commerceId }) => {
     <div>
       {error && <Alert color="failure">{error.message}</Alert>}
       {success && <Alert color="success">{success}</Alert>}
-      {loading && <Alert color="info">Chargement...</Alert>}
       <div>
         <Formik
           initialValues={initialProduct}
@@ -116,6 +129,7 @@ const AddProduct = ({ commerceId }) => {
             handleChange,
             handleSubmit,
             isSubmitting,
+            setFieldValue,
           }) => (
             <form
               onSubmit={handleSubmit}
@@ -268,6 +282,31 @@ const AddProduct = ({ commerceId }) => {
                   </Select>
                   <ErrorMessage
                     name="productCategoryId"
+                    component="div"
+                    className="text-red-500 text-xs"
+                  />
+                </div>
+
+                <div>
+                  <div className="mb-2 block">
+                    <Label htmlFor="multipartFile">Image</Label>
+                  </div>
+                  <FileInput
+                    id="multipartFile"
+                    type="file"
+                    placeholder="Image"
+                    accept="image/*"
+                    error={errors.multipartFile}
+                    fieldtouched={touched.multipartFile?.toString()}
+                    onChange={(event) => {
+                      setFieldValue(
+                        "multipartFile",
+                        event.currentTarget.files[0]
+                      );
+                    }}
+                  />
+                  <ErrorMessage
+                    name="multipartFile"
                     component="div"
                     className="text-red-500 text-xs"
                   />

@@ -16,6 +16,11 @@ import Cart from "./pages/Cart";
 import AdminHome from "./pages/AdminHome";
 import Profile from "./pages/Profile";
 import Checkout from "./pages/Checkout";
+import AddProduct from "./components/AddProduct";
+import AddPromotion from "./components/AddPromotion";
+import AddCategory from "./components/AddCategory";
+import MerchantProducts from "./components/merchantProducts";
+import ProductDetails from "./components/ProductDetails";
 
 function App() {
   return (
@@ -112,7 +117,16 @@ function App() {
                 <MerchantHome />
               </PrivateRoute>
             }
-          />
+          >
+            <Route index element={<MerchantProducts />} />
+            <Route path="ajouterProduit/:commerceId" element={<AddProduct />} />
+            <Route path="promotion/:commerceId" element={<AddPromotion />} />
+            <Route path="addCategory/:commerceId" element={<AddCategory />} />
+            <Route
+              path="productDetails/:productId"
+              element={<ProductDetails />}
+            />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

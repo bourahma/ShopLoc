@@ -6,7 +6,7 @@ const useMerchantProducts = (token, merchantId) => {
   return useQuery({
     queryKey: ["merchantProducts", merchantId, token],
     queryFn: () => commerceService.fetchMerchantProducts(token, merchantId),
-    enabled: !!token,
+    enabled: !!token && !!merchantId,
   });
 };
 
@@ -14,7 +14,7 @@ const useProductsCategories = (token, commerceId) => {
   return useQuery({
     queryKey: ["productsCategories", commerceId, token],
     queryFn: () => productServices.getProductsCategories(token, commerceId),
-    enabled: !!commerceId,
+    enabled: !!commerceId && !!token,
   });
 };
 

@@ -21,6 +21,20 @@ const getProductsCategories = async (token, commerceId) => {
   }
 };
 
+const addProduct = async (product, token, commerceId) => {
+  const response = await axios.post(
+    `${SERVER_URL}/${baseUrl}/commerce/${commerceId}`,
+    product,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+  return response.data;
+};
+
 const addProductCategory = async (token, commerceId, category) => {
   try {
     const response = await axios.post(
@@ -60,6 +74,7 @@ const productServices = {
   getProductsCategories,
   addProductCategory,
   getProductDetails,
+  addProduct,
 };
 
 export default productServices;

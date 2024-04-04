@@ -4,12 +4,15 @@ import { TextInput, Button, Label, Alert, Textarea } from "flowbite-react";
 import { Formik, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import useProducts from "../hooks/useProducts";
+import { useParams } from "react-router-dom";
 
-const AddCategory = ({ commerceId }) => {
+const AddCategory = () => {
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
   const token = localStorage.getItem("userToken");
   const cleanedToken = token ? token.replace(/['"]+/g, "") : null;
+
+  const commerceId = useParams().commerceId;
 
   console.log("commerceId", commerceId);
 

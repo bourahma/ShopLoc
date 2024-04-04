@@ -5,7 +5,7 @@ const useCommerceId = (token, merchantId) => {
   return useQuery({
     queryKey: ["commerceId", merchantId, token],
     queryFn: () => commerceService.getCommerceId(token, merchantId),
-    enabled: !!merchantId,
+    enabled: !!merchantId && !!token,
   });
 };
 

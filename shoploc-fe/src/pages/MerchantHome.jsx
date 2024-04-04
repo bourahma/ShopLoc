@@ -7,6 +7,7 @@ import AddPromotion from "../components/AddPromotion";
 import AddCategory from "../components/AddCategory";
 import useCommerces from "../hooks/useCommerces";
 import { jwtDecode } from "jwt-decode";
+import { Outlet, Link, Routes, Route } from "react-router-dom";
 
 const MerchantHome = () => {
   const [task, setTask] = useState("produits");
@@ -21,6 +22,8 @@ const MerchantHome = () => {
     cleanedToken,
     merchantId
   );
+
+  localStorage.setItem("commerceId", commerceIdResponse?.data);
 
   if (commerceIdResponse.isError) {
     setError(commerceIdResponse.error);
@@ -52,6 +55,8 @@ const MerchantHome = () => {
         <Sidebar.Items>
           <Sidebar.ItemGroup>
             <Sidebar.Item
+              as={Link}
+              to="/merchant/home/"
               onClick={() => setTask("produits")}
               icon={HiArrowSmRight}
               className={`hover:bg-gray-700 hover:cursor-pointer hover:text-white ${
@@ -62,6 +67,8 @@ const MerchantHome = () => {
             </Sidebar.Item>
 
             <Sidebar.Item
+              as={Link}
+              to={`/merchant/home/ajouterProduit/${commerceIdResponse?.data}`}
               onClick={() => setTask("ajouterProduit")}
               icon={HiArrowSmRight}
               className={`hover:bg-gray-700 hover:cursor-pointer hover:text-white ${
@@ -71,6 +78,8 @@ const MerchantHome = () => {
               Ajouter un produit
             </Sidebar.Item>
             <Sidebar.Item
+              as={Link}
+              to={`/merchant/home/promotion/${commerceIdResponse?.data}`}
               onClick={() => setTask("promotion")}
               icon={HiArrowSmRight}
               className={`hover:bg-gray-700 hover:cursor-pointer hover:text-white ${
@@ -80,6 +89,8 @@ const MerchantHome = () => {
               Ajouter une promotion
             </Sidebar.Item>
             <Sidebar.Item
+              as={Link}
+              to={`/merchant/home/addCategory/${commerceIdResponse?.data}`}
               onClick={() => setTask("addCategory")}
               icon={HiArrowSmRight}
               className={`hover:bg-gray-700 hover:cursor-pointer hover:text-white ${
@@ -92,16 +103,7 @@ const MerchantHome = () => {
         </Sidebar.Items>
       </Sidebar>
       <div className="flex-grow">
-        {task === "produits" && <MerchantProducts />}
-        {task === "ajouterProduit" && commerceIdResponse.isSuccess && (
-          <AddProduct commerceId={commerceIdResponse.data} />
-        )}
-        {task === "promotion" && commerceIdResponse.isSuccess && (
-          <AddPromotion commerceId={commerceIdResponse.data} />
-        )}
-        {task === "addCategory" && commerceIdResponse.isSuccess && (
-          <AddCategory commerceId={commerceIdResponse.data} />
-        )}
+        <Outlet />
       </div>
     </div>
   );

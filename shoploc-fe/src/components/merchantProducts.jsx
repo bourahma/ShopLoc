@@ -1,21 +1,13 @@
 import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import { Checkbox, Table, TextInput } from "flowbite-react";
+import { Table, TextInput } from "flowbite-react";
 import useProducts from "../hooks/useProducts";
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  useLocation,
-} from "react-router-dom";
-import ProductDetails from "./ProductDetails";
+import { Link } from "react-router-dom";
 
 const MerchantProducts = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const token = localStorage.getItem("userToken");
   const cleanedToken = token ? token.replace(/['"]+/g, "") : null;
-
-  let { pathname } = useLocation();
 
   // Decode the token
   let decoded = jwtDecode(cleanedToken);
@@ -42,9 +34,6 @@ const MerchantProducts = () => {
 
       <Table hoverable>
         <Table.Head>
-          <Table.HeadCell className="p-4">
-            <Checkbox />
-          </Table.HeadCell>
           <Table.HeadCell>Nom du produit</Table.HeadCell>
           <Table.HeadCell>Catégorie</Table.HeadCell>
           <Table.HeadCell>Cadeau</Table.HeadCell>
@@ -66,9 +55,6 @@ const MerchantProducts = () => {
                 className="bg-white dark:border-gray-700 dark:bg-gray-800"
                 key={product.productId}
               >
-                <Table.Cell className="p-4">
-                  <Checkbox />
-                </Table.Cell>
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                   {product.productName}
                 </Table.Cell>
@@ -80,8 +66,7 @@ const MerchantProducts = () => {
                 <Table.Cell>{product.price} €</Table.Cell>
                 <Table.Cell>
                   <Link
-                    to={`${url}/${product.productId}`}
-                    className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
+                    to={`/merchant/home/productDetails/${product.productId}`}
                   >
                     Détails
                   </Link>
@@ -90,10 +75,6 @@ const MerchantProducts = () => {
             ))}
         </Table.Body>
       </Table>
-
-      <Route path={`${path}/:productId`}>
-        <ProductDetails />
-      </Route>
     </div>
   );
 };
