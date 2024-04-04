@@ -111,5 +111,3 @@ const ProductDetails = () => {
 };
 
 export default ProductDetails;
-
-// TODO: une promotion devrait avoir un titre pour pouvoir choisir la promotion à appliquer

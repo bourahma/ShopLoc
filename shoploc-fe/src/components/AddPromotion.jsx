@@ -21,6 +21,7 @@ const AddPromotion = () => {
   const commerceId = useParams().commerceId;
 
   const initialValues = {
+    label: "",
     startDate: new Date(),
     endDate: new Date(),
     description: "",
@@ -37,6 +38,7 @@ const AddPromotion = () => {
   const useCreateOffer = usePromotions.useCreateOffer(cleanedToken, commerceId);
 
   const validationSchema = Yup.object({
+    label: Yup.string().required("Libellé requis"),
     description: Yup.string().required("Description requise"),
     promotionType: Yup.string().required("Type de promotion requis"),
   });
@@ -102,6 +104,23 @@ const AddPromotion = () => {
             className="flex flex-col md:flex-row md:space-x-4 my-6 mx-12"
           >
             <div className="flex-1">
+              <div className="mb-2 block">
+                <Label htmlFor="label">Libellé</Label>
+                <TextInput
+                  id="label"
+                  type="text"
+                  placeholder="Entrez le libellé de la promotion"
+                  value={values.label}
+                  error={errors.label}
+                  fieldtouched={touched.label?.toString()}
+                  onChange={handleChange}
+                />
+                <ErrorMessage
+                  name="label"
+                  component="div"
+                  className="text-red-500 text-xs"
+                />
+              </div>
               <div className="mb-2 block">
                 <Label htmlFor="startDate">Date de début</Label>
                 <Datepicker

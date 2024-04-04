@@ -16,7 +16,9 @@ export const PublicRoute = ({ children }) => {
       if (JSON.parse(window.localStorage.getItem("userRole")) === "MERCHANT") {
         return <Navigate to={"/merchant/home"} />;
       }
-      return <Navigate to={"/home"} />;
+      if (JSON.parse(window.localStorage.getItem("userRole")) === "CUSTOMER") {
+        return <Navigate to={"/home"} />;
+      }
     }
   }
   return children;
