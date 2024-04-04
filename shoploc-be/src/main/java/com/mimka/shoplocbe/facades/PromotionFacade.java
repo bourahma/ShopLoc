@@ -18,4 +18,6 @@ public interface PromotionFacade {
     List<PromotionDTO> getCommerceOfferPromotions (Long commerceId) throws CommerceNotFoundException;
 
     List<PromotionDTO> getCommerceDiscountPromotions (Long commerceId) throws CommerceNotFoundException;
+
+    List<PromotionDTO> getCommercePromotions (Long commerceId) throws CommerceNotFoundException;
 }

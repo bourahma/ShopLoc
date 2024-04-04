@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "${allowed.origin}")
@@ -60,5 +61,10 @@ public class PromotionController {
     @GetMapping("/{promotionId}")
     public PromotionDTO promotion (@PathVariable Long promotionId) throws CommerceNotFoundException {
         return this.promotionFacade.getPromotion(promotionId);
+    }
+
+    @GetMapping("/{commerceId}")
+    public List<PromotionDTO> promotions (@PathVariable Long commerceId) throws CommerceNotFoundException {
+        return this.promotionFacade.getCommercePromotions(commerceId);
     }
 }
