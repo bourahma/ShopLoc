@@ -1,4 +1,4 @@
-import { Card, Button, Avatar } from "flowbite-react";
+import { Card, Button } from "flowbite-react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import useProducts from "../hooks/useProducts";
@@ -13,7 +13,7 @@ const ProductDetails = () => {
   console.log(productId);
   const token = localStorage.getItem("userToken");
 
-  const cleanedToken = token ? token.replace(/['"]+/g, "") : null;
+  const cleanedToken = JSON.parse(token);
 
   const productResponse = useProducts.useProductDetails(
     cleanedToken,
@@ -53,46 +53,46 @@ const ProductDetails = () => {
             </p>
 
             <p className="text-gray-700 dark:text-gray-400">
-              Prix: {product?.price}
+              <b>{product?.price} € </b>
             </p>
             <p className="text-gray-700 dark:text-gray-400">
-              Quantité: {product?.quantity}
+              <b>{product?.quantity}</b> produits en stock
             </p>
             <p className="text-gray-700 dark:text-gray-400">
-              Prix en points de récompense: {product?.rewardPointsPrice}
+              <b>{product?.rewardPointsPrice}</b> points de fidélité
             </p>
             <p className="text-gray-700 dark:text-gray-400">
-              Cadeau: {product?.gift ? "Oui" : "Non"}
+              Cadeau: <b>{product?.gift ? "Oui" : "Non"}</b>
             </p>
             <p className="text-gray-700 dark:text-gray-400">
-              Catégorie de produit: {product?.productCategoryLabel}
+              Catégorie: <b>{product?.productCategoryLabel}</b>
             </p>
             {product?.promotion && (
               <>
                 <p className="text-gray-700 dark:text-gray-400">
-                  Date de début de la promotion: {product?.promotion.startDate}
+                  Début promotion: <b>{product?.promotion.startDate}</b>
                 </p>
                 <p className="text-gray-700 dark:text-gray-400">
-                  Date de fin de la promotion: {product?.promotion.endDate}
+                  Fin promotion: <b>{product?.promotion.endDate}</b>
                 </p>
                 <p className="text-gray-700 dark:text-gray-400">
-                  Description de la promotion: {product?.promotion.description}
+                  {product?.promotion.description}
                 </p>
                 {product?.promotion.promotionType === "DISCOUNT" && (
                   <p className="text-gray-700 dark:text-gray-400">
-                    Pourcentage de réduction de la promotion:{" "}
-                    {product?.promotion.discountPercent}
+                    <b>{product?.promotion.discountPercent}</b> % de réduction
                   </p>
                 )}
                 {product?.promotion.promotionType === "OFFER" && (
                   <>
                     <p className="text-gray-700 dark:text-gray-400">
-                      Nombre d'articles requis pour profiter de la promotion:{" "}
-                      {product?.promotion.requiredItems}
+                      <b>{product?.promotion.requiredItems}</b> produits achetés
                     </p>
                     <p className="text-gray-700 dark:text-gray-400">
-                      Nombre d'articles offerts :{" "}
-                      {product?.promotion.offeredItems}
+                      <b>{product?.promotion.offeredItems}</b>{" "}
+                      {product?.promotion.offeredItems > 1
+                        ? "produits offerts"
+                        : "produit offert"}
                     </p>
                   </>
                 )}

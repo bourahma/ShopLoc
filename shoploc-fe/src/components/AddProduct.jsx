@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Formik, ErrorMessage } from "formik";
 import productServices from "../services/product";
 import * as Yup from "yup";
@@ -18,8 +18,7 @@ const AddProduct = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const token = localStorage.getItem("userToken");
-  const cleanedToken = token ? token.replace(/['"]+/g, "") : null;
-
+  const cleanedToken = JSON.parse(token);
   const commerceId = useParams().commerceId;
 
   const commerceCategoriesResponse = useProducts.useProductsCategories(
@@ -38,8 +37,6 @@ const AddProduct = () => {
     productCategoryId: "",
     multipartFile: null,
   };
-
-  const navigate = useNavigate();
 
   const registerProduct = (values) => {
     const formData = new FormData();
@@ -219,7 +216,7 @@ const AddProduct = () => {
                 <div>
                   <div className="mb-2 block">
                     <Label htmlFor="rewardPointsPrice">
-                      Prix en points de récompense
+                      Points de récompense
                     </Label>
                   </div>
                   <TextInput

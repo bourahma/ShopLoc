@@ -1,20 +1,16 @@
 import React, { useState } from "react";
 import { Sidebar } from "flowbite-react";
 import { HiArrowSmRight } from "react-icons/hi";
-import AddProduct from "../components/AddProduct";
-import MerchantProducts from "../components/merchantProducts";
-import AddPromotion from "../components/AddPromotion";
-import AddCategory from "../components/AddCategory";
 import useCommerces from "../hooks/useCommerces";
 import { jwtDecode } from "jwt-decode";
-import { Outlet, Link, Routes, Route } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 
 const MerchantHome = () => {
   const [task, setTask] = useState("produits");
   const [error, setError] = useState(null);
 
   const token = localStorage.getItem("userToken");
-  const cleanedToken = token ? token.replace(/['"]+/g, "") : null;
+  const cleanedToken = JSON.parse(token);
 
   const merchantId = jwtDecode(cleanedToken).userId;
 

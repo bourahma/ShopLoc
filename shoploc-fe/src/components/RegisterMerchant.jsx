@@ -12,7 +12,7 @@ const MerchantRegistrationForm = () => {
   const [commerces, setCommerces] = useState([]);
 
   const token = localStorage.getItem("userToken");
-  const cleanedToken = token.replace(/['"]+/g, "");
+  const cleanedToken = JSON.parse(token);
 
   useEffect(() => {
     commerceService

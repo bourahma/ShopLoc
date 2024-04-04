@@ -28,7 +28,7 @@ const LoginForm = () => {
           JSON.stringify(data["access-token"])
         );
         console.log(data);
-        window.localStorage.setItem("userRole", JSON.stringify(data["role"]));
+        window.localStorage.setItem("userRole", JSON.stringify(userRole));
         navigate(successUrl);
       })
       .catch((error) => {
@@ -185,7 +185,7 @@ const LoginForm = () => {
             </Button>
           )}
           {userRole && (
-            <Button className="" onClick={() => setUserRole(null)}>
+            <Button className="" onClick={() => setUserRole("CUSTOMER")}>
               Êtes-vous client ?
             </Button>
           )}

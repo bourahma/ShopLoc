@@ -14,3 +14,5 @@ const useCommerces = {
 };
 
 export default useCommerces;
+
+// TODO: Les tokens ont une durée de vie de 2h ce qui n'est pas bon si la personne

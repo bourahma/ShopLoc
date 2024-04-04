@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Alert,
   Button,
@@ -16,7 +16,7 @@ const AddPromotion = () => {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
   const token = localStorage.getItem("userToken");
-  const cleanedToken = token ? token.replace(/['"]+/g, "") : null;
+  const cleanedToken = JSON.parse(token);
 
   const commerceId = useParams().commerceId;
 
@@ -42,6 +42,7 @@ const AddPromotion = () => {
   });
 
   const registerPromotion = (values) => {
+    console.log(values);
     if (values.promotionType === "discount") {
       useCreateDiscount.mutate(values, {
         onSuccess: () => {
@@ -105,9 +106,10 @@ const AddPromotion = () => {
                 <Label htmlFor="startDate">Date de début</Label>
                 <Datepicker
                   id="startDate"
-                  onChange={(date) => setFieldValue("startDate", date)}
-                  selected={values.startDate}
-                  language="fr"
+                  onSelectedDateChanged={(date) => {
+                    setFieldValue("startDate", date, true);
+                  }}
+                  language="fr-FR"
                   labelClearButton="Effacer"
                   labelTodayButton="Aujourd'hui"
                 />
@@ -121,9 +123,10 @@ const AddPromotion = () => {
                 <Label htmlFor="endDate">Date de fin</Label>
                 <Datepicker
                   id="endDate"
-                  onChange={(date) => setFieldValue("endDate", date)}
-                  selected={values.endDate}
-                  language="fr"
+                  onSelectedDateChanged={(date) => {
+                    setFieldValue("endDate", date, true);
+                  }}
+                  language="fr-FR"
                   labelClearButton="Effacer"
                   labelTodayButton="Aujourd'hui"
                 />

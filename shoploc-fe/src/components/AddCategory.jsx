@@ -10,8 +10,7 @@ const AddCategory = () => {
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
   const token = localStorage.getItem("userToken");
-  const cleanedToken = token ? token.replace(/['"]+/g, "") : null;
-
+  const cleanedToken = JSON.parse(token);
   const commerceId = useParams().commerceId;
 
   console.log("commerceId", commerceId);
