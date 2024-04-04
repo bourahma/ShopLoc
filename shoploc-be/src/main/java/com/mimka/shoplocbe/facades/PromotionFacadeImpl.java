@@ -74,5 +74,15 @@ public class PromotionFacadeImpl implements PromotionFacade {
     public List<PromotionDTO> getCommerceDiscountPromotions(Long commerceId) throws CommerceNotFoundException {
         return this.getCommercePromotions(commerceId, PromotionType.DISCOUNT.name());
     }
+
+    @Override
+    public List<PromotionDTO> getCommercePromotions(Long commerceId) throws CommerceNotFoundException {
+        Commerce commerce = this.commerceService.getCommerce(commerceId);
+        List<Promotion> promotions = this.promotionService.getCommercePromotions(commerce);
+
+        return promotions.stream()
+                .map(productDTOUtil::toPromotionDTO)
+                .collect(Collectors.toList());
+    }
 }
 
