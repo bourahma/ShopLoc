@@ -55,32 +55,22 @@ public class PromotionFacadeImpl implements PromotionFacade {
         return this.productDTOUtil.toPromotionDTO(this.promotionService.getPromotion(promotionId));
     }
 
-    private List<PromotionDTO> getCommercePromotions(Long commerceId, String promotionType) throws CommerceNotFoundException {
-        Commerce commerce = this.commerceService.getCommerce(commerceId);
-        List<Promotion> promotions = this.promotionService.getCommercePromotions(commerce);
-
-        return promotions.stream()
-                .filter(promotion -> promotion.getPromotionType().equals(promotionType))
-                .map(productDTOUtil::toPromotionDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<PromotionDTO> getCommerceOfferPromotions(Long commerceId) throws CommerceNotFoundException {
-        return this.getCommercePromotions(commerceId, PromotionType.OFFER.name());
-    }
-
-    @Override
-    public List<PromotionDTO> getCommerceDiscountPromotions(Long commerceId) throws CommerceNotFoundException {
-        return this.getCommercePromotions(commerceId, PromotionType.DISCOUNT.name());
-    }
-
     @Override
     public List<PromotionDTO> getCommercePromotions(Long commerceId) throws CommerceNotFoundException {
         Commerce commerce = this.commerceService.getCommerce(commerceId);
         List<Promotion> promotions = this.promotionService.getCommercePromotions(commerce);
 
         return promotions.stream()
+                .map(productDTOUtil::toPromotionDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PromotionDTO> getPromotions() {
+        List<Promotion> promotions = this.promotionService.getPromotions();
+
+        return promotions.stream()
+                .filter(promotion -> !promotion.isSent())
                 .map(productDTOUtil::toPromotionDTO)
                 .collect(Collectors.toList());
     }
