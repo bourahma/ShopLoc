@@ -195,6 +195,7 @@ CREATE TABLE Promotion
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
     description VARCHAR(255) NOT NULL,
+    label VARCHAR(255),
     type VARCHAR(255) NOT NULL,
     commerce_id INT NOT NULL,
 

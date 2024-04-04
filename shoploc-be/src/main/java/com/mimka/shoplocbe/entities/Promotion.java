@@ -21,6 +21,9 @@ public class Promotion {
     @SequenceGenerator(name = "promotion_sequence", sequenceName = "promotion_seq", allocationSize = 1, initialValue = 50)
     private Long promotionId;
 
+    @Column(name = "label", nullable = false)
+    private String label;
+
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 
@@ -48,5 +51,5 @@ public class Promotion {
 
     @Column(name = "offered_items")
     private Integer offeredItems;
-
+    
 }

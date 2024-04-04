@@ -29,6 +29,8 @@ public class PromotionDTO {
 
     private Long commerceId;
 
+    private String label;
+
     // Discount promotion fields
     private Integer discountPercent;
 

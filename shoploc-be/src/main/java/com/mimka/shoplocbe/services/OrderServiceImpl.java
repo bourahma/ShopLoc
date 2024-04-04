@@ -21,16 +21,17 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final CommerceService commerceService;
-    private final PromotionHistoryRepository promotionHistoryRepository;
     private final OrderDTOUtil orderDTOUtil;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, CommerceService commerceService, OrderDTOUtil orderDTOUtil, ProductRepository productRepository, PromotionHistoryRepository promotionHistoryRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository,
+                            CommerceService commerceService,
+                            OrderDTOUtil orderDTOUtil,
+                            ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.commerceService = commerceService;
         this.orderDTOUtil = orderDTOUtil;
         this.productRepository = productRepository;
-        this.promotionHistoryRepository = promotionHistoryRepository;
     }
 
     @Override
@@ -84,16 +85,16 @@ public class OrderServiceImpl implements OrderService {
                     {
                         orderProduct.setQuantity(orderProduct.getQuantity());
                         orderProduct.setPurchasePrice(product.getPrice());
+                        orderProduct.setPromotion(product.getPromotion());
                         product.setQuantity(product.getQuantity() - orderProduct.getQuantity());
+
                         this.productRepository.save(product);
-                        PromotionHistory promotionHistory = this.getPromotionHistory(promotion, product);
-                        this.promotionHistoryRepository.save(promotionHistory);
                     }
                     else if (promotion.getPromotionType().equals(PromotionType.DISCOUNT.name()))
                     {
-                        PromotionHistory promotionHistory = this.getPromotionHistory(promotion, product);
-                        this.promotionHistoryRepository.save(promotionHistory);
+                        orderProduct.setPromotion(product.getPromotion());
                         product.setQuantity(product.getQuantity() - orderProduct.getQuantity());
+
                         this.productRepository.save(product);
                     }
                 }
@@ -114,6 +115,7 @@ public class OrderServiceImpl implements OrderService {
         if (order == null) {
             return 0.0;
         }
+
         double totalOrderPrice = 0.0;
         for (OrderProduct orderProduct : order.getOrderProducts()) {
             double productPrice = usePointsPrice ? orderProduct.getProduct().getRewardPointsPrice() : orderProduct.getProduct().getPrice();
@@ -133,20 +135,5 @@ public class OrderServiceImpl implements OrderService {
         }
         System.out.println("total : " + totalOrderPrice);
         return totalOrderPrice;
-    }
-
-
-    private PromotionHistory getPromotionHistory(Promotion promotion, Product product) {
-        PromotionHistory promotionHistory = new PromotionHistory();
-        promotionHistory.setPromotionHistoryId(promotion.getPromotionId());
-        promotionHistory.setDescription(promotion.getDescription());
-        promotionHistory.setProduct(product);
-        promotionHistory.setCommerce(promotion.getCommerce());
-        promotionHistory.setEndDate(promotion.getEndDate());
-        promotionHistory.setDiscountPercent(promotion.getDiscountPercent() != null ? promotion.getDiscountPercent() : 0);
-        promotionHistory.setOfferedItems(promotion.getOfferedItems() != null ? promotion.getOfferedItems() : 0);
-        promotionHistory.setRequiredItems(promotion.getRequiredItems() != null ? promotion.getRequiredItems() : 0);
-
-        return promotionHistory;
     }
 }
