@@ -54,6 +54,7 @@ public class ProductDTOUtil {
         promotionDTO.setEndDate(promotion.getEndDate());
         promotionDTO.setDescription(promotion.getDescription());
         promotionDTO.setPromotionType(promotion.getPromotionType());
+        promotionDTO.setLabel(promotion.getLabel());
         // Set only the product ID in the PromotionDTO
         //if (promotion.getProduct() != null) {
           //  promotionDTO.setProductId(promotion.getProduct().getProductId());
