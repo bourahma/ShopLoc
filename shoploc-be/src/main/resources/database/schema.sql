@@ -196,6 +196,7 @@ CREATE TABLE Promotion
     end_date DATE NOT NULL,
     description VARCHAR(255) NOT NULL,
     label VARCHAR(255),
+    sent BOOLEAN DEFAULT FALSE,
     type VARCHAR(255) NOT NULL,
     commerce_id INT NOT NULL,
 

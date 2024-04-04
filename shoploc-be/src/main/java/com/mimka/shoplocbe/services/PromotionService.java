@@ -13,5 +13,7 @@ public interface PromotionService {
 
     List<Promotion> getCommercePromotions(Commerce commerce);
 
+    List<Promotion> getPromotions ( );
+
     Promotion getPromotion(Long offerPromotionId);
 }

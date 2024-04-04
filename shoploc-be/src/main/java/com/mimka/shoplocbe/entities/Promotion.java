@@ -24,6 +24,9 @@ public class Promotion {
     @Column(name = "label", nullable = false)
     private String label;
 
+    @Column(name = "sent", nullable = false)
+    private boolean sent;
+
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 

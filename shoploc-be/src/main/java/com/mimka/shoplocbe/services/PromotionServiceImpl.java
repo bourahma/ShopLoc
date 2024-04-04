@@ -7,6 +7,7 @@ import com.mimka.shoplocbe.repositories.PromotionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -47,5 +48,10 @@ public class PromotionServiceImpl implements PromotionService {
     @Override
     public Promotion getPromotion(Long offerPromotionId) {
         return this.promotionRepository.findById(offerPromotionId).get();
+    }
+
+    @Override
+    public List<Promotion> getPromotions() {
+        return this.promotionRepository.findPromotionByEndDateAfterAndSent(LocalDate.now(), false);
     }
 }

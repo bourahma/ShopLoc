@@ -31,6 +31,8 @@ public class PromotionDTO {
 
     private String label;
 
+    private boolean sent;
+
     // Discount promotion fields
     private Integer discountPercent;
 

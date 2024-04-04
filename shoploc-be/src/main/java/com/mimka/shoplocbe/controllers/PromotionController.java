@@ -44,27 +44,18 @@ public class PromotionController {
         return promotionDTO;
     }
 
-    @GetMapping("/offer/{commerceId}")
-    public List<PromotionDTO> offerPromotions (@PathVariable Long commerceId) throws CommerceNotFoundException {
-        List<PromotionDTO> promotions = this.promotionFacade.getCommerceOfferPromotions(commerceId);
-
-        return promotions;
-    }
-
-    @GetMapping("/discount/{commerceId}")
-    public List<PromotionDTO> discountPromotions (@PathVariable Long commerceId) throws CommerceNotFoundException {
-        List<PromotionDTO> promotions = this.promotionFacade.getCommerceDiscountPromotions(commerceId);
-
-        return promotions;
-    }
-
     @GetMapping("/{promotionId}")
     public PromotionDTO promotion (@PathVariable Long promotionId) throws CommerceNotFoundException {
         return this.promotionFacade.getPromotion(promotionId);
     }
 
-    @GetMapping("/{commerceId}")
+    @GetMapping("/commerce/{commerceId}")
     public List<PromotionDTO> promotions (@PathVariable Long commerceId) throws CommerceNotFoundException {
         return this.promotionFacade.getCommercePromotions(commerceId);
+    }
+
+    @GetMapping("/")
+    public List<PromotionDTO> promotions () {
+        return null;
     }
 }
