@@ -17,6 +17,20 @@ export const PrivateRoute = ({ children }) => {
       window.localStorage.clear();
       return <Navigate to={"/"} />;
     }
+
+    if (
+      JSON.parse(window.localStorage.getItem("userRole")) === "ADMINISTRATOR" &&
+      !window.location.pathname.includes("/admin/home")
+    ) {
+      return <Navigate to={"/admin/home"} />;
+    }
+
+    if (
+      JSON.parse(window.localStorage.getItem("userRole")) === "MERCHANT" &&
+      !window.location.pathname.includes("/merchant/home")
+    ) {
+      return <Navigate to={"/merchant/home"} />;
+    }
   }
 
   return children;
