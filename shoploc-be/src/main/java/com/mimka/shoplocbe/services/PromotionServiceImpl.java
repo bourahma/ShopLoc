@@ -52,6 +52,6 @@ public class PromotionServiceImpl implements PromotionService {
 
     @Override
     public List<Promotion> getPromotions() {
-        return this.promotionRepository.findPromotionByEndDateAfterAndSent(LocalDate.now(), false);
+        return this.promotionRepository.findAll();
     }
 }

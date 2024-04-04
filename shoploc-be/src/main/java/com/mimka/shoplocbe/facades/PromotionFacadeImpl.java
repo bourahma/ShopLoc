@@ -74,5 +74,7 @@ public class PromotionFacadeImpl implements PromotionFacade {
                 .map(productDTOUtil::toPromotionDTO)
                 .collect(Collectors.toList());
     }
+
+    // TODO Correct this method
 }
 
