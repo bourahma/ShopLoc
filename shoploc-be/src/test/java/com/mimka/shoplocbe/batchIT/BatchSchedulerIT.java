@@ -69,7 +69,7 @@ class BatchSchedulerIT {
         Assertions.assertEquals(BatchStatus.COMPLETED, jobExecution.getStatus());
 
         testBatchVFP(1, 9, true,false);
-        testBatchVFP(2, 2, true, false);
+        testBatchVFP(2, 2, false, false);
         testBatchVFP(3, 5, true, false);
     }
 

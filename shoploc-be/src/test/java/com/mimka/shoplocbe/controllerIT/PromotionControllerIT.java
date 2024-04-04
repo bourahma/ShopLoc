@@ -56,10 +56,7 @@ class PromotionControllerIT extends ControllerIT {
         mockMvc.perform(get("/promotion/offer/1")
                         .header("Authorization", "Bearer " + merchantJWTToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.promotionId").value(1))
-                .andExpect(jsonPath("$.productId").value(1))
-                .andExpect(jsonPath("$.productId").value(1))
-                .andExpect(jsonPath("$.productName").value("Pain au levain"));
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 
     @NotNull

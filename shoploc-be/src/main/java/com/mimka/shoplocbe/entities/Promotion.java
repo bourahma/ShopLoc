@@ -48,5 +48,5 @@ public class Promotion {
 
     @Column(name = "offered_items")
     private Integer offeredItems;
-
+    
 }
