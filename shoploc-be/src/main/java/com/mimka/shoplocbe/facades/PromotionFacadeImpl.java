@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -86,15 +87,18 @@ public class PromotionFacadeImpl implements PromotionFacade {
     public PromotionDTO launchPromotion(Long promotionId) {
         Promotion promotion = this.promotionService.getPromotion(promotionId);
         List<Customer> customers = this.customerService.getCustomers();
-        Commerce commerce = promotion.getCommerce();
 
-        try {
-            this.mailService.triggerPromotionToCustomers(promotion, commerce, customers);
-        } catch (MessagingException e) {
-            log.warn("Sending promotion error : " + e.getMessage());
+        if (!promotion.isSent() && promotion.getEndDate().isAfter(LocalDate.now())) {
+            try {
+                this.mailService.triggerPromotionToCustomers(promotion, promotion.getCommerce(), customers);
+                promotion.setSent(true);
+                this.promotionService.savePromotion(promotion);
+            } catch (MessagingException e) {
+                log.warn("Sending promotion error : " + e.getMessage());
+            }
         }
 
-        return null;
+        return this.productDTOUtil.toPromotionDTO(promotion);
     }
 }
 

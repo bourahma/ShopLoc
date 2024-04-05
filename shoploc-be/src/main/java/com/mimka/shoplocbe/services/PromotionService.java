@@ -16,4 +16,6 @@ public interface PromotionService {
     List<Promotion> getPromotions ( );
 
     Promotion getPromotion(Long offerPromotionId);
+
+    Promotion savePromotion (Promotion promotion);
 }

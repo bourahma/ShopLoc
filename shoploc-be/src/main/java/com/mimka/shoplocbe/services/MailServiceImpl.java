@@ -220,6 +220,7 @@ public class MailServiceImpl {
                 <p>%s</p>
                 <p>%s</p>
                 %s
+         
             </body>
             </html>
             """, greeting, introCommerce, detail, signature);
