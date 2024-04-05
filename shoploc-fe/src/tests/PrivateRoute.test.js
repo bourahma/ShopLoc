@@ -6,7 +6,9 @@ import { PrivateRoute } from "../components/PrivateRoute";
 
 describe("PrivateRoute", () => {
   test("renders children when user is logged in", () => {
-    Storage.prototype.getItem = jest.fn(() => "userToken");
+    const mockToken =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+    Storage.prototype.getItem = jest.fn(() => JSON.stringify(mockToken));
     render(
       <Router>
         <PrivateRoute>Test</PrivateRoute>

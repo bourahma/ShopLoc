@@ -82,7 +82,6 @@ const launchPromotion = async (token, promotionId) => {
   try {
     const response = await axios.get(
       `${SERVER_URL}/${baseUrl}/${promotionId}/launch`,
-      {},
       {
         headers: {
           Authorization: `Bearer ${token}`,
