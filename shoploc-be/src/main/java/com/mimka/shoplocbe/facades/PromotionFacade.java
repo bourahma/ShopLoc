@@ -17,5 +17,5 @@ public interface PromotionFacade {
 
     List<PromotionDTO> getCommercePromotions (Long commerceId) throws CommerceNotFoundException;
 
-    List<PromotionDTO> getPromotions ( ) throws CommerceNotFoundException;
+    List<PromotionDTO> getPromotions ( );
 }

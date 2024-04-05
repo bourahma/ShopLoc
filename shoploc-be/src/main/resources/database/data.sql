@@ -100,11 +100,11 @@ VALUES
     (nextval('promotion_sequence'), '2023-05-01', '2023-05-15', 'Réduction d été', 'Discount', 6, 20, NULL, NULL);
 
 -- Sample data for Promotion table
-INSERT INTO Promotion (promotion_id,start_date, end_date, description, type, commerce_id, discount_percent, required_items, offered_items)
+INSERT INTO Promotion (promotion_id,start_date, end_date, sent, description, type, commerce_id, discount_percent, required_items, offered_items)
 VALUES
-    (1, '2024-03-01', '2024-05-15', 'Vente de printemps', 'DISCOUNT', 8, 20, NULL, NULL),
-    (2, '2024-04-01', '2024-04-30', 'Achetez 3, obtenez-en 1 gratuitement', 'OFFER', 1, NULL, 3, 1),
-    (3, '2024-05-01', '2024-05-15', 'Réduction d été', 'DISCOUNT', 6, 15,  NULL, NULL);
+    (1, '2024-03-01', '2024-02-15', FALSE, 'Vente de printemps', 'DISCOUNT', 8, 20, NULL, NULL),
+    (2, '2024-04-01', '2024-04-30', FALSE, 'Achetez 3, obtenez-en 1 gratuitement', 'OFFER', 1, NULL, 3, 1),
+    (3, '2024-05-01', '2024-05-15', TRUE, 'Réduction d été', 'DISCOUNT', 6, 15,  NULL, NULL);
 
 -- Product's insertion :
 INSERT INTO Product (product_id, product_name, description, price, quantity, reward_points_price, is_gift, promotion_id, commerce_id, product_category_id, view)

@@ -65,7 +65,6 @@ class PromotionControllerIT extends ControllerIT {
         offerPromotionDTO.setStartDate(LocalDate.of(2024, 4, 1));
         offerPromotionDTO.setEndDate(LocalDate.of(2024, 4, 30));
         offerPromotionDTO.setDescription("Achetez 3, obtenez-en 1 gratuitement");
-        offerPromotionDTO.setProductId(8L);
         offerPromotionDTO.setCommerceId(8L);
         offerPromotionDTO.setRequiredItems(3);
         offerPromotionDTO.setOfferedItems(1);
@@ -79,7 +78,6 @@ class PromotionControllerIT extends ControllerIT {
         discountPromotionDTO.setStartDate(LocalDate.of(2024, 3, 1));
         discountPromotionDTO.setEndDate(LocalDate.of(2024, 5, 15));
         discountPromotionDTO.setDescription("Vente de printemps");
-        discountPromotionDTO.setProductId(12L);
         discountPromotionDTO.setCommerceId(5L);
         discountPromotionDTO.setDiscountPercent(20);
 

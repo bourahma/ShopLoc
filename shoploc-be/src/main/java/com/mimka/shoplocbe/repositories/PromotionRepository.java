@@ -13,5 +13,5 @@ public interface PromotionRepository extends JpaRepository<Promotion, Long> {
 
     List<Promotion> findAllByCommerce(Commerce commerce);
 
-    List<Promotion> findPromotionByEndDateAfterAndSent(LocalDate localDate, Boolean sent);
+    List<Promotion> findPromotionByEndDateAfterAndSentIsFalse(LocalDate localDate);
 }

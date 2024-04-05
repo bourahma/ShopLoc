@@ -56,6 +56,6 @@ public class PromotionController {
 
     @GetMapping("/")
     public List<PromotionDTO> promotions () {
-        return null;
+        return this.promotionFacade.getPromotions();
     }
 }
