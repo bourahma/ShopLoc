@@ -119,7 +119,7 @@ VALUES
     (8, 'Bougeoir en Bois', 'Bougeoir fait à la main en bois', 29.99, 40, 20, FALSE, NULL, 4, 7, 89),
     (9, 'Plateau en Bois', 'Plateau élégant pour servir', 39.99, 25, 30, FALSE, NULL, 7, 8, 78),
     (10, 'Espresso', 'Café fort et concentré', 2.50, 100, 2, TRUE, NULL, 2, 9, 78),
-    (11, 'Cappuccino', 'Espresso avec du lait mousseux', 3.50, 80, 3, TRUE, NULL, 2, 10, 9),
+    (11, 'Cappuccino', 'Espresso avec du lait mousseux', 3.50, 0, 3, TRUE, NULL, 2, 10, 9),
     (12, 'Croissant', 'Pâtisserie feuilletée et beurrée', 1.99, 150, 1, TRUE, NULL, 5, 11, 86),
     (13, 'Grains de café (250g)', 'Grains de café premium pour la préparation à la maison', 12.99, 50, 11, FALSE, 1, 8, 12, 12);
 

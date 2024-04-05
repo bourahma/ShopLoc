@@ -5,15 +5,16 @@ import com.mimka.shoplocbe.dto.order.OrderDTOUtil;
 import com.mimka.shoplocbe.dto.order.OrderProductDTO;
 import com.mimka.shoplocbe.entities.*;
 import com.mimka.shoplocbe.exception.CommerceNotFoundException;
+import com.mimka.shoplocbe.exception.ProductException;
 import com.mimka.shoplocbe.repositories.*;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -21,17 +22,21 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final CommerceService commerceService;
+
+    private final MailServiceImpl mailService;
+
     private final OrderDTOUtil orderDTOUtil;
 
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository,
                             CommerceService commerceService,
                             OrderDTOUtil orderDTOUtil,
-                            ProductRepository productRepository) {
+                            ProductRepository productRepository, MailServiceImpl mailService) {
         this.orderRepository = orderRepository;
         this.commerceService = commerceService;
         this.orderDTOUtil = orderDTOUtil;
         this.productRepository = productRepository;
+        this.mailService = mailService;
     }
 
     @Override
@@ -67,43 +72,64 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order payOrder(Long orderId) {
-        Optional<Order> optionalOrder = this.orderRepository.findById(orderId);
-        optionalOrder.ifPresent(order -> {
-            if (order.getOrderStatus().equals(OrderStatus.PENDING.name()))
-            {
-                for (OrderProduct orderProduct : order.getOrderProducts())
-                {
-                    Product product = orderProduct.getProduct();
-                    Promotion promotion = product.getPromotion();
-                    if (promotion == null)
-                    {
-                        product.setQuantity(product.getQuantity() - orderProduct.getQuantity());
-                        this.productRepository.save(product);
-                    }
-                    else if (promotion.getPromotionType().equals(PromotionType.OFFER.name()))
-                    {
-                        orderProduct.setQuantity(orderProduct.getQuantity());
-                        orderProduct.setPurchasePrice(product.getPrice());
-                        orderProduct.setPromotion(product.getPromotion());
-                        product.setQuantity(product.getQuantity() - orderProduct.getQuantity());
+    public Order payOrder(Long orderId) throws ProductException {
+        Order order = this.orderRepository.findById(orderId)
+                .orElseThrow(() -> new ProductException("Commande avec l'ID " + orderId + " non trouvée."));
 
-                        this.productRepository.save(product);
-                    }
-                    else if (promotion.getPromotionType().equals(PromotionType.DISCOUNT.name()))
-                    {
-                        orderProduct.setPromotion(product.getPromotion());
-                        product.setQuantity(product.getQuantity() - orderProduct.getQuantity());
+        if (order.getOrderStatus().equals(OrderStatus.PENDING.name())) {
+            processOrder(order);
+        }
 
-                        this.productRepository.save(product);
-                    }
-                }
-                order.setOrderStatus(OrderStatus.PAID.name());
-                this.orderRepository.save(order);
-            }
-        });
-        return optionalOrder.orElse(null);
+        return order;
     }
+
+    private void processOrder(Order order) throws ProductException {
+        for (OrderProduct orderProduct : order.getOrderProducts()) {
+            Product product = orderProduct.getProduct();
+            Promotion promotion = product.getPromotion();
+
+            if (product.getQuantity() - orderProduct.getQuantity() < 0) {
+                throw new ProductException("La quantité disponible pour le produit '" + product.getProductName() +
+                        "' est insuffisante pour compléter la commande. Quantité disponible: " +
+                        product.getQuantity() + ".");
+            }
+
+            notifyMerchantsIfProductOutOfStock(product, orderProduct.getQuantity(), new ArrayList<>(order.getCommerce().getMerchants()));
+
+            updateProductAndOrderProduct(product, orderProduct, promotion);
+
+            product.setQuantity(product.getQuantity() - orderProduct.getQuantity());
+        }
+
+        order.setOrderStatus(OrderStatus.PAID.name());
+        this.orderRepository.save(order);
+    }
+
+    private void notifyMerchantsIfProductOutOfStock(Product product, int orderProductQuantity, List<Merchant> merchants) {
+        if (product.getQuantity() == 0 || product.getQuantity() - orderProductQuantity == 0) {
+            try {
+                this.mailService.triggerMerchantsProductOutOfStock(product, merchants);
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void updateProductAndOrderProduct(Product product, OrderProduct orderProduct, Promotion promotion) {
+        if (promotion == null) {
+            this.productRepository.save(product);
+        } else if (promotion.getPromotionType().equals(PromotionType.OFFER.name())) {
+            orderProduct.setPurchasePrice(product.getPrice());
+            orderProduct.setPromotion(promotion);
+
+            this.productRepository.save(product);
+        } else if (promotion.getPromotionType().equals(PromotionType.DISCOUNT.name())) {
+            orderProduct.setPromotion(promotion);
+
+            this.productRepository.save(product);
+        }
+    }
+
 
     @Override
     public double getOrderTotalPrice(Long orderId, boolean usingPoints) {
