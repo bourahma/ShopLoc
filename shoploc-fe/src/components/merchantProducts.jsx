@@ -40,7 +40,7 @@ const MerchantProducts = () => {
           <Table.HeadCell>Réduction</Table.HeadCell>
           <Table.HeadCell>Prix</Table.HeadCell>
           <Table.HeadCell>
-            <span className="sr-only">Edit</span>
+            <span className="sr-only">Détails</span>
           </Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">

@@ -1,15 +1,10 @@
 import React, { useState } from "react";
 import { Sidebar } from "flowbite-react";
 import { HiArrowSmRight } from "react-icons/hi";
-import CommerceRegistrationForm from "../components/RegisterCommerce";
-import MerchantRegistrationForm from "../components/RegisterMerchant";
+import { Outlet, Link } from "react-router-dom";
 
 const AdminHome = () => {
   const [task, setTask] = useState("createCommerce");
-
-  const handleLaunchPromo = () => {
-    // Logic for launching promos
-  };
 
   return (
     <div className="flex flex-col sm:flex-row">
@@ -21,6 +16,8 @@ const AdminHome = () => {
           <Sidebar.ItemGroup>
             <Sidebar.Item
               onClick={() => setTask("createCommerce")}
+              as={Link}
+              to="/admin/home/"
               icon={HiArrowSmRight}
               className={`hover:bg-gray-700 hover:cursor-pointer hover:text-white ${
                 task === "createCommerce" ? "bg-gray-700 text-white" : ""
@@ -30,6 +27,8 @@ const AdminHome = () => {
             </Sidebar.Item>
             <Sidebar.Item
               onClick={() => setTask("createMerchant")}
+              as={Link}
+              to="/admin/home/create-merchant"
               icon={HiArrowSmRight}
               className={`hover:bg-gray-700 hover:cursor-pointer hover:text-white ${
                 task === "createMerchant" ? "bg-gray-700 text-white" : ""
@@ -39,6 +38,8 @@ const AdminHome = () => {
             </Sidebar.Item>
             <Sidebar.Item
               onClick={() => setTask("launchPromo")}
+              as={Link}
+              to="/admin/home/launch-promo"
               icon={HiArrowSmRight}
               className={`hover:bg-gray-700 hover:cursor-pointer hover:text-white ${
                 task === "launchPromo" ? "bg-gray-700 text-white" : ""
@@ -50,14 +51,7 @@ const AdminHome = () => {
         </Sidebar.Items>
       </Sidebar>
       <div className="flex-grow">
-        {task === "createCommerce" && <CommerceRegistrationForm />}
-        {task === "createMerchant" && <MerchantRegistrationForm />}
-        {task === "launchPromo" && (
-          <div>
-            <h1>Lancer une promotion</h1>
-            <button onClick={handleLaunchPromo}>Lancer</button>
-          </div>
-        )}
+        <Outlet />
       </div>
     </div>
   );

@@ -9,8 +9,17 @@ const useCommerceId = (token, merchantId) => {
   });
 };
 
+const useCommerceDetails = (token, commerceId) => {
+  return useQuery({
+    queryKey: ["commerceDetails", commerceId, token],
+    queryFn: () => commerceService.fetchCommerce(token, commerceId),
+    enabled: !!commerceId && !!token,
+  });
+};
+
 const useCommerces = {
   useCommerceId,
+  useCommerceDetails,
 };
 
 export default useCommerces;
