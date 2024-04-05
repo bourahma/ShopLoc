@@ -1,12 +1,14 @@
 package com.mimka.shoplocbe.services;
 
 import com.mimka.shoplocbe.dto.user.MerchantDTO;
+import com.mimka.shoplocbe.entities.Commerce;
 import com.mimka.shoplocbe.entities.Customer;
 import com.mimka.shoplocbe.entities.Promotion;
 import com.mimka.shoplocbe.entities.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -14,8 +16,12 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Base64;
 import java.util.List;
 
+@Slf4j
 @Service
 public class MailServiceImpl {
     private final JavaMailSender javaMailSender;
@@ -160,28 +166,33 @@ public class MailServiceImpl {
     }
 
     @Async
-    public void triggerPromotionToCustomers(Promotion promotion, List<Customer> customers) throws MessagingException {
+    public void triggerPromotionToCustomers(Promotion promotion, Commerce commerce, List<Customer> customers) throws MessagingException {
         for (Customer customer : customers) {
-            sendPromotionEmail(customer, promotion);
+            sendPromotionEmail(customer, commerce, promotion);
         }
     }
-    private void sendPromotionEmail(Customer customer, Promotion promotion) throws MessagingException {
+
+    private void sendPromotionEmail(Customer customer, Commerce commerce, Promotion promotion) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-        String subject = "Discover Our New Promotion!";
-        String content = buildPromotionContent(customer, promotion);
+        String subject = "Découvrez notre nouvelle promotion exclusive chez " + commerce.getCommerceName() + " !";
+        String content = buildPromotionContent(customer, commerce, promotion);
 
         helper.setText(content, true);
         helper.setTo(customer.getEmail());
         helper.setSubject(subject);
-        helper.setFrom(new InternetAddress("projet_etu_fil@univ-lille.fr"));
+        helper.setFrom(new InternetAddress(emailFrom));
 
         javaMailSender.send(message);
     }
-    private String buildPromotionContent(Customer customer, Promotion promotion) {
+
+    private String buildPromotionContent(Customer customer, Commerce commerce, Promotion promotion) {
         String greeting = String.format("Cher(ère) %s,", customer.getFirstname());
-        String intro = "Nous sommes ravis de partager notre nouvelle promotion avec vous !";
+        String introCommerce = String.format("Voici une offre spéciale de %s, ouvert de %s à %s.",
+                commerce.getCommerceName(),
+                commerce.getOpeningHour(),
+                commerce.getClosingHour());
         String detail;
 
         if ("discount".equalsIgnoreCase(promotion.getPromotionType())) {
@@ -195,8 +206,7 @@ public class MailServiceImpl {
                     promotion.getEndDate().toString());
         }
 
-        String signature = "Cordialement,\nL'équipe ShopLoc";
-
+        String signature = "Cordialement,\nL'équipe de " + commerce.getCommerceName();
         String content = String.format("""
             <!DOCTYPE html>
             <html lang="fr">
@@ -209,14 +219,13 @@ public class MailServiceImpl {
                 <p>%s</p>
                 <p>%s</p>
                 <p>%s</p>
+                %s
                 <p>%s</p>
             </body>
             </html>
-            """, greeting, intro, detail, signature);
+            """, greeting, introCommerce, detail, signature);
 
         return content;
     }
-
-
 
 }

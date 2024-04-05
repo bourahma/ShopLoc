@@ -86,9 +86,10 @@ public class PromotionFacadeImpl implements PromotionFacade {
     public PromotionDTO launchPromotion(Long promotionId) {
         Promotion promotion = this.promotionService.getPromotion(promotionId);
         List<Customer> customers = this.customerService.getCustomers();
+        Commerce commerce = promotion.getCommerce();
 
         try {
-            this.mailService.triggerPromotionToCustomers(promotion, customers);
+            this.mailService.triggerPromotionToCustomers(promotion, commerce, customers);
         } catch (MessagingException e) {
             log.warn("Sending promotion error : " + e.getMessage());
         }
