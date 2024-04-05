@@ -11,6 +11,8 @@ import com.mimka.shoplocbe.entities.*;
 import com.mimka.shoplocbe.exception.CommerceNotFoundException;
 import com.mimka.shoplocbe.exception.CommerceTypeNotFoundException;
 import com.mimka.shoplocbe.services.*;
+import jakarta.mail.MessagingException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,9 +22,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class CommerceFacadeImpl implements CommerceFacade {
 
     private final CommerceService commerceService;
+
+    private final CustomerService customerService;
+
+    private final MailServiceImpl mailService;
 
     private final MerchantService merchantService;
 
@@ -40,8 +47,10 @@ public class CommerceFacadeImpl implements CommerceFacade {
 
 
     @Autowired
-    public CommerceFacadeImpl(CommerceService commerceService, ProductService productService, ImageAPI imageAPI, CommerceTypeService commerceTypeService, CommerceDTOUtil commerceDTOUtil, ProductDTOUtil productDTOUtil, AddressService addressService, MerchantService merchantService) {
+    public CommerceFacadeImpl(CommerceService commerceService, CustomerService customerService, MailServiceImpl mailService, ProductService productService, ImageAPI imageAPI, CommerceTypeService commerceTypeService, CommerceDTOUtil commerceDTOUtil, ProductDTOUtil productDTOUtil, AddressService addressService, MerchantService merchantService) {
         this.commerceService = commerceService;
+        this.customerService = customerService;
+        this.mailService = mailService;
         this.productService = productService;
         this.imageAPI = imageAPI;
         this.commerceTypeService = commerceTypeService;
@@ -138,8 +147,16 @@ public class CommerceFacadeImpl implements CommerceFacade {
     public CommerceDTO updateCommerce(CommerceDTO commerceDTO, MultipartFile multipartFile) throws CommerceNotFoundException, CommerceTypeNotFoundException {
         // Create the new address if any.
         Address address = this.addressService.createAddress(commerceDTO.getAddressDTO());
+        Commerce commerce = this.commerceService.getCommerce(commerceDTO.getCommerceId());
+        if (!commerce.getClosingHour().equals(commerceDTO.getClosingHour()) || !commerce.getOpeningHour().equals(commerceDTO.getOpeningHour())) {
+            try {
+                this.mailService.triggerCommerceHoursChange(commerce, this.customerService.getCustomers());
+            } catch (MessagingException e) {
+                log.warn("Sending changing hour error");
+            }
+        }
         // Update the address
-        Commerce commerce = this.commerceService.updateCommerce(commerceDTO);
+        commerce = this.commerceService.updateCommerce(commerceDTO);
         // Update the commerce image if any
         commerce.setImageUrl(this.imageAPI.uploadImage(multipartFile));
         // Get commerce type.

@@ -16,10 +16,10 @@ VALUES
 
 INSERT INTO Customer (id, username, lastname, firstname, password, email, enabled, vfp_used, phone_number, role, is_vfp_membership, fidelity_card_id)
 VALUES
-    (1, 'Joe', 'John','Aziz', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'az.az2012221@gmail.com', TRUE, TRUE, '06 54 71 03 11', 1, TRUE, '123e4567-e89b-12d3-a456-426614174000'),
-    (2, 'Mohammed', 'El Khir','Mehdi', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', '0mehdi.halouane310@gmail.com', FALSE, FALSE, '06 54 71 03 11', 1, TRUE, '723a4867-e89b-16l3-a858-856918174111'),
-    (3, 'Donald', 'Trump','Mouctar', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', '0f.amadoumouctar78@gmail.com', TRUE, FALSE, '06 54 71 03 11', 1, FALSE, 'e89b-16l3-a858-723a4867-856918174111'),
-    (4, 'Jonas', 'Dupont','Arnold', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'arnay07@gmail.com', TRUE, FALSE, '06 54 71 03 11', 1, FALSE, 'e89b-a858-723a-16l34867-856918174111');
+    (1, 'Joe', 'John','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'az.az201221@gmail.com', TRUE, TRUE, '06 54 71 03 11', 1, TRUE, '123e4567-e89b-12d3-a456-426614174000'),
+    (2, 'Mohammed', 'El Khir','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'mohammed@gmail.com', FALSE, FALSE, '06 54 71 03 11', 1, TRUE, '723a4867-e89b-16l3-a858-856918174111'),
+    (3, 'Donald', 'Trump','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'az@gmail.com', TRUE, FALSE, '06 54 71 03 11', 1, FALSE, 'e89b-16l3-a858-723a4867-856918174111'),
+    (4, 'Jonas', 'Dupont','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'jonas@gmail.com', TRUE, FALSE, '06 54 71 03 11', 1, FALSE, 'e89b-a858-723a-16l34867-856918174111');
 
 
 -- Create the Token table :

@@ -162,7 +162,6 @@ public class MailServiceImpl {
         helper.setFrom(new InternetAddress(emailFrom));
 
         javaMailSender.send(message);
-
     }
 
     @Async
@@ -227,5 +226,56 @@ public class MailServiceImpl {
 
         return content;
     }
+
+    @Async
+    public void triggerCommerceHoursChange(Commerce commerce, List<Customer> customers) throws MessagingException {
+        for (Customer customer : customers) {
+            sendHoursChangeEmail(customer, commerce);
+        }
+    }
+
+    private void sendHoursChangeEmail(Customer customer, Commerce commerce) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        String subject = "Changement d'horaires chez " + commerce.getCommerceName();
+        String content = buildHoursChangeContent(customer, commerce);
+
+        helper.setText(content, true);
+        helper.setTo(customer.getEmail());
+        helper.setSubject(subject);
+        helper.setFrom(new InternetAddress(emailFrom));
+
+        javaMailSender.send(message);
+    }
+
+    private String buildHoursChangeContent(Customer customer, Commerce commerce) {
+        String greeting = String.format("Cher(ère) %s,", customer.getFirstname());
+        String introCommerce = String.format("Nous voulons vous informer des nouveaux horaires de %s.",
+                commerce.getCommerceName());
+        String detail = String.format("Nos nouvelles heures d'ouverture sont de %s à %s.",
+                commerce.getOpeningHour(), commerce.getClosingHour());
+        String signature = "Cordialement,\nL'équipe de " + commerce.getCommerceName();
+
+        String content = String.format("""
+            <!DOCTYPE html>
+            <html lang="fr">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Changement d'horaires</title>
+            </head>
+            <body>
+                <p>%s</p>
+                <p>%s</p>
+                <p>%s</p>
+                <p>%s</p>
+            </body>
+            </html>
+            """, greeting, introCommerce, detail, signature);
+
+        return content;
+    }
+
 
 }
