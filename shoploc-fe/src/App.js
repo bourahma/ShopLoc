@@ -22,6 +22,10 @@ import AddCategory from "./components/AddCategory";
 import MerchantProducts from "./components/merchantProducts";
 import ProductDetails from "./components/ProductDetails";
 import UpdateProduct from "./components/UpdateProduct";
+import CommerceRegistrationForm from "./components/RegisterCommerce";
+import MerchantRegistrationForm from "./components/RegisterMerchant";
+import LaunchPromo from "./components/LaunchPromo";
+import PromoDetails from "./components/PromoDetails";
 
 function App() {
   return (
@@ -90,7 +94,18 @@ function App() {
                 <AdminHome />
               </PrivateRoute>
             }
-          />
+          >
+            <Route index element={<CommerceRegistrationForm />} />
+            <Route
+              path="create-merchant"
+              element={<MerchantRegistrationForm />}
+            />
+            <Route path="launch-promo" element={<LaunchPromo />} />
+            <Route
+              path="promo-details/:promotionId"
+              element={<PromoDetails />}
+            />
+          </Route>
           <Route
             path="/profile"
             element={

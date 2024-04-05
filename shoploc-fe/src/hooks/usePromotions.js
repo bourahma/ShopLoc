@@ -9,6 +9,14 @@ const useCommercePromotions = (token, commerceId) => {
   });
 };
 
+const useAllPromotions = (token) => {
+  return useQuery({
+    queryKey: ["promotions", token],
+    queryFn: () => promotionService.getAllPromotions(token),
+    enabled: !!token,
+  });
+};
+
 const useCreateOffer = (token, commerceId) => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -30,10 +38,20 @@ const useCreateDiscount = (token, commerceId) => {
   });
 };
 
+const usePromotionDetails = (token, promotionId) => {
+  return useQuery({
+    queryKey: ["promotionDetails", promotionId, token],
+    queryFn: () => promotionService.getPromotionDetails(token, promotionId),
+    enabled: !!promotionId && !!token,
+  });
+};
+
 const usePromotions = {
   useCreateOffer,
   useCreateDiscount,
   useCommercePromotions,
+  useAllPromotions,
+  usePromotionDetails,
 };
 
 export default usePromotions;

@@ -25,35 +25,25 @@ const UpdateProduct = () => {
   const navigate = useNavigate();
 
   const productQuery = useProducts.useProductDetails(cleanedToken, productId);
-
-  console.log("productQuery", productQuery?.data);
-
   const commerceCategoriesQuery = useProducts.useProductsCategories(
     cleanedToken,
     commerceId
   );
-
-  console.log("commerceCategoriesQuery", commerceCategoriesQuery?.data);
 
   const commercePromotionsQuery = usePromotions.useCommercePromotions(
     cleanedToken,
     commerceId
   );
 
-  console.log("commercePromotionsQuery", commercePromotionsQuery?.data);
-
   const initialProduct = {
     ...productQuery.data,
   };
-
-  console.log("initialProduct", initialProduct);
 
   const updateProduct = (values) => {
     console.log("values", values);
     productServices
       .updateProduct(values, cleanedToken)
       .then((data) => {
-        console.log(data);
         setSuccess("Produit modifié avec succès");
         navigate("/merchant/home");
       })

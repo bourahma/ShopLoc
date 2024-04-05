@@ -205,7 +205,7 @@ public class MailServiceImpl {
                     promotion.getEndDate().toString());
         }
 
-        String signature = "Cordialement,\nL'équipe de " + commerce.getCommerceName();
+        String signature = "Cordialement, <br> L'équipe de " + commerce.getCommerceName();
         String content = String.format("""
             <!DOCTYPE html>
             <html lang="fr">

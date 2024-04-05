@@ -30,7 +30,7 @@ describe("LoginForm", () => {
   });
 
   test("checks form submission", async () => {
-    loginService.login.mockResolvedValue({});
+    loginService.customerLogin.mockResolvedValueOnce({});
 
     const { getByText, getByPlaceholderText } = render(
       <BrowserRouter>
@@ -46,8 +46,10 @@ describe("LoginForm", () => {
     });
     fireEvent.click(getByText("Connexion"));
 
-    await waitFor(() => expect(loginService.login).toHaveBeenCalledTimes(1));
-    expect(loginService.login).toHaveBeenCalledWith({
+    await waitFor(() =>
+      expect(loginService.customerLogin).toHaveBeenCalledTimes(1)
+    );
+    expect(loginService.customerLogin).toHaveBeenCalledWith({
       username: "testuser",
       password: "testpassword",
     });

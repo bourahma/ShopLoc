@@ -27,8 +27,10 @@ const LoginForm = () => {
           "userToken",
           JSON.stringify(data["access-token"])
         );
-        console.log(data);
-        window.localStorage.setItem("userRole", JSON.stringify(userRole));
+        window.localStorage.setItem(
+          "userRole",
+          JSON.stringify(userRole || data["role"])
+        );
         navigate(successUrl);
       })
       .catch((error) => {

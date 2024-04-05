@@ -7,11 +7,13 @@ describe("loginService", () => {
     const mock = new MockAdapter(axios);
     const data = { response: true };
     mock
-      .onPost(`${process.env.REACT_APP_SERVER_URL}/authentication/login`)
+      .onPost(
+        `${process.env.REACT_APP_SERVER_URL}/authentication/customer/login`
+      )
       .reply(200, data);
 
     const credentials = { username: "testuser", password: "testpassword" };
-    const response = await loginService.login(credentials);
+    const response = await loginService.customerLogin(credentials);
 
     expect(response).toEqual(data);
   });
