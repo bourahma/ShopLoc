@@ -26,30 +26,36 @@ const CheckoutPage = () => {
     });
     console.log(loyaltyPoints);
 
-    const [paymentSuccess, setPaymentSuccess] = useState(false);
-    const navigate = useNavigate();
-    const token = localStorage.getItem("userToken");
-    const cleanedToken = token.replace(/['"]+/g, "");
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const navigate = useNavigate();
+  const token = localStorage.getItem("userToken");
+  const cleanedToken = JSON.parse(token);
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handlePaymentMethodChange = (method) => {
+    setPaymentMethod(method);
+  };
+
+  useEffect(() => {
+    const fetchLoyalty = async () => {
+      const loyaltyCredit = await fetchLoyaltyCard(cleanedToken);
+      if (loyaltyCredit) {
+        setLoyaltyPoints(loyaltyCredit);
+      }
     };
 
-    const handlePaymentMethodChange = (method) => {
-        setPaymentMethod(method);
-    };
+    fetchLoyalty();
+  }, []);
 
-    useEffect(() => {
-        const fetchLoyalty = async () => {
-            const loyaltyCredit = await fetchLoyaltyCard(cleanedToken);
-            if (loyaltyCredit) {
-                setLoyaltyPoints(loyaltyCredit);
-            }
-        };
 
-        fetchLoyalty();
-    }, []);
+  const handlePaymentWithLoyaltyPoints = async () => {
+    // Créer d'abord la commande
+    const orderId = await createOrder();
+    console.log(orderId);
 
     const createOrder = async () => {
         try {
@@ -79,14 +85,6 @@ const CheckoutPage = () => {
             }
         } catch (error) {
             console.error("Error creating order:", error);
-        }
-    };
-
-    const handlePaymentWithLoyaltyPoints = async () => {
-        // Créer d'abord la commande
-        const orderId = await createOrder();
-        console.log(orderId);
-
         if (orderId) {
             try {
                 const response = await axios.get(
@@ -112,18 +110,20 @@ const CheckoutPage = () => {
                 console.error("Error processing loyalty card payment:", error);
             }
         }
-    };
+    }}}
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (paymentMethod === "creditCard") {
-            // Logic here
-            console.log("Processing credit card payment...");
-        } else {
-            // Paiement avec la carte de fidélité
-            handlePaymentWithLoyaltyPoints();
-        }
-    };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (paymentMethod === "creditCard") {
+      // Logic here
+      console.log("Processing credit card payment...");
+    } else {
+      // Paiement avec la carte de fidélité
+      handlePaymentWithLoyaltyPoints();
+    }
+  };
+
+       
 
     return (
         <div className="container mx-auto py-8">
@@ -282,7 +282,6 @@ const CheckoutPage = () => {
                 </div>
             </div>
         </div>
-    );
-};
-
-export default CheckoutPage;
+      )
+                    }
+    export default CheckoutPage

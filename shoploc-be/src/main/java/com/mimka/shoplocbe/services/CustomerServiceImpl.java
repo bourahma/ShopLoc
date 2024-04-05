@@ -22,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -58,6 +59,11 @@ public class CustomerServiceImpl implements CustomerService, UserDetailsService 
         if (customer == null)  throw new BadCredentialsException("Aucun client n'est associé à ce nom d'utilisateur.");
 
         return customer;
+    }
+
+    @Override
+    public List<Customer> getCustomers() {
+        return this.customerRepository.findAll();
     }
 
     private UserDetails getUserDetails(String username) {

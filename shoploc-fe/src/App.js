@@ -16,6 +16,16 @@ import Cart from "./pages/Cart";
 import AdminHome from "./pages/AdminHome";
 import Profile from "./pages/Profile";
 import Checkout from "./pages/Checkout";
+import AddProduct from "./components/AddProduct";
+import AddPromotion from "./components/AddPromotion";
+import AddCategory from "./components/AddCategory";
+import MerchantProducts from "./components/merchantProducts";
+import ProductDetails from "./components/ProductDetails";
+import UpdateProduct from "./components/UpdateProduct";
+import CommerceRegistrationForm from "./components/RegisterCommerce";
+import MerchantRegistrationForm from "./components/RegisterMerchant";
+import LaunchPromo from "./components/LaunchPromo";
+import PromoDetails from "./components/PromoDetails";
 
 function App() {
   return (
@@ -84,7 +94,18 @@ function App() {
                 <AdminHome />
               </PrivateRoute>
             }
-          />
+          >
+            <Route index element={<CommerceRegistrationForm />} />
+            <Route
+              path="create-merchant"
+              element={<MerchantRegistrationForm />}
+            />
+            <Route path="launch-promo" element={<LaunchPromo />} />
+            <Route
+              path="promo-details/:promotionId"
+              element={<PromoDetails />}
+            />
+          </Route>
           <Route
             path="/profile"
             element={
@@ -112,7 +133,20 @@ function App() {
                 <MerchantHome />
               </PrivateRoute>
             }
-          />
+          >
+            <Route index element={<MerchantProducts />} />
+            <Route path="ajouterProduit/:commerceId" element={<AddProduct />} />
+            <Route path="promotion/:commerceId" element={<AddPromotion />} />
+            <Route path="addCategory/:commerceId" element={<AddCategory />} />
+            <Route
+              path="productDetails/:productId"
+              element={<ProductDetails />}
+            />
+            <Route
+              path="updateProduct/:productId"
+              element={<UpdateProduct />}
+            />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

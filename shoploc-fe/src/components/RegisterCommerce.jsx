@@ -18,7 +18,7 @@ const CommerceRegistrationForm = () => {
   const [success, setSuccess] = useState(null);
   const [commerceTypes, setCommerceTypes] = useState([]);
   const token = localStorage.getItem("userToken");
-  const cleanedToken = token ? token.replace(/['"]+/g, "") : null;
+  const cleanedToken = JSON.parse(token);
 
   useEffect(() => {
     fetchCommerceTypes(cleanedToken)

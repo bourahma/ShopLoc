@@ -39,10 +39,12 @@ public class VFPStatusProcessor implements ItemProcessor<Pair<List<Order>, Custo
             this.vfpHistoryService.grantVFPStatus(customer);
         } else {
             VfpHistory vfpHistory = this.vfpHistoryService.lastVFPStatusGranted(customer);
-            if (vfpHistory != null && vfpHistory.getExpirationDate().isBefore(LocalDate.now())) {
+            if (vfpHistory != null &&
+                    vfpHistory.getExpirationDate().isBefore(LocalDate.now()) &&
+                    vfpHistory.getGrantedDate().isAfter(LocalDate.now().minusDays(7))) {
                 customer.setVfpMembership(true);
-            } else if (vfpHistory == null || vfpHistory.getExpirationDate().isAfter(LocalDate.now())){
-                customer.setVfpMembership(true);
+            } else if (vfpHistory == null || vfpHistory.getExpirationDate().isBefore(LocalDate.now())){
+                customer.setVfpMembership(false);
             }
         }
         customer.setVfpUsed(false);

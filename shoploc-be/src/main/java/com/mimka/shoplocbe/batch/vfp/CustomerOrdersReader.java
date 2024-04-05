@@ -5,7 +5,10 @@ import com.mimka.shoplocbe.entities.Order;
 import com.mimka.shoplocbe.entities.OrderStatus;
 import com.mimka.shoplocbe.repositories.CustomerRepository;
 import com.mimka.shoplocbe.repositories.OrderRepository;
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.annotation.BeforeJob;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
@@ -27,19 +30,16 @@ public class CustomerOrdersReader implements ItemReader<Pair<List<Order>, Custom
         this.orderRepository = orderRepository;
         this.customerRepository = customerRepository;
     }
-
-    public void init () {
-        this.customers = this.customerRepository.findAll();
-        this.customerIterator = customers.iterator();
+    public void reset() {
+        this.customerIterator = this.customerRepository.findAll().iterator();
     }
 
     @Override
     @Transactional
     public Pair<List<Order>, Customer> read() {
-        if (customers == null || !customerIterator.hasNext()) {
+        if (!customerIterator.hasNext()) {
             return null;
         }
-
         Customer currentCustomer = customerIterator.next();
         return Pair.of(orderRepository.findByCustomerAndAndOrderDateAfterAndAndOrderStatus(currentCustomer, LocalDate.now().minusDays(7), OrderStatus.PAID.name()), currentCustomer);
     }

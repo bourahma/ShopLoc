@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import { Checkbox, Table, TextInput } from "flowbite-react";
-import useMerchantProducts from "../hooks/useMerchantProducts";
+import { Table, TextInput } from "flowbite-react";
+import useProducts from "../hooks/useProducts";
+import { Link } from "react-router-dom";
 
 const MerchantProducts = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const token = localStorage.getItem("userToken");
-  const cleanedToken = token ? token.replace(/['"]+/g, "") : null;
+  const cleanedToken = JSON.parse(token);
 
   // Decode the token
   let decoded = jwtDecode(cleanedToken);
@@ -14,7 +15,7 @@ const MerchantProducts = () => {
   // Get the merchant ID
   let merchantId = decoded.userId;
 
-  const { isLoading, isError, error, data } = useMerchantProducts(
+  const { isLoading, isError, error, data } = useProducts.useMerchantProducts(
     cleanedToken,
     merchantId
   );
@@ -33,16 +34,13 @@ const MerchantProducts = () => {
 
       <Table hoverable>
         <Table.Head>
-          <Table.HeadCell className="p-4">
-            <Checkbox />
-          </Table.HeadCell>
           <Table.HeadCell>Nom du produit</Table.HeadCell>
           <Table.HeadCell>Catégorie</Table.HeadCell>
           <Table.HeadCell>Cadeau</Table.HeadCell>
-          <Table.HeadCell>Promotion</Table.HeadCell>
+          <Table.HeadCell>Réduction</Table.HeadCell>
           <Table.HeadCell>Prix</Table.HeadCell>
           <Table.HeadCell>
-            <span className="sr-only">Edit</span>
+            <span className="sr-only">Détails</span>
           </Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
@@ -57,9 +55,6 @@ const MerchantProducts = () => {
                 className="bg-white dark:border-gray-700 dark:bg-gray-800"
                 key={product.productId}
               >
-                <Table.Cell className="p-4">
-                  <Checkbox />
-                </Table.Cell>
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                   {product.productName}
                 </Table.Cell>
@@ -70,12 +65,12 @@ const MerchantProducts = () => {
                 </Table.Cell>
                 <Table.Cell>{product.price} €</Table.Cell>
                 <Table.Cell>
-                  <a
-                    href="#"
+                  <Link
                     className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
+                    to={`/merchant/home/productDetails/${product.productId}`}
                   >
-                    Modifier
-                  </a>
+                    Détails
+                  </Link>
                 </Table.Cell>
               </Table.Row>
             ))}

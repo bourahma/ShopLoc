@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Formik, ErrorMessage } from "formik";
 import productServices from "../services/product";
 import * as Yup from "yup";
@@ -10,64 +10,42 @@ import {
   Button,
   Alert,
   Textarea,
-  FileInput,
 } from "flowbite-react";
 import useProducts from "../hooks/useProducts";
+import usePromotions from "../hooks/usePromotions";
 
-const AddProduct = () => {
+const UpdateProduct = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const token = localStorage.getItem("userToken");
   const cleanedToken = JSON.parse(token);
-  const commerceId = useParams().commerceId;
+  const commerceId = JSON.parse(localStorage.getItem("commerceId"));
 
-  const commerceCategoriesResponse = useProducts.useProductsCategories(
+  const { productId } = useParams();
+  const navigate = useNavigate();
+
+  const productQuery = useProducts.useProductDetails(cleanedToken, productId);
+  const commerceCategoriesQuery = useProducts.useProductsCategories(
+    cleanedToken,
+    commerceId
+  );
+
+  const commercePromotionsQuery = usePromotions.useCommercePromotions(
     cleanedToken,
     commerceId
   );
 
   const initialProduct = {
-    productName: "",
-    description: "",
-    price: 0,
-    quantity: 0,
-    rewardPointsPrice: 0,
-    view: 0,
-    gift: false,
-    productCategoryId: "",
-    multipartFile: null,
+    ...productQuery.data,
   };
 
-  const registerProduct = (values) => {
-    const formData = new FormData();
-    formData.append(
-      "productDTO",
-      new Blob(
-        [
-          JSON.stringify({
-            productName: values.productName,
-            description: values.description,
-            price: values.price,
-            quantity: values.quantity,
-            rewardPointsPrice: values.rewardPointsPrice,
-            gift: values.gift,
-            productCategoryId: values.productCategoryId,
-            view: 0,
-            commerceId: commerceId,
-          }),
-        ],
-        {
-          type: "application/json",
-        }
-      )
-    );
-    formData.append("multipartFile", values.multipartFile);
-
+  const updateProduct = (values) => {
+    console.log("values", values);
     productServices
-      .addProduct(formData, cleanedToken, commerceId)
+      .updateProduct(values, cleanedToken)
       .then((data) => {
-        console.log(data);
-        setSuccess("Produit ajouté avec succès");
+        setSuccess("Produit modifié avec succès");
+        navigate("/merchant/home");
       })
       .catch((error) => {
         console.log(error);
@@ -114,7 +92,7 @@ const AddProduct = () => {
             productCategoryId: Yup.string().required("Requis"),
           })}
           onSubmit={(values, { setSubmitting, resetForm }) => {
-            registerProduct(values);
+            updateProduct(values);
             resetForm();
             setSubmitting(false);
           }}
@@ -126,7 +104,6 @@ const AddProduct = () => {
             handleChange,
             handleSubmit,
             isSubmitting,
-            setFieldValue,
           }) => (
             <form
               onSubmit={handleSubmit}
@@ -268,7 +245,7 @@ const AddProduct = () => {
                     onChange={handleChange}
                   >
                     <option value="">Choisir une catégorie</option>
-                    {commerceCategoriesResponse.data?.map((category) => (
+                    {commerceCategoriesQuery.data?.map((category) => (
                       <option
                         key={category.productCategoryId}
                         value={category.productCategoryId}
@@ -286,24 +263,27 @@ const AddProduct = () => {
 
                 <div>
                   <div className="mb-2 block">
-                    <Label htmlFor="multipartFile">Image</Label>
+                    <Label htmlFor="promotionId">Promotion</Label>
                   </div>
-                  <FileInput
-                    id="multipartFile"
-                    type="file"
-                    placeholder="Image"
-                    accept="image/*"
-                    error={errors.multipartFile}
-                    fieldtouched={touched.multipartFile?.toString()}
-                    onChange={(event) => {
-                      setFieldValue(
-                        "multipartFile",
-                        event.currentTarget.files[0]
-                      );
-                    }}
-                  />
+                  <Select
+                    id="promotionId"
+                    value={values.promotionId}
+                    error={errors.promotionId}
+                    fieldtouched={touched.promotionId?.toString()}
+                    onChange={handleChange}
+                  >
+                    <option value="">Choisir une promotion</option>
+                    {commercePromotionsQuery.data?.map((promotion) => (
+                      <option
+                        key={promotion.promotionId}
+                        value={promotion.promotionId}
+                      >
+                        {promotion.label}
+                      </option>
+                    ))}
+                  </Select>
                   <ErrorMessage
-                    name="multipartFile"
+                    name="promotionId"
                     component="div"
                     className="text-red-500 text-xs"
                   />
@@ -314,7 +294,7 @@ const AddProduct = () => {
                   type="submit"
                   disabled={isSubmitting}
                 >
-                  Ajouter
+                  Modifier
                 </Button>
               </div>
             </form>
@@ -325,4 +305,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default UpdateProduct;

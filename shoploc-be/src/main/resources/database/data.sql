@@ -16,10 +16,10 @@ VALUES
 
 INSERT INTO Customer (id, username, lastname, firstname, password, email, enabled, vfp_used, phone_number, role, is_vfp_membership, fidelity_card_id)
 VALUES
-    (1, 'Joe', 'John','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'az.az201221@gmail.com', TRUE, TRUE, '06 54 71 03 11', 1, TRUE, '123e4567-e89b-12d3-a456-426614174000'),
-    (2, 'Mohammed', 'El Khir','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'mohammed@gmail.com', FALSE, FALSE, '06 54 71 03 11', 1, TRUE, '723a4867-e89b-16l3-a858-856918174111'),
-    (3, 'Donald', 'Trump','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'az@gmail.com', TRUE, FALSE, '06 54 71 03 11', 1, FALSE, 'e89b-16l3-a858-723a4867-856918174111'),
-    (4, 'Jonas', 'Dupont','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'jonas@gmail.com', TRUE, FALSE, '06 54 71 03 11', 1, FALSE, 'e89b-a858-723a-16l34867-856918174111');
+    (1, 'Joe', 'John','Aziz', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'az.az2012221@gmail.com', TRUE, TRUE, '06 54 71 03 11', 1, TRUE, '123e4567-e89b-12d3-a456-426614174000'),
+    (2, 'Mohammed', 'El Khir','Mehdi', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', '0mehdi.halouane310@gmail.com', FALSE, FALSE, '06 54 71 03 11', 1, TRUE, '723a4867-e89b-16l3-a858-856918174111'),
+    (3, 'Donald', 'Trump','Mouctar', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', '0f.amadoumouctar78@gmail.com', TRUE, FALSE, '06 54 71 03 11', 1, FALSE, 'e89b-16l3-a858-723a4867-856918174111'),
+    (4, 'Jonas', 'Dupont','Arnold', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'arnay07@gmail.com', TRUE, FALSE, '06 54 71 03 11', 1, FALSE, 'e89b-a858-723a-16l34867-856918174111');
 
 
 -- Create the Token table :
@@ -100,11 +100,11 @@ VALUES
     (nextval('promotion_sequence'), '2023-05-01', '2023-05-15', 'Réduction d été', 'Discount', 6, 20, NULL, NULL);
 
 -- Sample data for Promotion table
-INSERT INTO Promotion (promotion_id,start_date, end_date, description, type, commerce_id, discount_percent, required_items, offered_items)
+INSERT INTO Promotion (promotion_id,start_date, end_date, sent, description, type, commerce_id, discount_percent, required_items, offered_items)
 VALUES
-    (1, '2024-03-01', '2024-05-15', 'Vente de printemps', 'DISCOUNT', 8, 20, NULL, NULL),
-    (2, '2024-04-01', '2024-04-30', 'Achetez 3, obtenez-en 1 gratuitement', 'OFFER', 1, NULL, 3, 1),
-    (3, '2024-05-01', '2024-05-15', 'Réduction d été', 'DISCOUNT', 6, 15,  NULL, NULL);
+    (1, '2024-03-01', '2024-02-15', FALSE, 'Vente de printemps', 'DISCOUNT', 8, 20, NULL, NULL),
+    (2, '2024-04-01', '2024-04-30', FALSE, 'Achetez 3, obtenez-en 1 gratuitement', 'OFFER', 1, NULL, 3, 1),
+    (3, '2024-05-01', '2024-05-15', TRUE, 'Réduction d été', 'DISCOUNT', 6, 15,  NULL, NULL);
 
 -- Product's insertion :
 INSERT INTO Product (product_id, product_name, description, price, quantity, reward_points_price, is_gift, promotion_id, commerce_id, product_category_id, view)

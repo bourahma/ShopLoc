@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "${allowed.origin}")
@@ -43,22 +44,24 @@ public class PromotionController {
         return promotionDTO;
     }
 
-    @GetMapping("/offer/{commerceId}")
-    public List<PromotionDTO> offerPromotions (@PathVariable Long commerceId) throws CommerceNotFoundException {
-        List<PromotionDTO> promotions = this.promotionFacade.getCommerceOfferPromotions(commerceId);
-
-        return promotions;
-    }
-
-    @GetMapping("/discount/{commerceId}")
-    public List<PromotionDTO> discountPromotions (@PathVariable Long commerceId) throws CommerceNotFoundException {
-        List<PromotionDTO> promotions = this.promotionFacade.getCommerceDiscountPromotions(commerceId);
-
-        return promotions;
-    }
-
     @GetMapping("/{promotionId}")
     public PromotionDTO promotion (@PathVariable Long promotionId) throws CommerceNotFoundException {
         return this.promotionFacade.getPromotion(promotionId);
     }
+
+    @GetMapping("/commerce/{commerceId}")
+    public List<PromotionDTO> promotions (@PathVariable Long commerceId) throws CommerceNotFoundException {
+        return this.promotionFacade.getCommercePromotions(commerceId);
+    }
+
+    @GetMapping("/")
+    public List<PromotionDTO> promotions () {
+        return this.promotionFacade.getPromotions();
+    }
+
+    @GetMapping("/{promotionId}/launch")
+    public PromotionDTO launchPromotion(@PathVariable Long promotionId) {
+        return this.promotionFacade.launchPromotion(promotionId);
+    }
+
 }

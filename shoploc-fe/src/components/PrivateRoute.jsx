@@ -1,33 +1,36 @@
 import { Navigate } from "react-router-dom";
 import React from "react";
+import { jwtDecode } from "jwt-decode";
 
 export const PrivateRoute = ({ children }) => {
-  const loggedUser = window.localStorage.getItem("userToken");
+  const loggedUserToken = JSON.parse(window.localStorage.getItem("userToken"));
 
-  if (!loggedUser) {
+  if (!loggedUserToken) {
     return <Navigate to={"/"} />;
   }
 
-  return children;
-};
+  if (loggedUserToken) {
+    let decoded = jwtDecode(loggedUserToken);
+    let expirationDate = decoded.exp;
 
-export const AdminPrivateRoute = ({ children }) => {
-  const loggedUser = window.localStorage.getItem("userToken");
-  const userRole = window.localStorage.getItem("userRole");
+    if (expirationDate < Date.now() / 1000) {
+      window.localStorage.clear();
+      return <Navigate to={"/"} />;
+    }
 
-  if (!loggedUser || userRole !== "ADMINISTRATOR") {
-    return <Navigate to={"/"} />;
-  }
+    if (
+      JSON.parse(window.localStorage.getItem("userRole")) === "ADMINISTRATOR" &&
+      !window.location.pathname.includes("/admin/home")
+    ) {
+      return <Navigate to={"/admin/home"} />;
+    }
 
-  return children;
-};
-
-export const MerchantPrivateRoute = ({ children }) => {
-  const loggedUser = window.localStorage.getItem("userToken");
-  const userRole = window.localStorage.getItem("userRole");
-
-  if (!loggedUser || userRole !== "MERCHANT") {
-    return <Navigate to={"/"} />;
+    if (
+      JSON.parse(window.localStorage.getItem("userRole")) === "MERCHANT" &&
+      !window.location.pathname.includes("/merchant/home")
+    ) {
+      return <Navigate to={"/merchant/home"} />;
+    }
   }
 
   return children;
