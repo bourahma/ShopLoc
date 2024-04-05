@@ -1,18 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import promotionService from "../services/promotion";
 
-const useOffers = (token, commerceId) => {
+const useCommercePromotions = (token, commerceId) => {
   return useQuery({
-    queryKey: ["offers", commerceId, token],
-    queryFn: () => promotionService.getOffers(token, commerceId),
-    enabled: !!commerceId && !!token,
-  });
-};
-
-const useDiscounts = (token, commerceId) => {
-  return useQuery({
-    queryKey: ["discounts", commerceId, token],
-    queryFn: () => promotionService.getDiscounts(token, commerceId),
+    queryKey: ["commercePromotions", commerceId, token],
+    queryFn: () => promotionService.getCommercePromotions(token, commerceId),
     enabled: !!commerceId && !!token,
   });
 };
@@ -39,10 +31,9 @@ const useCreateDiscount = (token, commerceId) => {
 };
 
 const usePromotions = {
-  useOffers,
-  useDiscounts,
   useCreateOffer,
   useCreateDiscount,
+  useCommercePromotions,
 };
 
 export default usePromotions;

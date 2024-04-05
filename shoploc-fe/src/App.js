@@ -21,6 +21,7 @@ import AddPromotion from "./components/AddPromotion";
 import AddCategory from "./components/AddCategory";
 import MerchantProducts from "./components/merchantProducts";
 import ProductDetails from "./components/ProductDetails";
+import UpdateProduct from "./components/UpdateProduct";
 
 function App() {
   return (
@@ -125,6 +126,10 @@ function App() {
             <Route
               path="productDetails/:productId"
               element={<ProductDetails />}
+            />
+            <Route
+              path="updateProduct/:productId"
+              element={<UpdateProduct />}
             />
           </Route>
         </Route>

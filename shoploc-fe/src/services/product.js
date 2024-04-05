@@ -70,11 +70,26 @@ const getProductDetails = async (token, productId) => {
   }
 };
 
+const updateProduct = async (product, token) => {
+  try {
+    const response = await axios.put(`${SERVER_URL}/${baseUrl}/`, product, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating product: ", error);
+    throw error;
+  }
+};
+
 const productServices = {
   getProductsCategories,
   addProductCategory,
   getProductDetails,
   addProduct,
+  updateProduct,
 };
 
 export default productServices;

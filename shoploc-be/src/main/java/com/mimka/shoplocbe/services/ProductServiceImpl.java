@@ -7,6 +7,7 @@ import com.mimka.shoplocbe.entities.CommerceType;
 import com.mimka.shoplocbe.entities.Product;
 import com.mimka.shoplocbe.exception.ProductException;
 import com.mimka.shoplocbe.repositories.ProductRepository;
+import com.mimka.shoplocbe.repositories.PromotionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +18,15 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
 
+    private final PromotionRepository promotionRepository;
+
     private final ProductDTOUtil productDTOUtil;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, ProductDTOUtil productDTOUtil) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductDTOUtil productDTOUtil, PromotionRepository promotionRepository) {
         this.productRepository = productRepository;
         this.productDTOUtil = productDTOUtil;
+        this.promotionRepository = promotionRepository;
     }
 
     @Override
@@ -64,6 +68,9 @@ public class ProductServiceImpl implements ProductService {
         product.setRewardPointsPrice(productDTO.getRewardPointsPrice());
         product.setQuantity(productDTO.getQuantity());
         product.setGift(productDTO.isGift());
+        product.setPromotion(
+                productDTO.getPromotionId() != null ? this.promotionRepository.findById(productDTO.getPromotionId()).orElse(null) : null
+        );
 
         return this.productRepository.save(product);
     }
