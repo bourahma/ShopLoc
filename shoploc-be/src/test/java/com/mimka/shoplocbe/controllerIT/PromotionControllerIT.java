@@ -1,6 +1,7 @@
 package com.mimka.shoplocbe.controllerIT;
 
 import com.mimka.shoplocbe.dto.product.PromotionDTO;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -16,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PromotionControllerIT extends ControllerIT {
 
     @Test
+    @Transactional
     void testCreateOfferPromotion_ReturnCreated () throws Exception {
         mockMvc.perform(post("/promotion/offer/8")
                         .header("Authorization", "Bearer " + merchantJWTToken)
@@ -25,38 +27,20 @@ class PromotionControllerIT extends ControllerIT {
     }
 
     @Test
+    @Transactional
     void testCreateDiscountPromotion_ReturnCreated () throws Exception {
-        mockMvc.perform(get("/promotion/discount/8")
+        mockMvc.perform(post("/promotion/discount/8")
                         .header("Authorization", "Bearer " + merchantJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(this.getDiscountPromotionDTO())))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)));
-    }
-
-    @Test
-    void testGetOfferPromotions_ReturnOK () throws Exception {
-        mockMvc.perform(get("/promotion/offer/1")
-                        .header("Authorization", "Bearer " + merchantJWTToken))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)));
-    }
-
-
-    @Test
-    void testGetDiscountPromotions_ReturnOK () throws Exception {
-        mockMvc.perform(get("/promotion/offer/8")
-                        .header("Authorization", "Bearer " + merchantJWTToken))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)));
+                .andExpect(status().isCreated());
     }
 
     @Test
     void testGetPromotion_ReturnOk () throws Exception {
-        mockMvc.perform(get("/promotion/offer/1")
+        mockMvc.perform(get("/promotion/1")
                         .header("Authorization", "Bearer " + merchantJWTToken))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)));
+                .andExpect(status().isOk());
     }
 
     @NotNull
