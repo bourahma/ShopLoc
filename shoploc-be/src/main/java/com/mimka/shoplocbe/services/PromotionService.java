@@ -17,5 +17,5 @@ public interface PromotionService {
 
     Promotion getPromotion(Long offerPromotionId);
 
-    Promotion savePromotion (Promotion promotion);
+    void savePromotion (Promotion promotion);
 }
