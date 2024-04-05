@@ -3,8 +3,6 @@ package com.mimka.shoplocbe.services;
 import com.mimka.shoplocbe.configurations.CustomUserDetails;
 import com.mimka.shoplocbe.dto.DtoUtil;
 import com.mimka.shoplocbe.dto.user.CustomerDTO;
-import com.mimka.shoplocbe.dto.vfp.VfpDTO;
-import com.mimka.shoplocbe.dto.vfp.VfpDTOUtil;
 import com.mimka.shoplocbe.entities.*;
 import com.mimka.shoplocbe.exception.RegistrationException;
 import com.mimka.shoplocbe.exception.RegistrationTokenInvalidException;

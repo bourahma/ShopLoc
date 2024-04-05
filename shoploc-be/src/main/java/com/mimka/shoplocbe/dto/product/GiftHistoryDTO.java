@@ -1,6 +1,5 @@
 package com.mimka.shoplocbe.dto.product;
 
-import com.mimka.shoplocbe.dto.product.ProductDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

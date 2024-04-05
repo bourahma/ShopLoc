@@ -51,8 +51,8 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
     @Override
-    public Promotion savePromotion(Promotion promotion) {
-        return this.promotionRepository.save(promotion);
+    public void savePromotion(Promotion promotion) {
+        this.promotionRepository.save(promotion);
     }
 
     @Override

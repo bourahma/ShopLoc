@@ -1,10 +1,7 @@
 package com.mimka.shoplocbe.services;
 
 import com.mimka.shoplocbe.dto.user.MerchantDTO;
-import com.mimka.shoplocbe.entities.Commerce;
-import com.mimka.shoplocbe.entities.Customer;
-import com.mimka.shoplocbe.entities.Promotion;
-import com.mimka.shoplocbe.entities.User;
+import com.mimka.shoplocbe.entities.*;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -16,9 +13,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Base64;
 import java.util.List;
 
 @Slf4j
@@ -277,5 +271,53 @@ public class MailServiceImpl {
         return content;
     }
 
+    @Async
+    public void triggerMerchantsProductOutOfStock(Product product, List<Merchant> merchants) throws MessagingException {
+        for (Merchant merchant : merchants) {
+            sendProductOutOfStockEmail(merchant, product);
+        }
+    }
+
+    private void sendProductOutOfStockEmail(Merchant merchant, Product product) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        String subject = "Alerte de rupture de stock pour " + product.getProductName();
+        String content = buildProductOutOfStockContent(merchant, product);
+
+        helper.setText(content, true);
+        helper.setTo(merchant.getEmail());
+        helper.setSubject(subject);
+        helper.setFrom(new InternetAddress(emailFrom));
+
+        javaMailSender.send(message);
+    }
+
+    private String buildProductOutOfStockContent(Merchant merchant, Product product) {
+        String greeting = String.format("Cher(ère) %s,", merchant.getFirstname());
+        String intro = "Nous vous informons d'une rupture de stock pour un de vos produits.";
+        String detail = String.format("Le produit \"%s\" est maintenant en rupture de stock. Veuillez reconstituer le stock pour continuer les ventes.",
+                product.getProductName());
+        String signature = "Cordialement,\nL'équipe de gestion de stock ShopLoc";
+
+        String content = String.format("""
+            <!DOCTYPE html>
+            <html lang="fr">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Alerte de rupture de stock</title>
+            </head>
+            <body>
+                <p>%s</p>
+                <p>%s</p>
+                <p>%s</p>
+                <p>%s</p>
+            </body>
+            </html>
+            """, greeting, intro, detail, signature);
+
+        return content;
+    }
 
 }
