@@ -15,7 +15,8 @@ const CheckoutPage = () => {
     const { cartItems, totalPrice } = useCart();
     const [loyaltyPoints, setLoyaltyPoints] = useState(0);
     const [customerData, setCustomerData] = useState(null);
-    const [paymentMethod, setPaymentMethod] = useState("creditCard");
+    const [paymentMethod, setPaymentMethod] = useState("credits");
+    const [showCreditCard, setShowCreditCard] = useState(false);
     const [formData, setFormData] = useState({
         cvc: "",
         expiry: "",
@@ -23,7 +24,7 @@ const CheckoutPage = () => {
         name: "",
         number: "",
     });
-    console.log(cartItems);
+    console.log(loyaltyPoints);
 
     const [paymentSuccess, setPaymentSuccess] = useState(false);
     const navigate = useNavigate();
@@ -50,26 +51,29 @@ const CheckoutPage = () => {
         fetchLoyalty();
     }, []);
 
-
     const createOrder = async () => {
         try {
-            const response = await axios.post(`${SERVER_URL}/order/`, {
-                commerceId: cartItems[0].commerceId,
-                // commerceName: "Nom du Commerce", // Remplacer par le nom du commerce
-                products: cartItems.map((item) => ({
-                    productId: item.productId,
-                    productName: item.productName,
-                    price: item.price,
-                    rewardPointsPrice: item.rewardPointsPrice,
-                    promotionId: item.promotionId,
-                    quantity: item.quantity,
-                })),
-            },{
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${cleanedToken}`,
-            },
-        });
+            const response = await axios.post(
+                `${SERVER_URL}/order/`,
+                {
+                    commerceId: cartItems[0].commerceId,
+                    // commerceName: "Nom du Commerce", // Remplacer par le nom du commerce
+                    products: cartItems.map((item) => ({
+                        productId: item.productId,
+                        productName: item.productName,
+                        price: item.price,
+                        rewardPointsPrice: item.rewardPointsPrice,
+                        promotionId: item.promotionId,
+                        quantity: item.quantity,
+                    })),
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${cleanedToken}`,
+                    },
+                }
+            );
             if (response.status === 200) {
                 return response.data.orderId; // Retourne l'ID de la commande
             }
@@ -135,66 +139,95 @@ const CheckoutPage = () => {
             <div className="flex justify-center">
                 <button
                     className={`mx-4 px-4 py-2 rounded ${
-                        paymentMethod === "creditCard"
+                        paymentMethod === "credits"
                             ? "bg-blue-500 text-white"
                             : "bg-gray-300 text-gray-800"
                     }`}
-                    onClick={() => handlePaymentMethodChange("creditCard")}
+                    onClick={() => handlePaymentMethodChange("credits")}
                 >
-                    <FaCreditCard className="inline-block mr-2" /> Pay with
-                    Credit Card
+                    <FaCreditCard className="inline-block mr-2" /> Payer avec la
+                    carte de credit
                 </button>
                 <button
                     className={`mx-4 px-4 py-2 rounded ${
-                        paymentMethod === "loyaltyCard"
+                        paymentMethod === "points"
                             ? "bg-blue-500 text-white"
                             : "bg-gray-300 text-gray-800"
                     }`}
-                    onClick={() => handlePaymentMethodChange("loyaltyCard")}
+                    onClick={() => handlePaymentMethodChange("points")}
                 >
-                    <FaHandHoldingHeart className="inline-block mr-2" /> Pay
-                    with Loyalty Card
+                    <FaHandHoldingHeart className="inline-block mr-2" /> Payer
+                    avec vos points de fidelité
                 </button>
             </div>
             <form onSubmit={handleSubmit} className="mt-8">
-                {paymentMethod === "creditCard" ? (
-                    <div className="max-w-md mx-auto">
-                        <Cards
-                            cvc={formData.cvc}
-                            expiry={formData.expiry}
-                            focused={formData.focus}
-                            name={formData.name}
-                            number={formData.number}
-                        />
-                        <div className="mt-4">
-                            <input
-                                type="tel"
-                                name="number"
-                                placeholder="Card Number"
-                                className="input-field"
-                                onChange={handleInputChange}
+                {paymentMethod === "credits" ? (
+                    <div className="max-w-md mx-auto bg-white rounded-lg overflow-hidden shadow-lg p-4">
+                        <div className="flex items-center justify-center mb-4">
+                            <FaStar className="text-yellow-500 text-4xl mr-2" />
+                            <h2 className="text-2xl font-bold">Loyalty Card</h2>
+                        </div>
+                        <div className="flex items-center justify-center">
+                            <div className="text-gray-800 flex items-center justify-center">
+                                <span className="text-xl">Balance</span>
+                            </div>
+                            <div className="text-gray-600 mx-4">=</div>
+                            <div className="text-gray-800 flex items-center justify-center">
+                                <span className="font-semibold text-2xl mr-2">
+                                    {(loyaltyPoints.balance * 1).toFixed(2)}
+                                </span>
+                                <span className="text-xl">&euro;</span>
+                            </div>
+                        </div>
+                        <div className="flex justify-center mt-2">
+                            <button
+                                type="button"
+                                className="bg-shopred text-white px-4 py-1 rounded-md hover:bg-red-600"
+                                onClick={() => setShowCreditCard(true)}
+                            >
+                                Recharger Mon portfeuille
+                            </button>
+                        </div>
+                        ShowCreditCard?(
+                        <div className="max-w-md mx-auto">
+                            <Cards
+                                cvc={formData.cvc}
+                                expiry={formData.expiry}
+                                focused={formData.focus}
+                                name={formData.name}
+                                number={formData.number}
                             />
-                            <input
-                                type="text"
-                                name="name"
-                                placeholder="Card Holder Name"
-                                className="input-field"
-                                onChange={handleInputChange}
-                            />
-                            <input
-                                type="text"
-                                name="expiry"
-                                placeholder="MM/YY Expiry"
-                                className="input-field"
-                                onChange={handleInputChange}
-                            />
-                            <input
-                                type="tel"
-                                name="cvc"
-                                placeholder="CVC"
-                                className="input-field"
-                                onChange={handleInputChange}
-                            />
+                            <div className="mt-4">
+                                <input
+                                    type="tel"
+                                    name="number"
+                                    placeholder="Card Number"
+                                    className="input-field"
+                                    onChange={handleInputChange}
+                                />
+                                <input
+                                    type="text"
+                                    name="name"
+                                    placeholder="Card Holder Name"
+                                    className="input-field"
+                                    onChange={handleInputChange}
+                                />
+                                <input
+                                    type="text"
+                                    name="expiry"
+                                    placeholder="MM/YY Expiry"
+                                    className="input-field"
+                                    onChange={handleInputChange}
+                                />
+                                <input
+                                    type="tel"
+                                    name="cvc"
+                                    placeholder="CVC"
+                                    className="input-field"
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                            )
                         </div>
                     </div>
                 ) : (

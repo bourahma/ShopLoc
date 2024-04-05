@@ -106,10 +106,10 @@ const Product = () => {
                 <img
                     src={commerce.imageUrl}
                     alt={commerce.commerceName}
-                    className="w-full object-cover mt-4"
+                    className="w-full object-cover mt-4 border-4 border-shopred"
                 />
                 <div>
-                    <h1 className="text-lg font-bold text-center mt-3 bg-shopgray px-1 py-2">
+                    <h1 className="text-lg font-bold text-center mt-1 bg-shopgray px-1 py-2 border-4 border-shopred">
                         {commerce.commerceName}
                     </h1>
                 </div>
