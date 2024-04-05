@@ -37,11 +37,22 @@ const useProductDetails = (token, productId) => {
   });
 };
 
+const useUpdateProduct = (token, product) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => productServices.updateProduct(product, token),
+    onSuccess: () => {
+      queryClient.invalidateQueries("merchantProducts");
+    },
+  });
+};
+
 const useProducts = {
   useMerchantProducts,
   useProductsCategories,
   useCreateProductCategory,
   useProductDetails,
+  useUpdateProduct,
 };
 
 export default useProducts;

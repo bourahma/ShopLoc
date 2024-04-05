@@ -1,5 +1,5 @@
 import { Card, Button } from "flowbite-react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
 import useProducts from "../hooks/useProducts";
 import productSample from "../images/productSample.png";
@@ -102,7 +102,12 @@ const ProductDetails = () => {
 
           <div className="flex flex-row space-x-4 mt-2">
             <Button onClick={() => navigate(-1)}>Retour</Button>
-            <Button onClick={() => console.log("wow")}>Modifier</Button>
+            <Button
+              as={Link}
+              to={`/merchant/home/updateProduct/${product?.productId}`}
+            >
+              Modifier
+            </Button>
           </div>
         </div>
       </div>

@@ -30,10 +30,10 @@ const addOffer = async (token, offer, commerceId) => {
   return response.data;
 };
 
-const getOffers = async (token, commerceId) => {
+const getCommercePromotions = async (token, commerceId) => {
   try {
     const response = await axios.get(
-      `${SERVER_URL}/${baseUrl}/offer/${commerceId}`,
+      `${SERVER_URL}/${baseUrl}/commerce/${commerceId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -42,24 +42,7 @@ const getOffers = async (token, commerceId) => {
     );
     return response.data;
   } catch (error) {
-    console.error("Error fetching promotions: ", error);
-    throw error;
-  }
-};
-
-const getDiscounts = async (token, commerceId) => {
-  try {
-    const response = await axios.get(
-      `${SERVER_URL}/${baseUrl}/discount/${commerceId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching promotions: ", error);
+    console.error("Error fetching commerce promotions: ", error);
     throw error;
   }
 };
@@ -67,8 +50,7 @@ const getDiscounts = async (token, commerceId) => {
 const promotionService = {
   addDiscount,
   addOffer,
-  getOffers,
-  getDiscounts,
+  getCommercePromotions,
 };
 
 export default promotionService;
