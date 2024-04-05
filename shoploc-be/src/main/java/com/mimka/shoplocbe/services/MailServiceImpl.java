@@ -2,6 +2,7 @@ package com.mimka.shoplocbe.services;
 
 import com.mimka.shoplocbe.dto.user.MerchantDTO;
 import com.mimka.shoplocbe.entities.Customer;
+import com.mimka.shoplocbe.entities.Promotion;
 import com.mimka.shoplocbe.entities.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
@@ -13,12 +14,17 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class MailServiceImpl {
     private final JavaMailSender javaMailSender;
 
     @Value("${be.url}")
     private String beUrl;
+
+    @Value("${spring.mail.username}")
+    private String emailFrom;
     @Autowired
     public MailServiceImpl (JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
@@ -59,7 +65,7 @@ public class MailServiceImpl {
         helper.setText(content, true);
         helper.setTo(user.getEmail());
         helper.setSubject("Confirmation d'inscription");
-        helper.setFrom(new InternetAddress("projet_etu_fil@univ-lille.fr"));
+        helper.setFrom(new InternetAddress(emailFrom));
 
         javaMailSender.send(message);
 
@@ -99,7 +105,7 @@ public class MailServiceImpl {
         helper.setText(content, true);
         helper.setTo(user.getEmail());
         helper.setSubject("Veuillez confirmer votre inscription");
-        helper.setFrom(new InternetAddress("projet_etu_fil@univ-lille.fr"));
+        helper.setFrom(new InternetAddress(emailFrom));
 
         javaMailSender.send(message);
     }
@@ -147,10 +153,70 @@ public class MailServiceImpl {
         helper.setText(content, true);
         helper.setTo(merchantDTO.getEmail());
         helper.setSubject("Céation de votre compte commerçant");
-        helper.setFrom(new InternetAddress("projet_etu_fil@univ-lille.fr"));
+        helper.setFrom(new InternetAddress(emailFrom));
 
         javaMailSender.send(message);
 
     }
+
+    @Async
+    public void triggerPromotionToCustomers(Promotion promotion, List<Customer> customers) throws MessagingException {
+        for (Customer customer : customers) {
+            sendPromotionEmail(customer, promotion);
+        }
+    }
+    private void sendPromotionEmail(Customer customer, Promotion promotion) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        String subject = "Discover Our New Promotion!";
+        String content = buildPromotionContent(customer, promotion);
+
+        helper.setText(content, true);
+        helper.setTo(customer.getEmail());
+        helper.setSubject(subject);
+        helper.setFrom(new InternetAddress("projet_etu_fil@univ-lille.fr"));
+
+        javaMailSender.send(message);
+    }
+    private String buildPromotionContent(Customer customer, Promotion promotion) {
+        String greeting = String.format("Cher(ère) %s,", customer.getFirstname());
+        String intro = "Nous sommes ravis de partager notre nouvelle promotion avec vous !";
+        String detail;
+
+        if ("discount".equalsIgnoreCase(promotion.getPromotionType())) {
+            detail = String.format("Profitez d'une réduction de %d%% sur les produits sélectionnés jusqu'au %s.",
+                    promotion.getDiscountPercent(),
+                    promotion.getEndDate().toString());
+        } else {
+            detail = String.format("Obtenez %d articles gratuits pour l'achat de %d articles jusqu'au %s.",
+                    promotion.getOfferedItems(),
+                    promotion.getRequiredItems(),
+                    promotion.getEndDate().toString());
+        }
+
+        String signature = "Cordialement,\nL'équipe ShopLoc";
+
+        String content = String.format("""
+            <!DOCTYPE html>
+            <html lang="fr">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Information sur la promotion</title>
+            </head>
+            <body>
+                <p>%s</p>
+                <p>%s</p>
+                <p>%s</p>
+                <p>%s</p>
+            </body>
+            </html>
+            """, greeting, intro, detail, signature);
+
+        return content;
+    }
+
+
 
 }

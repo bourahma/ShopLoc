@@ -58,4 +58,10 @@ public class PromotionController {
     public List<PromotionDTO> promotions () {
         return this.promotionFacade.getPromotions();
     }
+
+    @GetMapping("/{promotionId}/launch")
+    public PromotionDTO launchPromotion(@PathVariable Long promotionId) {
+        return this.promotionFacade.launchPromotion(promotionId);
+    }
+
 }
