@@ -66,7 +66,6 @@ const AddProduct = () => {
     productServices
       .addProduct(formData, cleanedToken, commerceId)
       .then((data) => {
-        console.log(data);
         setSuccess("Produit ajouté avec succès");
       })
       .catch((error) => {

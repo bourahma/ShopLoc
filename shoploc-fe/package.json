@@ -64,6 +64,7 @@
     "react-icons": "^5.0.1",
     "react-leaflet": "^4.2.1",
     "react-qr-code": "^2.0.12",
+    "react-query": "^3.39.3",
     "react-router-dom": "^6.17.0",
     "react-slick": "^0.29.0",
     "react-star-rating": "^1.4.2",
@@ -89,7 +90,7 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js --watchAll"
   },
   "eslintConfig": {
     "extends": [
@@ -118,6 +119,7 @@
     "babel-jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8.4.31",
+    "react-test-renderer": "^18.2.0",
     "tailwindcss": "^3.3.5"
   },
   "jest": {
@@ -147,12 +149,14 @@
       "^.+\\.jsx?$": "babel-jest"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!(axios)/)"
+      "node_modules/(?!(axios | react_leaflet)/)"
     ],
     "modulePaths": [],
     "moduleNameMapper": {
       "^react-native$": "react-native-web",
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy",
+      "\\.(jpg|jpeg|png|gif|webp|svg)$": "<rootDir>/fileMock.js",
+      "\\.(css|less|scss|sass)$": "<rootDir>/styleMock.js"
     },
     "moduleFileExtensions": [
       "web.js",

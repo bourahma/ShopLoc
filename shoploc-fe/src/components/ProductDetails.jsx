@@ -10,7 +10,6 @@ const ProductDetails = () => {
   const navigate = useNavigate();
   const productId = useParams().productId;
 
-  console.log(productId);
   const token = localStorage.getItem("userToken");
 
   const cleanedToken = JSON.parse(token);

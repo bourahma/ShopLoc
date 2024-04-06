@@ -36,7 +36,6 @@ const PromoDetails = () => {
   let promotion = null;
   if (promotionQuery.isSuccess) {
     promotion = promotionQuery.data;
-    console.log("promotion", promotion);
   }
 
   const launchPromo = async (promotionId) => {

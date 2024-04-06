@@ -250,7 +250,7 @@ const AddPromotion = () => {
                   />
                 </div>
               )}
-              <Button className="mt-2" type="submit">
+              <Button className="mt-2 " type="submit">
                 Ajouter la promotion
               </Button>
             </div>

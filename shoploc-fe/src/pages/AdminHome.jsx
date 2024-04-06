@@ -58,5 +58,3 @@ const AdminHome = () => {
 };
 
 export default AdminHome;
-
-// TODO: Get all the promotions that are not sent out yet

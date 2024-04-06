@@ -11,8 +11,6 @@ const LaunchPromo = () => {
   const { data, isLoading, isError, Error } =
     usePromotions.useAllPromotions(cleanedToken);
 
-  console.log(data);
-
   return (
     <div className="overflow-x-auto">
       {isError && <div>Error: {Error.message}</div>}
