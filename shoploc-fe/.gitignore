@@ -5,7 +5,6 @@ node_modules/
 build/
 dist/
 out/
-*.log
 npm-debug.log*
 
 # Ignore .env files (store environment variables)
@@ -24,9 +23,6 @@ npm-debug.log*
 # Ignore test snapshots
 __snapshots__/
 
-# Ignore yarn.lock file
-yarn.lock
-
 # Ignore generated files and folders from various build tools
 *.pnp.js
 .pnp/
@@ -35,20 +31,8 @@ coverage/
 
 # Ignore logs and temporary files
 logs/
-*.log
-*.swp
-*.bak
-
-# Ignore TypeScript and JavaScript configuration files
-tsconfig.json
-tsconfig.*.json
-*.jsconfig.json
-
-# Ignore eslint configuration
-.eslintcache
 
 # Ignore automatically generated coverage reports
-coverage/
 
 # Ignore next.js build directory
 .next/
@@ -57,4 +41,4 @@ coverage/
 .serverless/
 
 # Ignore Nest output folder
-dist/
+package-lock.json

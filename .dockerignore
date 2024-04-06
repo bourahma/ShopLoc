@@ -1,0 +1,172 @@
+# flyctl launch added from .gitignore
+**\target
+#!**\.mvn\wrapper\maven-wrapper.jar
+!**\**\src\main\**\target
+!**\**\src\test\**\target
+
+### IntelliJ IDEA ###
+**\.idea\modules.xml
+**\.idea\jarRepositories.xml
+**\.idea\compiler.xml
+**\.idea\libraries
+**\*.iws
+**\*.iml
+**\*.ipr
+**\.idea
+
+### Eclipse ###
+**\.apt_generated
+**\.classpath
+**\.factorypath
+**\.project
+**\.settings
+**\.springBeans
+**\.sts4-cache
+
+### NetBeans ###
+nbproject\private
+nbbuild
+dist
+nbdist
+.nb-gradle
+**\build
+!**\**\src\main\**\build
+!**\**\src\test\**\build
+
+### VS Code ###
+**\.vscode
+
+### Mac OS ###
+**\.DS_Store
+
+# flyctl launch added from .idea\.gitignore
+# Default ignored files
+.idea\shelf
+.idea\workspace.xml
+# Editor-based HTTP Client requests
+.idea\httpRequests
+# Datasource local storage ignored files
+.idea\dataSources
+.idea\dataSources.local.xml
+
+# flyctl launch added from shoploc-be\.gitignore
+shoploc-be\**\HELP.md
+shoploc-be\**\target
+!shoploc-be\**\.mvn\wrapper\maven-wrapper.jar
+!shoploc-be\**\**\src\main\**\target
+!shoploc-be\**\**\src\test\**\target
+
+### STS ###
+shoploc-be\**\.apt_generated
+shoploc-be\**\.classpath
+shoploc-be\**\.factorypath
+shoploc-be\**\.project
+shoploc-be\**\.settings
+shoploc-be\**\.springBeans
+shoploc-be\**\.sts4-cache
+
+### Eclipse ###
+shoploc-be\**\.apt_generated
+shoploc-be\**\.classpath
+shoploc-be\**\.factorypath
+shoploc-be\**\.project
+shoploc-be\**\.settings
+shoploc-be\**\.springBeans
+shoploc-be\**\.sts4-cache
+
+
+### IntelliJ IDEA ###
+shoploc-be\**\.idea
+shoploc-be\**\*.iws
+shoploc-be\**\*.iml
+shoploc-be\**\*.ipr
+
+### NetBeans ###
+shoploc-be\nbproject\private
+shoploc-be\nbbuild
+shoploc-be\dist
+shoploc-be\nbdist
+shoploc-be\.nb-gradle
+shoploc-be\**\build
+!shoploc-be\**\**\src\main\**\build
+!shoploc-be\**\**\src\test\**\build
+
+### VS Code ###
+shoploc-be\**\.vscode
+
+### Mac OS ###
+shoploc-be\**\.DS_Store
+
+
+# flyctl launch added from shoploc-be\.idea\.gitignore
+# Default ignored files
+shoploc-be\.idea\shelf
+shoploc-be\.idea\workspace.xml
+# Editor-based HTTP Client requests
+shoploc-be\.idea\httpRequests
+# Datasource local storage ignored files
+shoploc-be\.idea\dataSources
+shoploc-be\.idea\dataSources.local.xml
+
+# flyctl launch added from shoploc-fe\.gitignore
+# Ignore Node.js modules folder
+shoploc-fe\**\node_modules
+
+# Ignore build artifacts and production build folder
+shoploc-fe\**\build
+shoploc-fe\**\dist
+shoploc-fe\**\out
+shoploc-fe\**\*.log
+shoploc-fe\**\npm-debug.log*
+
+# Ignore .env files (store environment variables)
+shoploc-fe\**\.env.local
+shoploc-fe\**\.env.development.local
+shoploc-fe\**\.env.test.local
+shoploc-fe\**\.env.production.local
+
+# Ignore IDE and editor-specific files
+shoploc-fe\**\.vscode
+shoploc-fe\**\.idea
+
+# Ignore macOS system files
+shoploc-fe\**\.DS_Store
+
+# Ignore test snapshots
+shoploc-fe\**\__snapshots__
+
+# Ignore yarn.lock file
+shoploc-fe\**\yarn.lock
+
+# Ignore generated files and folders from various build tools
+shoploc-fe\**\*.pnp.js
+shoploc-fe\**\.pnp
+shoploc-fe\**\.cache
+shoploc-fe\**\coverage
+
+# Ignore logs and temporary files
+shoploc-fe\**\logs
+shoploc-fe\**\*.log
+shoploc-fe\**\*.swp
+shoploc-fe\**\*.bak
+
+# Ignore TypeScript and JavaScript configuration files
+shoploc-fe\**\tsconfig.json
+shoploc-fe\**\tsconfig.*.json
+shoploc-fe\**\*.jsconfig.json
+
+# Ignore eslint configuration
+shoploc-fe\**\.eslintcache
+
+# Ignore automatically generated coverage reports
+shoploc-fe\**\coverage
+
+# Ignore next.js build directory
+shoploc-fe\**\.next
+
+# Ignore serverless generated files
+shoploc-fe\**\.serverless
+
+# Ignore Nest output folder
+shoploc-fe\**\dist
+fly.toml

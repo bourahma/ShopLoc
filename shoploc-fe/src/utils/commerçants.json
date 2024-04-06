@@ -1,0 +1,84 @@
+{
+    "commercants": [
+        {
+            "id": 1,
+            "nom": "Auchan",
+            "image": "auchan.png",
+            "description": "Description du fournisseur 1.",
+            "produits": [
+                {
+                    "id": 101,
+                    "nom": "Auchan Bâtonnet de pommes de terres façon rosti sauce barbecue 20 pièces 240g pas cher",
+                    "image": "auchan1.jpeg",
+                    "description": "Description du produit A.",
+                    "prix": 20.99,
+                    "stock": 50
+                },
+                {
+                    "id": 102,
+                    "nom": "Auchan Terroir petit saint nectaire 600g pas cher",
+                    "image": "auchan2.jpeg",
+                    "description": "Description du produit B.",
+                    "prix": 30.49,
+                    "stock": 30
+                },
+                {
+                    "id": 103,
+                    "nom": "AUCHAN Poêlées légumes à l'italienne 750g pas cher",
+                    "image": "auchan3.jpeg",
+                    "description": "Description du produit C.",
+                    "prix": 24.49,
+                    "stock": 30
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "nom": "Planetebain",
+            "image": "planetbain.jpg",
+            "description": "Description du fournisseur 2.",
+            "produits": [
+                {
+                    "id": 201,
+                    "nom": "Meubles lave-mains et Lave-mains",
+                    "image": "planet1.jpg",
+                    "description": "Description du produit X.",
+                    "prix": 15.99,
+                    "stock": 20
+                },
+                {
+                    "id": 202,
+                    "nom": "Meuble Lave-Mains Complet Couleur Chêne Avec Mitigeur Pour WC",
+                    "image": "planet2.jpg",
+                    "description": "Description du produit Y.",
+                    "prix": 25.49,
+                    "stock": 40
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "nom": "Le Roy Merlin",
+            "image": "le roy merlin.jpeg",
+            "description": "Description du fournisseur 3.",
+            "produits": [
+                {
+                    "id": 301,
+                    "nom": "Fenêtre Bois Essentiel H.95xl.120cm, 2 vantaux",
+                    "image": "fenetre.webp",
+                    "description": "Description du produit X.",
+                    "prix": 15.99,
+                    "stock": 20
+                },
+                {
+                    "id": 302,
+                    "nom": "Peinture mur blanc mat LUXENS Séjour et chambre 10l",
+                    "image": "peinture.webp",
+                    "description": "Description du produit Y.",
+                    "prix": 25.49,
+                    "stock": 40
+                }
+            ]
+        }
+    ]
+}

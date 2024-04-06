@@ -4,18 +4,18 @@ services:
 
    #ShopLoc Data Base
   shoploc-db:
-    image: postgres:latest
+    image: postgres
     container_name: shoploc-db
     environment:
       - POSTGRES_DB=shoploc-db
       - POSTGRES_USER=shoplocU
       - POSTGRES_PASSWORD=shoplocP
     ports:
-      - "5432:5432"
+      - "5430:5432"
     volumes:
         - ./mysql-data:/var/lib/mysql
 
-  # ShopLoc Back End App
+  # ShopLoc Back End
   shoploc-be:
     build:
       context: ./shoploc-be
@@ -29,7 +29,7 @@ services:
     depends_on:
       - shoploc-db
 
-  # ShopLoc Front End App
+  # ShopLoc Front End
   shoploc-fe:
     build:
       context: ./shoploc-fe
@@ -37,6 +37,6 @@ services:
     image: shoploc-fe
     container_name: shoploc-fe
     ports:
-      - '3000:3000' 
+      - '3000:3000'
     depends_on:
       - shoploc-be
