@@ -5,19 +5,24 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "../services/CartContext";
 import { FaCreditCard, FaHandHoldingHeart } from "react-icons/fa";
 import { fetchLoyaltyCard } from "../services/carteDeFidelite";
-import { FaUser, FaStar } from "react-icons/fa";
+import { FaUser, FaStar, FaGift } from "react-icons/fa";
 
 import axios from "axios";
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 const CheckoutPage = () => {
-    const { cartItems, totalPrice, clearCart } = useCart();
+    const { cartItems, totalPrice, clearCart, removeFromCart } = useCart();
     const [loyaltyPoints, setLoyaltyPoints] = useState(0);
     const [customerData, setCustomerData] = useState(null);
-    const [paymentMethod, setPaymentMethod] = useState("credits");
+    const [paymentMethod, setPaymentMethod] = useState("points");
     const [showCreditCard, setShowCreditCard] = useState(false);
     const [rechargeSuccess, setRechargeSuccess] = useState(false);
+    const [totalBeforePayment, setTotalBeforePayment] = useState(0);
+    const [paymentOverlay, setPaymentOverlay] = useState(false);
+    const [allGift, setAllGift] = useState(false);
+    const [allNoGift, setAllNoGift] = useState(false);
+
     const [formData, setFormData] = useState({
         cvc: "",
         expiry: "",
@@ -124,7 +129,6 @@ const CheckoutPage = () => {
                         },
                     }
                 );
-
                 if (response.status === 200) {
                     // Mettre à jour les points de fidélité une fois le paiement réussi
                     const updatedLoyaltyCredit = await fetchLoyaltyCard(
@@ -153,13 +157,14 @@ const CheckoutPage = () => {
         }
     };
 
-    const createOrder = async (fidelityCardId) => {
+    const createOrder = async (fidelityCardId, giftItems) => {
+        const items = paymentMethod === "points" ? giftItems : cartItems;
         try {
             const response = await axios.post(
                 `${SERVER_URL}/order/`,
                 {
-                    commerceId: cartItems[0].commerceId,
-                    products: cartItems.map((item) => ({
+                    commerceId: items[0].commerceId,
+                    products: items.map((item) => ({
                         productId: item.productId,
                         productName: item.productName,
                         price: item.price,
@@ -184,9 +189,57 @@ const CheckoutPage = () => {
         }
     };
 
-    const handlePaymentWithLoyaltyPoints = async () => {
+    useEffect(() => {
+        // Vérifier si tous les produits sont des cadeaux
+        const allGifts = cartItems.every((item) => item.gift);
+        const allNotGifts = cartItems.every((item) => !item.gift);
+
+        // Effectuer le paiement uniquement pour les produits qui sont des cadeaux
+        const giftItems = cartItems.filter((item) => item.gift);
+        console.log(allGifts);
+        if (paymentMethod === "points") {
+            if (allGifts) {
+                setAllGift(true);
+                setAllNoGift(false);
+                console.log(
+                    "Tous les produits sont des cadeaux vous pouvez tous payer avec les points !"
+                );
+            } else if (allNotGifts) {
+                setAllGift(false);
+                setAllNoGift(true);
+                console.log(
+                    "Aucun produit cadeau dans le panier, vous pouvez pas utiliser cette methode de payment"
+                );
+            } else {
+                setAllGift(false);
+                setAllNoGift(false);
+                console.log(
+                    "Attention ! Vous ne pouvez pas payer tous les produits avec des points"
+                );
+            }
+        }
+    }, [paymentMethod]);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        // Effectuer le paiement uniquement pour les produits qui sont des cadeaux
+        const giftItems = cartItems.filter((item) => item.gift);
+
+        if (paymentMethod === "credits") {
+            console.log("Processing credit card payment...");
+            handlePaymentWithLoyaltyBalance();
+        } else {
+            console.log("Processing point payment...");
+            handlePaymentWithLoyaltyPoints(giftItems);
+        }
+    };
+
+    const handlePaymentWithLoyaltyPoints = async (giftItems) => {
         // Créer d'abord la commande
-        const orderId = await createOrder(loyaltyPoints.fidelityCardId); // Utilisez le fidelityCardId
+        const orderId = await createOrder(
+            loyaltyPoints.fidelityCardId,
+            giftItems
+        ); // Utilisez le fidelityCardId
         console.log(orderId);
         if (orderId) {
             try {
@@ -200,7 +253,9 @@ const CheckoutPage = () => {
                 );
                 // Vérifier si le paiement a réussi
                 if (response.status === 200) {
-                    clearCart();
+                    // Retirer les produits cadeaux du panier
+                    const GiftItems = cartItems.filter((item) => item.gift);
+                    GiftItems.forEach((item) => removeFromCart(item.productId));
                     // Mettre à jour les points de fidélité une fois le paiement réussi
                     const updatedLoyaltyCredit = await fetchLoyaltyCard(
                         cleanedToken
@@ -210,10 +265,6 @@ const CheckoutPage = () => {
                     }
                     setPaymentSuccess(true);
                     console.log(response);
-                    // Rediriger vers la page de profil après 2 secondes
-                    // setTimeout(() => {
-                    //     navigate("/profile");
-                    // }, 2000);
                 }
             } catch (error) {
                 console.error("Error processing loyalty card payment:", error);
@@ -235,6 +286,7 @@ const CheckoutPage = () => {
                         },
                     }
                 );
+                setTotalBeforePayment(totalPrice);
                 // Vérifier si le paiement a réussi
                 if (response.status === 200) {
                     clearCart();
@@ -257,33 +309,45 @@ const CheckoutPage = () => {
             }
         }
     };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (paymentMethod === "credits") {
-            console.log("Processing credit card payment...");
-            handlePaymentWithLoyaltyBalance();
-        } else {
-            console.log("Processing point payment...");
-            handlePaymentWithLoyaltyPoints();
-        }
-    };
-
     return (
         <div className="container mx-auto py-8">
+            {paymentOverlay && (
+                <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center z-10 bg-red-500 text-white">
+                    <div className="text-center">
+                        Vous ne pouvez pas payer avec des points pour les
+                        produits qui ne sont pas des cadeaux.
+                    </div>
+                </div>
+            )}
             {rechargeSuccess && (
                 <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center z-10">
                     <div className="bg-green-500/90 text-white rounded-lg p-8 max-w-md w-full mx-4">
                         <div className="text-center">
-                    Rechargement de balance réussi. Vous pouvez maintenant
-                    acheter.
-                </div></div></div>
+                            Rechargement de balance réussi. Vous pouvez
+                            maintenant acheter.
+                        </div>
+                    </div>
+                </div>
             )}
             {paymentSuccess && (
                 <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center z-10">
                     <div className="bg-green-500/90 text-white rounded-lg p-8 max-w-md w-full mx-4">
                         <div className="text-center">
-                            <p className="text-2xl font-semibold mb-2">
+                            <p className="text-2xl font-semibold">
+                                {paymentMethod === "credits" && (
+                                    <p>
+                                        Wooaah ! Vous Avez Gagné{" "}
+                                        {totalBeforePayment} Points
+                                    </p>
+                                )}
+                            </p>
+                            <p
+                                className={`${
+                                    paymentMethod === "credits"
+                                        ? "text-md font-semibold "
+                                        : "text-2xl font-semibold"
+                                }`}
+                            >
                                 Paiement réussi !
                             </p>
                             <p className="mb-4">
@@ -291,13 +355,26 @@ const CheckoutPage = () => {
                             </p>
                             <div className="flex justify-center space-x-4">
                                 <button
-                                    className="bg-white text-green-500 px-6 py-2 rounded-md hover:bg-green-100"
+                                    className="bg-white text-green-500 text-sm px-6 py-2 rounded-md hover:bg-green-100"
                                     onClick={() => navigate("/")}
                                 >
                                     Continuer le shopping
                                 </button>
+                                {!allGift && !allNoGift && (
+                                    <button
+                                        className="bg-white text-green-500 text-sm px-6 py-2 rounded-md hover:bg-green-100"
+                                        onClick={() => {
+                                            setPaymentSuccess(false);
+                                            setPaymentMethod("credits");
+                                            setAllGift(false);
+                                            setAllNoGift(true);
+                                        }}
+                                    >
+                                        Payer le reste
+                                    </button>
+                                )}
                                 <button
-                                    className="bg-white text-green-500 px-6 py-2 rounded-md hover:bg-green-100"
+                                    className="bg-white text-green-500 text-sm px-6 py-2 rounded-md hover:bg-green-100"
                                     onClick={() => navigate("/profile")}
                                 >
                                     Allez voir dans votre profil
@@ -385,6 +462,21 @@ const CheckoutPage = () => {
                                     >
                                         Fermer Recharge de carte
                                     </button>
+                                )}
+                            </div>
+                            <div className="text-center mt-4 font-semibold">
+                                {allGift && (
+                                    <p className="text-green-400">
+                                        Tout vos produits sont des cadeaux,
+                                        préfére de les acheter en utilisant des
+                                        points si vous avez
+                                    </p>
+                                )}
+                                {!allGift && !allNoGift && (
+                                    <p className="text-green-400">
+                                        Attention ! Quelques produits sont
+                                        payable avec des points si vous avez
+                                    </p>
                                 )}
                             </div>
                             {showCreditCard && (
@@ -516,12 +608,42 @@ const CheckoutPage = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex justify-center mt-8">
+                        <div className="text-center mt-4 font-semibold">
+                            {allGift && (
+                                <p className="text-green-500">
+                                    Tous les produits sont des cadeaux, vous
+                                    pouvez tous payer avec les points !
+                                </p>
+                            )}
+                            {allNoGift && (
+                                <p className="text-red-500">
+                                    Aucun produit cadeau dans le panier, vous ne
+                                    pouvez pas utiliser cette méthode de
+                                    paiement.
+                                </p>
+                            )}
+                            {!allGift && !allNoGift && (
+                                <p className="text-orange-400">
+                                    Attention ! Vous ne pouvez pas payer tous
+                                    les produits avec des points.
+                                </p>
+                            )}
+                        </div>
+                        <div className="flex justify-center mt-4">
                             <button
                                 type="submit"
-                                className="bg-shopred text-white px-6 py-2 rounded-md hover:bg-blue-600"
+                                className={`bg-shopred text-white px-6 py-2 rounded-md hover:bg-blue-600 ${
+                                    paymentMethod === "points" && allNoGift
+                                        ? "opacity-50 cursor-not-allowed"
+                                        : ""
+                                }`}
+                                disabled={allNoGift === true ? true : false}
                             >
-                                Procéder au paiement
+                                {allGift
+                                    ? "Procéder au paiement"
+                                    : allNoGift
+                                    ? "Payment Impossible"
+                                    : "Payer que les cadeaux"}
                             </button>
                         </div>
                     </>
@@ -536,7 +658,15 @@ const CheckoutPage = () => {
                             key={item.productId}
                             className="flex justify-between mb-2"
                         >
-                            <span>{item.productName}</span>
+                            <div className="flex gap-1 items-center">
+                                <span>{item.productName}</span>
+                                {item.gift && (
+                                    <div className="flex text-sm items-center text-shopred justify-center bg-shopyellow/75 px-2 rounded-full">
+                                        Gift
+                                        <FaGift className="text-shopred text-sm ml-1" />
+                                    </div>
+                                )}
+                            </div>
                             <span>{item.price} €</span>
                         </li>
                     ))}
