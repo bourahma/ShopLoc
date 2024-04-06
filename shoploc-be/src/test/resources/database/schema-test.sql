@@ -18,6 +18,7 @@ DROP TABLE IF EXISTS Benefit CASCADE;
 DROP TABLE IF EXISTS Benefit_History CASCADE;
 DROP TABLE IF EXISTS Gift_History CASCADE;
 DROP TABLE IF EXISTS Promotion CASCADE;
+DROP TABLE IF EXISTS Promotion_History CASCADE;
 DROP TABLE IF EXISTS VFP CASCADE;
 DROP TABLE IF EXISTS Commerce_Type CASCADE;
 DROP TABLE IF EXISTS Customer_Connection CASCADE;
@@ -27,10 +28,7 @@ DROP TABLE IF EXISTS Address CASCADE;
 DROP TABLE IF EXISTS QR_Code_Payment CASCADE;
 DROP TABLE IF EXISTS Product_Category CASCADE;
 
-DROP TABLE IF EXISTS Product_Promotion_History CASCADE;
-DROP TABLE IF EXISTS Product_Promotion CASCADE;
-
-DROP SEQUENCE IF EXISTS product_promotion_history_sequence CASCADE;
+DROP SEQUENCE IF EXISTS vfp_history_sequence CASCADE;
 DROP SEQUENCE IF EXISTS product_category_sequence CASCADE;
 DROP SEQUENCE IF EXISTS order_sequence CASCADE;
 DROP SEQUENCE IF EXISTS address_sequence CASCADE;
@@ -45,7 +43,7 @@ DROP SEQUENCE IF EXISTS gift_history_sequence CASCADE;
 DROP SEQUENCE IF EXISTS benefit_history_sequence CASCADE;
 DROP SEQUENCE IF EXISTS commerce_type_sequence CASCADE;
 
-CREATE SEQUENCE product_promotion_history_sequence
+CREATE SEQUENCE vfp_history_sequence
     INCREMENT 1
     START 1
     MINVALUE 1
@@ -190,6 +188,28 @@ CREATE TABLE Product_Category
     FOREIGN KEY (commerce_id) REFERENCES Commerce (commerce_id)
 );
 
+-- Create Promotion Table :
+CREATE TABLE Promotion
+(
+    promotion_id INT DEFAULT nextval('promotion_sequence') PRIMARY KEY,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    label VARCHAR(255),
+    sent BOOLEAN DEFAULT FALSE,
+    type VARCHAR(255) NOT NULL,
+    commerce_id INT NOT NULL,
+
+    -- For discount promotion type :
+    discount_percent INT,
+
+    -- For Offer promotion type :
+    required_items INT,
+    offered_items INT,
+
+    FOREIGN KEY (commerce_id) REFERENCES Commerce (commerce_id)
+);
+
 -- Create the Product Table :
 CREATE TABLE Product
 (
@@ -200,14 +220,35 @@ CREATE TABLE Product
     quantity integer NOT NULL,
     reward_points_price NUMERIC(10,2),
     is_gift BOOLEAN NOT NULL,
-    discount_id INT,
+    promotion_id INT,
     commerce_id INT,
     view INT,
     image_url VARCHAR(255),
     product_category_id INT NOT NULL,
 
+    FOREIGN KEY (promotion_id) REFERENCES Promotion(promotion_id),
     FOREIGN KEY (product_category_id) REFERENCES Product_Category(product_category_id),
     FOREIGN KEY (commerce_id) REFERENCES Commerce(commerce_id)
+);
+
+-- Create Promotion_History Table :
+CREATE TABLE Promotion_History
+(
+    promotion_history_id INT PRIMARY KEY,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    type VARCHAR(255) NOT NULL,
+    commerce_id INT,
+
+    -- For discount promotion type :
+    discount_percent INT,
+
+    -- For Offer promotion type :
+    required_items INT,
+    offered_items INT,
+
+    FOREIGN KEY (commerce_id) REFERENCES Commerce (commerce_id)
 );
 
 -- Create FidelityCard Table :
@@ -232,11 +273,12 @@ CREATE TABLE Customer
     role INT NOT NULL,
     is_vfp_membership BOOLEAN DEFAULT false,
     fidelity_card_id VARCHAR(255),
+    subscription_date DATE,
+    vfp_used BOOLEAN DEFAULT false,
 
     FOREIGN KEY (fidelity_card_id) REFERENCES Fidelity_Card (fidelity_card_id),
     FOREIGN KEY (role) REFERENCES Role (role_id)
 );
-
 
 -- Create Customer_Connection Table :
 CREATE TABLE Customer_Connection
@@ -261,8 +303,6 @@ CREATE TABLE Merchant
     enabled BOOLEAN NOT NULL,
     phone_number VARCHAR(20),
     role INT NOT NULL,
-
-    -- Merchant attributes
     subscription_date DATE,
     commerce_id INT,
 
@@ -351,30 +391,40 @@ CREATE TABLE Order_Product
     order_product_id INT NOT NULL,
     order_id INT NOT NULL,
     quantity INT NOT NULL CHECK (quantity > 0),
+    promotion_id INT,
+    purchase_price NUMERIC(4,2),
 
     PRIMARY KEY (order_product_id, order_id),
     FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+    FOREIGN KEY (promotion_id) REFERENCES Promotion(promotion_id),
     FOREIGN KEY (order_product_id) REFERENCES Product(product_id)
 );
 
--- Create Benefits Table :
+-- Create Benefit Table :
 CREATE TABLE Benefit
 (
     benefit_id INT DEFAULT nextval('benefit_sequence') PRIMARY KEY,
-    description VARCHAR(255)
+    benefit_available BOOLEAN,
+    image_url VARCHAR(255),
+    description VARCHAR(255),
+    license_plate_number VARCHAR(10)
 );
 
--- Create BenefitHistory Table :
+-- Create Benefit_History Table :
 CREATE TABLE Benefit_History
 (
     benefit_history_id INT DEFAULT nextval('benefit_history_sequence') PRIMARY KEY,
-    dateAcquisition DATE,
+    qr_code VARCHAR(255) NOT NULL,
+    acquisition_date DATE,
+    acquisition_time TIMESTAMP,
     customer_id INT,
     benefit_id INT,
+    license_plate_number VARCHAR(10),
 
     FOREIGN KEY (customer_id) REFERENCES Customer(id),
     FOREIGN KEY (benefit_id) REFERENCES Benefit(benefit_id)
 );
+
 
 -- Create GiftHistory Table :
 CREATE TABLE Gift_History
@@ -388,55 +438,13 @@ CREATE TABLE Gift_History
     FOREIGN KEY (product_id) REFERENCES Product(product_id)
 );
 
--- Create Promotion Table :
-CREATE TABLE Promotion
-(
-    promotion_id INT DEFAULT nextval('promotion_sequence') PRIMARY KEY,
-    start_date DATE NOT NULL,
-    end_date DATE NOT NULL,
-    description VARCHAR(255) NOT NULL,
-    type VARCHAR(255) NOT NULL,
-    commerce_id INT NOT NULL,
-
-    -- For discount promotion type :
-    discount_percent INT,
-
-    -- For Offer promotion type :
-    required_items INT,
-    offered_items INT,
-
-    FOREIGN KEY (commerce_id) REFERENCES Commerce (commerce_id)
-);
-
--- Create Promotion Table :
-CREATE TABLE Product_Promotion
-(
-    promotion_id INT,
-    product_id INT,
-
-    PRIMARY KEY (promotion_id, product_id),
-    FOREIGN KEY (product_id) REFERENCES Product(product_id),
-    FOREIGN KEY (promotion_id) REFERENCES Promotion(promotion_id)
-);
-
--- Create Product_Promotion_History Table :
-CREATE TABLE Product_Promotion_History
-(
-    product_promotion_history_id INT DEFAULT nextval('product_promotion_history_sequence') PRIMARY KEY,
-    promotion_id INT,
-    product_id INT,
-
-    FOREIGN KEY (product_id) REFERENCES Product(product_id),
-    FOREIGN KEY (promotion_id) REFERENCES Promotion(promotion_id)
-);
-
 -- Create VFP_History Table
 CREATE TABLE VFP_History
 (
-    vfp_update_id INT DEFAULT nextval('promotion_sequence') PRIMARY KEY,
-    customer_id INT UNIQUE NOT NULL,
+    vfp_history_id INT DEFAULT nextval('vfp_history_sequence') PRIMARY KEY,
+    customer_id INT NOT NULL,
     granted_date DATE,
-    validity_date DATE,
+    expiration_date DATE,
 
     FOREIGN KEY (customer_id) REFERENCES Customer(id)
 );
@@ -452,3 +460,97 @@ CREATE TABLE QR_Code_Payment
     FOREIGN KEY (customer_id) REFERENCES Customer(id),
     FOREIGN KEY (order_id) REFERENCES Orders(order_id)
 );
+
+-- Batch tables :
+DROP SEQUENCE IF EXISTS BATCH_STEP_EXECUTION_SEQ CASCADE;
+DROP SEQUENCE IF EXISTS BATCH_JOB_EXECUTION_SEQ CASCADE;
+DROP SEQUENCE IF EXISTS BATCH_JOB_SEQ CASCADE;
+
+CREATE SEQUENCE BATCH_STEP_EXECUTION_SEQ MAXVALUE 9223372036854775807 NO CYCLE;
+CREATE SEQUENCE BATCH_JOB_EXECUTION_SEQ MAXVALUE 9223372036854775807 NO CYCLE;
+CREATE SEQUENCE BATCH_JOB_SEQ MAXVALUE 9223372036854775807 NO CYCLE;
+
+DROP TABLE IF EXISTS BATCH_JOB_INSTANCE CASCADE;
+CREATE TABLE BATCH_JOB_INSTANCE
+(
+    JOB_INSTANCE_ID BIGINT  NOT NULL PRIMARY KEY ,
+    VERSION BIGINT ,
+    JOB_NAME VARCHAR(100) NOT NULL,
+    JOB_KEY VARCHAR(32) NOT NULL,
+    constraint JOB_INST_UN unique (JOB_NAME, JOB_KEY)
+) ;
+
+DROP TABLE IF EXISTS BATCH_JOB_EXECUTION CASCADE;
+CREATE TABLE BATCH_JOB_EXECUTION
+(
+    JOB_EXECUTION_ID BIGINT  NOT NULL PRIMARY KEY ,
+    VERSION BIGINT  ,
+    JOB_INSTANCE_ID BIGINT NOT NULL,
+    CREATE_TIME TIMESTAMP NOT NULL,
+    START_TIME TIMESTAMP DEFAULT NULL ,
+    END_TIME TIMESTAMP DEFAULT NULL ,
+    STATUS VARCHAR(10) ,
+    EXIT_CODE VARCHAR(2500) ,
+    EXIT_MESSAGE VARCHAR(2500) ,
+    LAST_UPDATED TIMESTAMP,
+    constraint JOB_INST_EXEC_FK foreign key (JOB_INSTANCE_ID)
+        references BATCH_JOB_INSTANCE(JOB_INSTANCE_ID)
+) ;
+
+DROP TABLE IF EXISTS BATCH_JOB_EXECUTION_PARAMS CASCADE;
+CREATE TABLE BATCH_JOB_EXECUTION_PARAMS
+(
+    JOB_EXECUTION_ID BIGINT NOT NULL ,
+    PARAMETER_NAME VARCHAR(100) NOT NULL ,
+    PARAMETER_TYPE VARCHAR(100) NOT NULL ,
+    PARAMETER_VALUE VARCHAR(2500) ,
+    IDENTIFYING CHAR(1) NOT NULL ,
+    constraint JOB_EXEC_PARAMS_FK foreign key (JOB_EXECUTION_ID)
+        references BATCH_JOB_EXECUTION(JOB_EXECUTION_ID)
+) ;
+
+DROP TABLE IF EXISTS BATCH_STEP_EXECUTION CASCADE;
+CREATE TABLE BATCH_STEP_EXECUTION
+(
+    STEP_EXECUTION_ID BIGINT  NOT NULL PRIMARY KEY ,
+    VERSION BIGINT NOT NULL,
+    STEP_NAME VARCHAR(100) NOT NULL,
+    JOB_EXECUTION_ID BIGINT NOT NULL,
+    CREATE_TIME TIMESTAMP NOT NULL,
+    START_TIME TIMESTAMP DEFAULT NULL ,
+    END_TIME TIMESTAMP DEFAULT NULL ,
+    STATUS VARCHAR(10) ,
+    COMMIT_COUNT BIGINT ,
+    READ_COUNT BIGINT ,
+    FILTER_COUNT BIGINT ,
+    WRITE_COUNT BIGINT ,
+    READ_SKIP_COUNT BIGINT ,
+    WRITE_SKIP_COUNT BIGINT ,
+    PROCESS_SKIP_COUNT BIGINT ,
+    ROLLBACK_COUNT BIGINT ,
+    EXIT_CODE VARCHAR(2500) ,
+    EXIT_MESSAGE VARCHAR(2500) ,
+    LAST_UPDATED TIMESTAMP,
+    constraint JOB_EXEC_STEP_FK foreign key (JOB_EXECUTION_ID)
+        references BATCH_JOB_EXECUTION(JOB_EXECUTION_ID)
+) ;
+
+DROP TABLE IF EXISTS BATCH_STEP_EXECUTION_CONTEXT CASCADE;
+CREATE TABLE BATCH_STEP_EXECUTION_CONTEXT
+(
+    STEP_EXECUTION_ID BIGINT NOT NULL PRIMARY KEY,
+    SHORT_CONTEXT VARCHAR(2500) NOT NULL,
+    SERIALIZED_CONTEXT TEXT ,
+    constraint STEP_EXEC_CTX_FK foreign key (STEP_EXECUTION_ID)
+        references BATCH_STEP_EXECUTION(STEP_EXECUTION_ID)
+) ;
+
+DROP TABLE IF EXISTS BATCH_JOB_EXECUTION_CONTEXT CASCADE;
+CREATE TABLE BATCH_JOB_EXECUTION_CONTEXT
+(
+    JOB_EXECUTION_ID BIGINT NOT NULL PRIMARY KEY,
+    SHORT_CONTEXT VARCHAR(2500) NOT NULL,
+    SERIALIZED_CONTEXT TEXT ,
+    constraint JOB_EXEC_CTX_FK foreign key (JOB_EXECUTION_ID)
+        references BATCH_JOB_EXECUTION(JOB_EXECUTION_ID)
+) ;

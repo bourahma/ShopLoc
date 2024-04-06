@@ -5,16 +5,15 @@ import com.mimka.shoplocbe.dto.order.OrderDTOUtil;
 import com.mimka.shoplocbe.dto.order.OrderProductDTO;
 import com.mimka.shoplocbe.entities.*;
 import com.mimka.shoplocbe.exception.CommerceNotFoundException;
-import com.mimka.shoplocbe.repositories.OrderRepository;
-import com.mimka.shoplocbe.repositories.ProductRepository;
-import com.mimka.shoplocbe.repositories.PromotionHistoryRepository;
+import com.mimka.shoplocbe.exception.ProductException;
+import com.mimka.shoplocbe.repositories.*;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -22,21 +21,27 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final CommerceService commerceService;
-    private final PromotionHistoryRepository promotionHistoryRepository;
+
+    private final MailServiceImpl mailService;
+
     private final OrderDTOUtil orderDTOUtil;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, CommerceService commerceService, OrderDTOUtil orderDTOUtil, ProductRepository productRepository, PromotionHistoryRepository promotionHistoryRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository,
+                            CommerceService commerceService,
+                            OrderDTOUtil orderDTOUtil,
+                            ProductRepository productRepository, MailServiceImpl mailService) {
         this.orderRepository = orderRepository;
         this.commerceService = commerceService;
         this.orderDTOUtil = orderDTOUtil;
         this.productRepository = productRepository;
-        this.promotionHistoryRepository = promotionHistoryRepository;
+        this.mailService = mailService;
     }
 
     @Override
     public Order createOrder(Customer customer, OrderDTO orderDTO) throws CommerceNotFoundException {
         Order order = new Order();
+
         order.setCustomer(customer);
         order.setCommerce(this.commerceService.getCommerce(orderDTO.getCommerceId()));
         order.setOrderDate(LocalDate.now());
@@ -66,37 +71,64 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order payOrder(Long orderId) {
-        Optional<Order> optionalOrder = this.orderRepository.findById(orderId);
-        optionalOrder.ifPresent(order -> {
-            if (order.getOrderStatus().equals(OrderStatus.PENDING.name())) {
-                for (OrderProduct orderProduct : order.getOrderProducts()) {
-                    Product product = orderProduct.getProduct();
-                    Promotion promotion = product.getPromotion();
+    public Order payOrder(Long orderId) throws ProductException {
+        Order order = this.orderRepository.findById(orderId)
+                .orElseThrow(() -> new ProductException("Commande avec l'ID " + orderId + " non trouvée."));
 
-                    if (promotion instanceof OfferPromotion offerPromotion) {
+        if (order.getOrderStatus().equals(OrderStatus.PENDING.name())) {
+            processOrder(order);
+        }
 
-                        int quantity = (int) Math.floor(((double) (orderProduct.getQuantity() * (offerPromotion.getOfferedItems())) / (offerPromotion.getRequiredItems())));
-                        orderProduct.setQuantity(orderProduct.getQuantity() + quantity);
-                        orderProduct.setPurchasePrice(product.getPrice());
-                        product.setQuantity(product.getQuantity() - orderProduct.getQuantity());
-
-                        this.productRepository.save(product);
-
-                        PromotionHistory promotionHistory = this.getOfferPromotionHistory(offerPromotion, promotion, product);
-                        this.promotionHistoryRepository.save(promotionHistory);
-
-                    } else if (promotion instanceof DiscountPromotion discountPromotion) {
-                        PromotionHistory promotionHistory = this.getDiscountPromotionHistory(discountPromotion, promotion, product);
-                        this.promotionHistoryRepository.save(promotionHistory);
-                    }
-                }
-                order.setOrderStatus(OrderStatus.PAID.name());
-                this.orderRepository.save(order);
-            }
-        });
-        return optionalOrder.orElse(null);
+        return order;
     }
+
+    private void processOrder(Order order) throws ProductException {
+        for (OrderProduct orderProduct : order.getOrderProducts()) {
+            Product product = orderProduct.getProduct();
+            Promotion promotion = product.getPromotion();
+
+            if (product.getQuantity() - orderProduct.getQuantity() < 0) {
+                throw new ProductException("La quantité disponible pour le produit '" + product.getProductName() +
+                        "' est insuffisante pour compléter la commande. Quantité disponible: " +
+                        product.getQuantity() + ".");
+            }
+
+            notifyMerchantsIfProductOutOfStock(product, orderProduct.getQuantity(), new ArrayList<>(order.getCommerce().getMerchants()));
+
+            updateProductAndOrderProduct(product, orderProduct, promotion);
+
+            product.setQuantity(product.getQuantity() - orderProduct.getQuantity());
+        }
+
+        order.setOrderStatus(OrderStatus.PAID.name());
+        this.orderRepository.save(order);
+    }
+
+    private void notifyMerchantsIfProductOutOfStock(Product product, int orderProductQuantity, List<Merchant> merchants) {
+        if (product.getQuantity() == 0 || product.getQuantity() - orderProductQuantity == 0) {
+            try {
+                this.mailService.triggerMerchantsProductOutOfStock(product, merchants);
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void updateProductAndOrderProduct(Product product, OrderProduct orderProduct, Promotion promotion) {
+        if (promotion == null) {
+            this.productRepository.save(product);
+        } else if (promotion.getPromotionType().equals(PromotionType.OFFER.name())) {
+            orderProduct.setPurchasePrice(product.getPrice());
+            orderProduct.setPromotion(promotion);
+
+            this.productRepository.save(product);
+        } else if (promotion.getPromotionType().equals(PromotionType.DISCOUNT.name())) {
+            orderProduct.setPromotion(promotion);
+
+            this.productRepository.save(product);
+        }
+    }
+
 
     @Override
     public double getOrderTotalPrice(Long orderId, boolean usingPoints) {
@@ -105,53 +137,28 @@ public class OrderServiceImpl implements OrderService {
 
     public double getOrderTotal(Long orderId, boolean usePointsPrice) {
         Order order = orderRepository.findByOrderIdAndOrderStatus(orderId, OrderStatus.PENDING.name());
-
         if (order == null) {
             return 0.0;
         }
 
         double totalOrderPrice = 0.0;
-
         for (OrderProduct orderProduct : order.getOrderProducts()) {
             double productPrice = usePointsPrice ? orderProduct.getProduct().getRewardPointsPrice() : orderProduct.getProduct().getPrice();
             Promotion promotion = orderProduct.getProduct().getPromotion();
-
-            if (promotion instanceof DiscountPromotion discountPromotion) {
-                totalOrderPrice += orderProduct.getQuantity() * productPrice * (1 - (discountPromotion.getDiscountPercent() / 100.0));
-            } else if (promotion instanceof OfferPromotion offerPromotion && orderProduct.getQuantity() >= (offerPromotion.getRequiredItems())) {
-                totalOrderPrice += orderProduct.getQuantity() * productPrice;
-
-                int additionalQuantity = (int) Math.floor(((double) (orderProduct.getQuantity() * (offerPromotion.getOfferedItems())) / (offerPromotion.getRequiredItems())));
-                orderProduct.setQuantity(orderProduct.getQuantity() + additionalQuantity);
-            } else {
+            if (promotion == null) {
                 totalOrderPrice += orderProduct.getQuantity() * productPrice;
             }
+            else if (promotion.getPromotionType().equals(PromotionType.DISCOUNT.name())) {
+                totalOrderPrice += orderProduct.getQuantity() * productPrice * (1 - (promotion.getDiscountPercent() / 100.0));
+            }
+            else if (promotion.getPromotionType().equals(PromotionType.OFFER.name())) {
+                DecimalFormat df = new DecimalFormat("#.##");
+                totalOrderPrice += Double.parseDouble(df.format(orderProduct.getQuantity() * productPrice));
+                int additionalQuantity = (int) Math.floor(((double) (orderProduct.getQuantity() * (promotion.getOfferedItems())) / (promotion.getRequiredItems())));
+                orderProduct.setQuantity(orderProduct.getQuantity() + additionalQuantity);
+            }
         }
-
+        System.out.println("total : " + totalOrderPrice);
         return totalOrderPrice;
-    }
-
-
-    private PromotionHistory getDiscountPromotionHistory(DiscountPromotion discountPromotion, Promotion promotion, Product product) {
-        PromotionHistory promotionHistory = new PromotionHistory();
-        promotionHistory.setPromotionHistoryId(promotion.getPromotionId());
-        promotionHistory.setDescription(promotion.getDescription());
-        promotionHistory.setProduct(product);
-        promotionHistory.setCommerce(promotion.getCommerce());
-        promotionHistory.setEndDate(promotion.getEndDate());
-        promotionHistory.setDiscountPercent(discountPromotion.getDiscountPercent());
-        return promotionHistory;
-    }
-
-    private PromotionHistory getOfferPromotionHistory(OfferPromotion offerPromotion, Promotion promotion, Product product) {
-        PromotionHistory promotionHistory = new PromotionHistory();
-        promotionHistory.setPromotionHistoryId(promotion.getPromotionId());
-        promotionHistory.setDescription(promotion.getDescription());
-        promotionHistory.setProduct(product);
-        promotionHistory.setCommerce(promotion.getCommerce());
-        promotionHistory.setEndDate(promotion.getEndDate());
-        promotionHistory.setOfferedItems(offerPromotion.getOfferedItems());
-        promotionHistory.setRequiredItems(offerPromotion.getRequiredItems());
-        return promotionHistory;
     }
 }

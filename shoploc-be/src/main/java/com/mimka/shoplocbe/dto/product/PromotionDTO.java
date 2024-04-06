@@ -25,15 +25,19 @@ public class PromotionDTO {
     @NotNull(message = "La description de la promotion est requise")
     private String description;
 
-    private Long productId;
-
     private Long commerceId;
 
+    private String label;
+
+    private boolean sent;
+
     // Discount promotion fields
-    private int discountPercent;
+    private Integer discountPercent;
+
+    private String promotionType;
 
     // Offer promotion fields
-    private int requiredItems;
+    private Integer requiredItems;
 
-    private int offeredItems;
+    private Integer offeredItems;
 }

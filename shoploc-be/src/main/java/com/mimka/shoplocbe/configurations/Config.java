@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Properties;
@@ -55,4 +56,10 @@ public class Config {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder ( ) {
+        return  new BCryptPasswordEncoder();
+    }
+
 }

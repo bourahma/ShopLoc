@@ -5,6 +5,7 @@ import com.mimka.shoplocbe.dto.order.OrderDTOUtil;
 import com.mimka.shoplocbe.entities.*;
 import com.mimka.shoplocbe.exception.CommerceNotFoundException;
 import com.mimka.shoplocbe.exception.InsufficientFundsException;
+import com.mimka.shoplocbe.exception.ProductException;
 import com.mimka.shoplocbe.services.CustomerService;
 import com.mimka.shoplocbe.services.FidelityCardService;
 import com.mimka.shoplocbe.services.OrderService;
@@ -41,12 +42,11 @@ public class OrderFacadeImpl implements OrderFacade {
     public OrderDTO createOrder(String customerUsername, OrderDTO orderDTO) throws CommerceNotFoundException {
         Customer customer = this.customerService.getCustomerByUsername(customerUsername);
         Order order = this.orderService.createOrder(customer, orderDTO);
-
         return this.orderDTOUtil.toOrderDTO(order);
     }
 
     @Override
-    public OrderDTO settleOrder (String customerUsername, Long orderId, boolean usingPoints) throws InsufficientFundsException {
+    public OrderDTO settleOrder (String customerUsername, Long orderId, boolean usingPoints) throws InsufficientFundsException, ProductException {
         double total = this.orderService.getOrderTotalPrice(orderId, usingPoints);
         Customer customer = this.customerService.getCustomerByUsername(customerUsername);
         Commerce commerce = this.orderService.getOrder(orderId).getCommerce();
@@ -74,7 +74,7 @@ public class OrderFacadeImpl implements OrderFacade {
     }
 
     @Override
-    public Map<String,String> settleOrderUsingPointsQRCode(String qRCodeUUID) throws InsufficientFundsException {
+    public Map<String,String> settleOrderUsingPointsQRCode(String qRCodeUUID) throws InsufficientFundsException, ProductException {
         QRCodePayment qrCodePayment = this.qrCodePaymentService.getQRCodePayment(qRCodeUUID);
         Order order = qrCodePayment.getOrder();
         Customer customer = qrCodePayment.getCustomer();
@@ -86,7 +86,7 @@ public class OrderFacadeImpl implements OrderFacade {
     }
 
     @Override
-    public Map<String,String> settleOrderUsingBalanceQRCode(String qRCodeUUID) throws InsufficientFundsException {
+    public Map<String,String> settleOrderUsingBalanceQRCode(String qRCodeUUID) throws InsufficientFundsException, ProductException {
         QRCodePayment qrCodePayment = this.qrCodePaymentService.getQRCodePayment(qRCodeUUID);
         Order order = qrCodePayment.getOrder();
         Customer customer = qrCodePayment.getCustomer();

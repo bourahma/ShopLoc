@@ -1,17 +1,21 @@
 package com.mimka.shoplocbe.services;
 
 import com.mimka.shoplocbe.dto.product.PromotionDTO;
-import com.mimka.shoplocbe.entities.Commerce;
-import com.mimka.shoplocbe.entities.Product;
-import com.mimka.shoplocbe.entities.Promotion;
+import com.mimka.shoplocbe.entities.*;
 
 import java.util.List;
 
 public interface PromotionService {
 
-    Promotion createDiscountPromotion (PromotionDTO promotionDTO, Product product);
+    Promotion createDiscountPromotion(PromotionDTO promotionDTO, Commerce commerce);
 
-    Promotion createOfferPromotion (PromotionDTO promotionDTO, Product product);
+    Promotion createOfferPromotion(PromotionDTO promotionDTO, Commerce commerce);
 
-    List<Promotion> getCommercePromotions (Commerce commerce);
+    List<Promotion> getCommercePromotions(Commerce commerce);
+
+    List<Promotion> getPromotions ( );
+
+    Promotion getPromotion(Long offerPromotionId);
+
+    void savePromotion (Promotion promotion);
 }

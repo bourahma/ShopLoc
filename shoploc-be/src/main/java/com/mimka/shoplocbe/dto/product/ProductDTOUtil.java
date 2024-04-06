@@ -21,7 +21,7 @@ public class ProductDTOUtil {
 
     public ProductDTO toProductDTO (Product product) {
         ProductDTO productDTO = this.modelMapper.map(product, ProductDTO.class);
-        productDTO.setPromotion(this.toPromotionDTO(product.getPromotion()));
+        productDTO.setPromotion(product.getPromotion() != null ? this.toPromotionDTO(product.getPromotion()) : null);
         productDTO.setCommerceId(product.getCommerce().getCommerceId());
 
         return productDTO;
@@ -44,32 +44,12 @@ public class ProductDTOUtil {
         return this.modelMapper.map(productCategoryDTO, ProductCategory.class);
     }
 
-    public OfferPromotion toOfferPromotion (PromotionDTO promotionDTO) {
-        return this.modelMapper.map(promotionDTO, OfferPromotion.class);
-    }
-
-    public DiscountPromotion toDiscountPromotion (PromotionDTO promotionDTO) {
-        return this.modelMapper.map(promotionDTO, DiscountPromotion.class);
+    public Promotion toPromotion (PromotionDTO promotionDTO) {
+        return this.modelMapper.map(promotionDTO, Promotion.class);
     }
 
     public PromotionDTO toPromotionDTO(Promotion promotion) {
-        if (promotion == null) {
-            return null;
-        }
-        PromotionDTO promotionDTO = new PromotionDTO();
-        promotionDTO.setPromotionId(promotion.getPromotionId());
-        promotionDTO.setStartDate(promotion.getStartDate());
-        promotionDTO.setEndDate(promotion.getEndDate());
-        promotionDTO.setDescription(promotion.getDescription());
-        promotionDTO.setProductId(promotion.getProduct().getProductId());
-        if (promotion instanceof DiscountPromotion discountPromotion) {
-            promotionDTO.setDiscountPercent(discountPromotion.getDiscountPercent());
-        } else if (promotion instanceof OfferPromotion offerPromotion) {
-            promotionDTO.setRequiredItems(offerPromotion.getRequiredItems());
-            promotionDTO.setOfferedItems(offerPromotion.getOfferedItems());
-        }
-
-        return promotionDTO;
+        return this.modelMapper.map(promotion, PromotionDTO.class);
     }
 
     private void configureMappings() {

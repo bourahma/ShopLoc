@@ -23,6 +23,8 @@ public class OrderProductDTO {
 
     private double rewardPointsPrice;
 
+    private long promotionId;
+
     @NotNull
     @Positive(message = "La quantité est requise et doit être un nombre positif.")
     private int quantity;

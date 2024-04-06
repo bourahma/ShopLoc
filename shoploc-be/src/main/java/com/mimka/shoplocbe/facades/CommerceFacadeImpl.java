@@ -11,17 +11,27 @@ import com.mimka.shoplocbe.entities.*;
 import com.mimka.shoplocbe.exception.CommerceNotFoundException;
 import com.mimka.shoplocbe.exception.CommerceTypeNotFoundException;
 import com.mimka.shoplocbe.services.*;
+import jakarta.mail.MessagingException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class CommerceFacadeImpl implements CommerceFacade {
 
     private final CommerceService commerceService;
+
+    private final CustomerService customerService;
+
+    private final MailServiceImpl mailService;
+
+    private final MerchantService merchantService;
 
     private final ProductService productService;
 
@@ -37,14 +47,17 @@ public class CommerceFacadeImpl implements CommerceFacade {
 
 
     @Autowired
-    public CommerceFacadeImpl(CommerceService commerceService, ProductService productService, ImageAPI imageAPI, CommerceTypeService commerceTypeService, CommerceDTOUtil commerceDTOUtil, ProductDTOUtil productDTOUtil, AddressService addressService) {
+    public CommerceFacadeImpl(CommerceService commerceService, CustomerService customerService, MailServiceImpl mailService, ProductService productService, ImageAPI imageAPI, CommerceTypeService commerceTypeService, CommerceDTOUtil commerceDTOUtil, ProductDTOUtil productDTOUtil, AddressService addressService, MerchantService merchantService) {
         this.commerceService = commerceService;
+        this.customerService = customerService;
+        this.mailService = mailService;
         this.productService = productService;
         this.imageAPI = imageAPI;
         this.commerceTypeService = commerceTypeService;
         this.commerceDTOUtil = commerceDTOUtil;
         this.productDTOUtil = productDTOUtil;
         this.addressService = addressService;
+        this.merchantService = merchantService;
     }
 
     @Override
@@ -55,7 +68,7 @@ public class CommerceFacadeImpl implements CommerceFacade {
     }
 
     @Override
-    public CommerceDTO addCommerce(CommerceDTO commerceDTO) throws CommerceTypeNotFoundException {
+    public CommerceDTO addCommerce(CommerceDTO commerceDTO, MultipartFile multipartFile) throws CommerceTypeNotFoundException {
         // Create commerce address
         Address address = this.addressService.createAddress(commerceDTO.getAddressDTO());
         // Get commerce type if it exists otherwise CommerceTypeNotFoundException is thrown.
@@ -65,16 +78,16 @@ public class CommerceFacadeImpl implements CommerceFacade {
         commerce.setCommerceType(commerceType);
         commerce.setAddress(address);
         // Save commerce image to amazon S3 bucket and get back the image url.
-        commerce.setImageUrl(this.imageAPI.uploadImage(commerceDTO.getMultipartFile()));
+        commerce.setImageUrl(this.imageAPI.uploadImage(multipartFile));
         commerce = this.commerceService.saveCommerce(commerce);
 
         return this.commerceDTOUtil.toCommerceDTO(commerce);
     }
 
     @Override
-    public CommerceDTO addProduct(Long commerceId, ProductDTO productDTO) throws CommerceNotFoundException {
+    public CommerceDTO addProduct(Long commerceId, ProductDTO productDTO, MultipartFile multipartFile) throws CommerceNotFoundException {
         Product product = this.productService.createProduct(productDTO);
-        product.setImageUrl(this.imageAPI.uploadImage(productDTO.getMultipartFile()));
+        product.setImageUrl(this.imageAPI.uploadImage(multipartFile));
         Commerce commerce = this.commerceService.addProduct(product, commerceId);
 
         return this.commerceDTOUtil.toCommerceDTO(commerce);
@@ -131,13 +144,21 @@ public class CommerceFacadeImpl implements CommerceFacade {
     }
 
     @Override
-    public CommerceDTO updateCommerce(CommerceDTO commerceDTO) throws CommerceNotFoundException, CommerceTypeNotFoundException {
+    public CommerceDTO updateCommerce(CommerceDTO commerceDTO, MultipartFile multipartFile) throws CommerceNotFoundException, CommerceTypeNotFoundException {
         // Create the new address if any.
         Address address = this.addressService.createAddress(commerceDTO.getAddressDTO());
+        Commerce commerce = this.commerceService.getCommerce(commerceDTO.getCommerceId());
+        if (!commerce.getClosingHour().equals(commerceDTO.getClosingHour()) || !commerce.getOpeningHour().equals(commerceDTO.getOpeningHour())) {
+            try {
+                this.mailService.triggerCommerceHoursChange(commerce, this.customerService.getCustomers());
+            } catch (MessagingException e) {
+                log.warn("Sending changing hour error");
+            }
+        }
         // Update the address
-        Commerce commerce = this.commerceService.updateCommerce(commerceDTO);
+        commerce = this.commerceService.updateCommerce(commerceDTO);
         // Update the commerce image if any
-        commerce.setImageUrl(this.imageAPI.uploadImage(commerceDTO.getMultipartFile()));
+        commerce.setImageUrl(this.imageAPI.uploadImage(multipartFile));
         // Get commerce type.
         CommerceType commerceType = this.commerceTypeService.getCommerceTypeById(commerceDTO.getCommerceType().getCommerceTypeId());
         commerce.setAddress(address);
@@ -154,5 +175,10 @@ public class CommerceFacadeImpl implements CommerceFacade {
         return productCategorySet
                 .stream()
                 .map(productDTOUtil::toProductCategoryDTO).collect(Collectors.toSet());
+    }
+
+    @Override
+    public Long getCommerceIdByMerchantId(Long merchantId) {
+        return this.merchantService.getCommerceIdByMerchantId(merchantId);
     }
 }

@@ -36,6 +36,10 @@ public class ProductDTO {
     @NotNull(message = "Le statut de cadeau est requis")
     private boolean gift;
 
+    private Long view;
+
+    private String imageUrl;
+
     private String productCategoryLabel;
 
     private MultipartFile multipartFile;
@@ -44,8 +48,8 @@ public class ProductDTO {
 
     private Long commerceId;
 
-    private Long discountId;
-
     private PromotionDTO promotion;
+
+    private Long promotionId;
 
 }

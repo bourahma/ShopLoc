@@ -38,9 +38,6 @@ public class Product {
     @Column(name = "is_gift", nullable = false)
     private boolean gift;
 
-    @Column(name = "discount_id")
-    private Long discountId;
-
     @Column(name = "view")
     private Long view;
 
@@ -51,7 +48,8 @@ public class Product {
     @JoinColumn(name = "commerce_id", referencedColumnName = "commerce_id")
     private Commerce commerce;
 
-    @OneToOne(mappedBy = "product")
+    @ManyToOne
+    @JoinColumn(name = "promotion_id", referencedColumnName = "promotion_id")
     private Promotion promotion;
 
     @ManyToOne

@@ -1,12 +1,30 @@
-import React, { useState } from "react";
-import { Alert, Button, Label, TextInput } from "flowbite-react";
+import React, { useEffect, useState } from "react";
+import { Alert, Button, Label, Select, TextInput } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import { ErrorMessage, Formik } from "formik";
 import * as Yup from "yup";
 import registerMerchantService from "../services/registerMerchant";
+import commerceService from "../services/commerce";
 
 const MerchantRegistrationForm = () => {
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [commerces, setCommerces] = useState([]);
+
+  const token = localStorage.getItem("userToken");
+  const cleanedToken = JSON.parse(token);
+
+  useEffect(() => {
+    commerceService
+      .fetchCommerces(cleanedToken)
+      .then((data) => {
+        setCommerces(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching commercants:", error);
+        setError(error);
+      });
+  }, [cleanedToken]);
 
   const initialMerchant = {
     username: "",
@@ -23,10 +41,26 @@ const MerchantRegistrationForm = () => {
   const navigate = useNavigate();
 
   const createMerchant = (values) => {
-    delete values.agree;
+    console.log(values);
     registerMerchantService
-      .registerMerchant(values)
+      .registerMerchant(
+        {
+          username: values.username,
+          lastname: values.lastname,
+          firstname: values.firstname,
+          password: values.password,
+          confirmedPassword: values.confirmedPassword,
+          email: values.email,
+          phoneNumber: values.phoneNumber,
+          subscriptionDate: null,
+          commerce: null,
+          commerceId: values.commerceId,
+          role: null,
+        },
+        cleanedToken
+      )
       .then((data) => {
+        setSuccess("Commerçant inscrit avec succès");
         console.log(data);
         navigate("/admin/home");
       })
@@ -46,9 +80,16 @@ const MerchantRegistrationForm = () => {
     }, 5000);
   }
 
+  if (success) {
+    setTimeout(() => {
+      setSuccess(null);
+    }, 5000);
+  }
+
   return (
-    <>
+    <div>
       {error && <Alert color="failure">{error.message}</Alert>}
+      {success && <Alert color="success">{success}</Alert>}
       <div>
         <Formik
           initialValues={initialMerchant}
@@ -80,11 +121,11 @@ const MerchantRegistrationForm = () => {
               .min(10, "Doit être 10 caractères ou plus")
               .max(10, "Doit être 10 caractères ou moins")
               .required("Champ requis"),
-            subscriptionDate: Yup.date().default(() => new Date()),
             commerceId: Yup.string().required("Champ requis"),
           })}
-          onSubmit={(values, { setSubmitting }) => {
+          onSubmit={(values, { setSubmitting, resetForm }) => {
             createMerchant(values);
+            resetForm();
             setSubmitting(false);
           }}
         >
@@ -97,10 +138,10 @@ const MerchantRegistrationForm = () => {
             isSubmitting,
           }) => (
             <form
-              className="flex flex-wrap justify-center gap-4 my-6 mx-6"
               onSubmit={handleSubmit}
+              className="flex flex-col md:flex-row md:space-x-4 my-6 mx-12"
             >
-              <div className="flex max-w-md w-full flex-col gap-4">
+              <div className="flex-1">
                 <div>
                   <div className="mb-2 block">
                     <Label htmlFor="username">Nom d'utilisateur</Label>
@@ -165,7 +206,7 @@ const MerchantRegistrationForm = () => {
                   <TextInput
                     id="phoneNumber"
                     type="text"
-                    placeholder="Votre numéro de téléphone"
+                    placeholder="Numéro de téléphone"
                     value={values.phoneNumber}
                     error={errors.phoneNumber}
                     fieldtouched={touched.phoneNumber?.toString()}
@@ -178,7 +219,7 @@ const MerchantRegistrationForm = () => {
                   />
                 </div>
               </div>
-              <div className="flex max-w-md w-full flex-col gap-4">
+              <div className="flex-1">
                 <div>
                   <div className="mb-2 block">
                     <Label htmlFor="password">Mot de passe</Label>
@@ -186,7 +227,7 @@ const MerchantRegistrationForm = () => {
                   <TextInput
                     id="password"
                     type="password"
-                    placeholder="Votre mot de passe"
+                    placeholder="Mot de passe"
                     value={values.password}
                     error={errors.password}
                     fieldtouched={touched.password?.toString()}
@@ -207,7 +248,7 @@ const MerchantRegistrationForm = () => {
                   <TextInput
                     id="confirmedPassword"
                     type="password"
-                    placeholder="Confirmer votre mot de passe"
+                    placeholder="Confirmer le mot de passe"
                     value={values.confirmedPassword}
                     error={errors.confirmedPassword}
                     fieldtouched={touched.confirmedPassword?.toString()}
@@ -238,45 +279,36 @@ const MerchantRegistrationForm = () => {
                     className="text-red-500 text-xs"
                   />
                 </div>
-                <div className="mb-2 block">
-                  <Label htmlFor="subscriptionDate">Date d'inscription</Label>
-                </div>
-                <TextInput
-                  id="subscriptionDate"
-                  type="date"
-                  placeholder="Date d'inscription"
-                  value={values.subscriptionDate}
-                  error={errors.subscriptionDate}
-                  fieldtouched={touched.subscriptionDate?.toString()}
-                  onChange={handleChange}
-                />
-                <ErrorMessage
-                  name="subscriptionDate"
-                  component="div"
-                  className="text-red-500 text-xs"
-                />
                 <div>
                   <div className="mb-2 block">
-                    <Label htmlFor="commerceId">ID du commerce</Label>
+                    <Label htmlFor="commerceId">Commerce</Label>
                   </div>
-                  <TextInput
+                  <Select
                     id="commerceId"
-                    type="text"
-                    placeholder="ID du commerce"
                     value={values.commerceId}
                     error={errors.commerceId}
                     fieldtouched={touched.commerceId?.toString()}
                     onChange={handleChange}
-                  />
+                  >
+                    <option value="">Choix du commerce</option>
+                    {commerces.map((commerce) => (
+                      <option
+                        key={commerce.commerceId}
+                        value={commerce.commerceId}
+                      >
+                        {commerce.commerceName}
+                      </option>
+                    ))}
+                  </Select>
+
                   <ErrorMessage
                     name="commerceId"
                     component="div"
                     className="text-red-500 text-xs"
                   />
                 </div>
-
                 <Button
-                  className="mb-2 block bg-shopred w-full justify-center items-center"
+                  className="mt-2 bg-shopred w-full justify-center items-center"
                   type="submit"
                   disabled={isSubmitting}
                 >
@@ -287,7 +319,7 @@ const MerchantRegistrationForm = () => {
           )}
         </Formik>
       </div>
-    </>
+    </div>
   );
 };
 

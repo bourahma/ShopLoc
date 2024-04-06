@@ -40,6 +40,8 @@ class OrderControllerIT extends ControllerIT {
     }
 
     @Test
+    @Transactional
+    @Rollback
     void testCreateOrder_WithEmptyOrderDto_ReturnBadRequest () throws Exception {
         OrderDTO orderDTO = new OrderDTO();
 
@@ -76,6 +78,8 @@ class OrderControllerIT extends ControllerIT {
     }
 
     @Test
+    @Transactional
+    @Rollback
     void testCreateOrder_WithInvalidCommerceId_ReturnBadRequest () throws Exception {
         mockMvc.perform(post("/order/")
                         .header("Authorization", "Bearer " + customerJWTToken)
@@ -86,6 +90,8 @@ class OrderControllerIT extends ControllerIT {
     }
 
     @Test
+    @Transactional
+    @Rollback
     void testCreateOrder_WithInvalidProductId_ReturnBadRequest () throws Exception {
         mockMvc.perform(post("/order/")
                         .header("Authorization", "Bearer " + customerJWTToken)
@@ -97,6 +103,8 @@ class OrderControllerIT extends ControllerIT {
     }
 
     @Test
+    @Transactional
+    @Rollback
     void testCreateOrder_WithInvalidProductQuantity_ReturnBadRequest () throws Exception {
         mockMvc.perform(post("/order/")
                         .header("Authorization", "Bearer " + customerJWTToken)
@@ -107,6 +115,8 @@ class OrderControllerIT extends ControllerIT {
     }
 
     @Test
+    @Transactional
+    @Rollback
     void testCreateOrder_WithEmptyProducts_ReturnBadRequest () throws Exception {
         mockMvc.perform(post("/order/")
                         .header("Authorization", "Bearer " + customerJWTToken)
@@ -149,6 +159,120 @@ class OrderControllerIT extends ControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.points").value(68.5))
                 .andExpect(jsonPath("$.balance").value(34.54));
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    void testSettleOrderUsingBalance_ProductsQuantityUpdated_ReturnOk () throws Exception {
+        mockMvc.perform(get("/product/detail/1")
+                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.quantity").value(150));
+
+        mockMvc.perform(get("/product/detail/4")
+                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.quantity").value(200));
+
+        // Create an order.
+        Integer orderId = JsonPath.read(mockMvc.perform(post("/order/")
+                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(this.getOrderDTO())))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString(), "$.orderId");
+
+        // Settle the order using balance
+        mockMvc.perform(get("/order/settle/using-balance/" + orderId)
+                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/product/detail/1")
+                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.quantity").value(148));
+
+        mockMvc.perform(get("/product/detail/4")
+                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.quantity").value(196));
+
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    void testProductQuantityUpdatedWhenPromotionOffer_ReturnOk () throws Exception {
+        mockMvc.perform(get("/product/detail/1")
+                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.quantity").value(150));
+
+        // Create an order.
+        Integer orderId = JsonPath.read(mockMvc.perform(post("/order/")
+                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(this.getOrderDTOWithOfferPromotion())))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString(), "$.orderId");
+
+        // Settle the order using balance
+        mockMvc.perform(get("/order/settle/using-balance/" + orderId)
+                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/product/detail/1")
+                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.quantity").value(142));
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    void testProductQuantityUpdatedWhenDiscountPromotion_ReturnOk () throws Exception {
+        mockMvc.perform(get("/product/detail/13")
+                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.quantity").value(50));
+
+        // Create an order.
+        Integer orderId = JsonPath.read(mockMvc.perform(post("/order/")
+                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(this.getOrderDTOWithDiscountPromotion())))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString(), "$.orderId");
+
+        // Settle the order using balance
+        mockMvc.perform(get("/order/settle/using-balance/" + orderId)
+                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        //Verify that balance is debited.
+        mockMvc.perform(get("/fidelity-card/")
+                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.balance").value(28.715999999999998))
+                .andExpect(jsonPath("$.points").value(74.5));
+
+        mockMvc.perform(get("/product/detail/13")
+                        .header("Authorization", "Bearer " + customerJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.quantity").value(48));
     }
 
     @Test
@@ -217,7 +341,9 @@ class OrderControllerIT extends ControllerIT {
         mockMvc.perform(get("/order/settle/using-points/" + orderId)
                         .header("Authorization", "Bearer " + customerJWTToken)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Le solde de points sur votre carte fidélité est insuffisant pour effectuer cette transaction."));
+
 
         //Verify that points are not debited.
         mockMvc.perform(get("/fidelity-card/")
@@ -233,7 +359,7 @@ class OrderControllerIT extends ControllerIT {
         OrderDTO orderDTO = this.getOrderDTO();
         orderDTO.setProducts(orderDTO.getProducts().stream()
                 .map(product -> {
-                    product.setQuantity(100);
+                    product.setQuantity(200);
                     return product;
                 })
                 .collect(Collectors.toSet()));
@@ -360,6 +486,32 @@ class OrderControllerIT extends ControllerIT {
         OrderDTO orderDTO = new OrderDTO();
         orderDTO.setCommerceId(1L);
         orderDTO.setProducts(Set.of(orderProductDTOPain, orderProductDTOTwoEclair));
+
+        return orderDTO;
+    }
+
+    @NotNull
+    private OrderDTO getOrderDTOWithOfferPromotion () {
+        OrderProductDTO orderProductDTOPain = new OrderProductDTO();
+        orderProductDTOPain.setProductId(1L);
+        orderProductDTOPain.setQuantity(6);
+
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setCommerceId(1L);
+        orderDTO.setProducts(Set.of(orderProductDTOPain));
+
+        return orderDTO;
+    }
+
+    @NotNull
+    private OrderDTO getOrderDTOWithDiscountPromotion () {
+        OrderProductDTO orderProductDTOPain = new OrderProductDTO();
+        orderProductDTOPain.setProductId(13L);
+        orderProductDTOPain.setQuantity(2);
+
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setCommerceId(1L);
+        orderDTO.setProducts(Set.of(orderProductDTOPain));
 
         return orderDTO;
     }

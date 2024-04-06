@@ -1,6 +1,7 @@
 package com.mimka.shoplocbe.configurations;
 
 import com.mimka.shoplocbe.batch.vfp.CustomerOrdersReader;
+import com.mimka.shoplocbe.batch.vfp.CustomerRefreshJobListener;
 import com.mimka.shoplocbe.batch.vfp.CustomerWriter;
 import com.mimka.shoplocbe.batch.vfp.VFPStatusProcessor;
 import com.mimka.shoplocbe.entities.Customer;
@@ -31,6 +32,8 @@ public class BatchConfig {
 
     private final CustomerWriter customerWriter;
 
+    private final CustomerRefreshJobListener customerRefreshJobListener;
+
     @Bean
     public PlatformTransactionManager transactionManager() {
         return new JpaTransactionManager();
@@ -39,12 +42,12 @@ public class BatchConfig {
     @Bean
     public Job processVFPStatusJob (JobRepository jobRepository) {
         return new JobBuilder("VFP Status JOB", jobRepository)
+                .listener(this.customerRefreshJobListener)
                 .flow(processVFPStatusStep(jobRepository)).end().build();
     }
 
     @Bean
     public Step processVFPStatusStep (JobRepository jobRepository) {
-        this.customerOrdersReader.init();
         return new StepBuilder("VFP Status STEP", jobRepository)
                 .<Pair<List<Order>, Customer>, Customer> chunk(10, transactionManager())
                 .allowStartIfComplete(true)

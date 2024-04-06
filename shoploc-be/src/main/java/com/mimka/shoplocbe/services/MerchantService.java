@@ -8,5 +8,7 @@ import com.mimka.shoplocbe.exception.RegistrationException;
 public interface MerchantService {
 
     Merchant createMerchant(MerchantDTO merchantDTO, Commerce commerce) throws RegistrationException;
-    
+
+    Long getCommerceIdByMerchantId(Long merchantId);
+
 }
