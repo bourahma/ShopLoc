@@ -13,8 +13,6 @@ const AddCategory = () => {
   const cleanedToken = JSON.parse(token);
   const commerceId = useParams().commerceId;
 
-  console.log("commerceId", commerceId);
-
   const initialCategory = {
     label: "",
     description: "",
