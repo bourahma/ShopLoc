@@ -473,7 +473,7 @@ const CheckoutPage = () => {
                                     </p>
                                 )}
                                 {!allGift && !allNoGift && (
-                                    <p className="text-orange-400">
+                                    <p className="text-green-400">
                                         Attention ! Quelques produits sont
                                         payable avec des points si vous avez
                                     </p>
