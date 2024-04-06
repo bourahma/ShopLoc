@@ -38,8 +38,8 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     }
 
     @Override
-    public ProductCategory saveProductCategory(ProductCategory productCategory) {
-        return this.productCategoryRepository.save(productCategory);
+    public void saveProductCategory(ProductCategory productCategory) {
+        this.productCategoryRepository.save(productCategory);
     }
 
     @Override

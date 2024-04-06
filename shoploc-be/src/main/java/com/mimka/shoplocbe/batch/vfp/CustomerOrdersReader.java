@@ -5,10 +5,8 @@ import com.mimka.shoplocbe.entities.Order;
 import com.mimka.shoplocbe.entities.OrderStatus;
 import com.mimka.shoplocbe.repositories.CustomerRepository;
 import com.mimka.shoplocbe.repositories.OrderRepository;
-import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.annotation.BeforeJob;
+
 import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
