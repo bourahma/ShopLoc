@@ -9,15 +9,9 @@ import java.util.List;
 
 public interface PromotionFacade {
 
-    PromotionDTO createOfferPromotion (PromotionDTO promotionDTO, Long commerceId) throws ProductException, ProductPromotionException, CommerceNotFoundException;
+    PromotionDTO createOfferPromotion (PromotionDTO promotionDTO) throws ProductException, ProductPromotionException, CommerceNotFoundException;
 
-    PromotionDTO createDiscountPromotion (PromotionDTO promotionDTO, Long commerceId) throws ProductException, ProductPromotionException, CommerceNotFoundException;
-
-    PromotionDTO getPromotion (Long promotionId);
+    PromotionDTO createDiscountPromotion (PromotionDTO promotionDTO) throws ProductException, ProductPromotionException, CommerceNotFoundException;
 
     List<PromotionDTO> getCommercePromotions (Long commerceId) throws CommerceNotFoundException;
-
-    List<PromotionDTO> getPromotions ( );
-
-    PromotionDTO launchPromotion (Long promotionId);
 }

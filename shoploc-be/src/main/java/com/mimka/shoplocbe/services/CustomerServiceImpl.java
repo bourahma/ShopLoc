@@ -1,6 +1,5 @@
 package com.mimka.shoplocbe.services;
 
-import com.mimka.shoplocbe.configurations.CustomUserDetails;
 import com.mimka.shoplocbe.dto.DtoUtil;
 import com.mimka.shoplocbe.dto.user.CustomerDTO;
 import com.mimka.shoplocbe.entities.*;
@@ -16,11 +15,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -32,17 +29,13 @@ public class CustomerServiceImpl implements CustomerService, UserDetailsService 
 
     private final RoleRepository roleRepository;
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
     private final TokenRepository tokenRepository;
     @Autowired
-    public CustomerServiceImpl(CustomerRepository customerRepository, DtoUtil dtoUtil, RoleRepository roleRepository,
-                               TokenRepository tokenRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, DtoUtil dtoUtil, RoleRepository roleRepository, TokenRepository tokenRepository) {
         this.customerRepository = customerRepository;
         this.dtoUtil = dtoUtil;
         this.roleRepository = roleRepository;
         this.tokenRepository = tokenRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
 
@@ -59,26 +52,19 @@ public class CustomerServiceImpl implements CustomerService, UserDetailsService 
         return customer;
     }
 
-    @Override
-    public List<Customer> getCustomers() {
-        return this.customerRepository.findAll();
-    }
-
     private UserDetails getUserDetails(String username) {
         User user = this.getCustomerByUsername(username);
 
         Set<GrantedAuthority> authorities = Set.of(new SimpleGrantedAuthority(user.getRole().getRoleName()));
 
-        return new CustomUserDetails(
+        return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
                 user.getEnabled(),
                 true,
                 true,
                 true,
-                authorities,
-                user.getId()
-        );
+                authorities);
     }
 
     public boolean emailAndUsernameUniquenessValid(String email, String username) throws RegistrationException {
@@ -106,8 +92,6 @@ public class CustomerServiceImpl implements CustomerService, UserDetailsService 
             customer.setRole(this.roleRepository.findByRoleId(1L));
             customer.setEnabled(false);
             customer.setSubscriptionDate(LocalDate.now());
-            customer.setFidelityCard(fidelityCard);
-            customer.setPassword(this.bCryptPasswordEncoder.encode(customer.getPassword()));
             this.customerRepository.save(customer);
         }
 

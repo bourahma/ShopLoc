@@ -7,9 +7,7 @@ describe("signupService", () => {
     const mock = new MockAdapter(axios);
     const data = { response: true };
     mock
-      .onPost(
-        `${process.env.REACT_APP_SERVER_URL}/authentication/customer/register`
-      )
+      .onPost(`${process.env.REACT_APP_SERVER_URL}/authentication/register`)
       .reply(200, data);
 
     const credentials = { username: "testuser", password: "testpassword" };

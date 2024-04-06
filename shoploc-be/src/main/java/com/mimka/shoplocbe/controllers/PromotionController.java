@@ -24,42 +24,27 @@ public class PromotionController {
         this.promotionFacade = promotionFacade;
     }
 
-    @PostMapping("/offer/{commerceId}")
+    @GetMapping("/{commerceId}")
     @PreAuthorize("hasAnyAuthority('SCOPE_MERCHANT')")
-    @ResponseStatus(HttpStatus.CREATED)
-    public PromotionDTO fireOfferPromotion (@RequestBody PromotionDTO promotionDTO, @PathVariable Long commerceId) throws ProductException, ProductPromotionException, CommerceNotFoundException {
-        promotionDTO = this.promotionFacade.createOfferPromotion(promotionDTO, commerceId);
-
-        return promotionDTO;
-    }
-
-    @PostMapping("/discount/{commerceId}")
-    @PreAuthorize("hasAuthority('SCOPE_MERCHANT')")
-    @ResponseStatus(HttpStatus.CREATED)
-    public PromotionDTO fireDiscountPromotion (@RequestBody PromotionDTO promotionDTO, @PathVariable Long commerceId) throws ProductException, ProductPromotionException, CommerceNotFoundException {
-        promotionDTO = this.promotionFacade.createDiscountPromotion(promotionDTO, commerceId);
-
-        return promotionDTO;
-    }
-
-    @GetMapping("/{promotionId}")
-    public PromotionDTO promotion (@PathVariable Long promotionId) throws CommerceNotFoundException {
-        return this.promotionFacade.getPromotion(promotionId);
-    }
-
-    @GetMapping("/commerce/{commerceId}")
-    public List<PromotionDTO> promotions (@PathVariable Long commerceId) throws CommerceNotFoundException {
+    public List<PromotionDTO> commercePromotions (@PathVariable Long commerceId) throws CommerceNotFoundException {
         return this.promotionFacade.getCommercePromotions(commerceId);
     }
 
-    @GetMapping("/")
-    public List<PromotionDTO> promotions () {
-        return this.promotionFacade.getPromotions();
+    @PostMapping("/offer")
+    @PreAuthorize("hasAnyAuthority('SCOPE_MERCHANT')")
+    @ResponseStatus(HttpStatus.CREATED)
+    public PromotionDTO fireOfferPromotion (@RequestBody PromotionDTO promotionDTO) throws ProductException, ProductPromotionException, CommerceNotFoundException {
+        promotionDTO = this.promotionFacade.createOfferPromotion(promotionDTO);
+
+        return promotionDTO;
     }
 
-    @GetMapping("/{promotionId}/launch")
-    public PromotionDTO launchPromotion(@PathVariable Long promotionId) {
-        return this.promotionFacade.launchPromotion(promotionId);
-    }
+    @PostMapping("/discount")
+    @PreAuthorize("hasAuthority('SCOPE_MERCHANT')")
+    @ResponseStatus(HttpStatus.CREATED)
+    public PromotionDTO fireDiscountPromotion (@RequestBody PromotionDTO promotionDTO) throws ProductException, ProductPromotionException, CommerceNotFoundException {
+        promotionDTO = this.promotionFacade.createDiscountPromotion(promotionDTO);
 
+        return promotionDTO;
+    }
 }

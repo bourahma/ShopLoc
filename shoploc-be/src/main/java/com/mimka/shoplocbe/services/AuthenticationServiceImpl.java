@@ -1,6 +1,5 @@
 package com.mimka.shoplocbe.services;
 
-import com.mimka.shoplocbe.configurations.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,8 +43,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         Instant instant =  Instant.now();
         // Retrieves the user's roles. The roles are constructed in a single string & separated by a space.
         String scope = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" "));
-
-        Long userId = ((CustomUserDetails) authentication.getPrincipal()).getId();
         // Set JWT claims
         JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
                 //  Date when the JWT is generated.
@@ -53,7 +50,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .expiresAt(instant.plus(120, ChronoUnit.MINUTES))
                 .subject(username)
                 .claim("scope", scope)
-                .claim("userId", userId)
                 .build();
 
         // Sign the JWT token using MacAlgorithm HS512.

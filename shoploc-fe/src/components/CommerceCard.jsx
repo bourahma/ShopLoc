@@ -14,13 +14,10 @@ const CommerceCard = ({ commercant }) => {
             className="max-w-sm rounded border shadow-sm overflow-hidden cursor-pointer"
         >
             <img
-                className="h-40 w-full object-cover bg-shopgray "
+                className="h-48 w-full object-cover "
                 src={commercant.imageUrl}
                 alt={commercant.imageUrl}
-                width="100"
             />
-            <div className="bg-shopgray mt-2">
-
             <div className="px-2 pt-4">
                 <div className="font-bold text-xl mb-2">
                     {commercant.commerceName}
@@ -48,7 +45,6 @@ const CommerceCard = ({ commercant }) => {
                         Fermeture: {formatTime(commercant.closingHour)}
                     </span>
                 </div>
-            </div>
             </div>
         </Link>
     );

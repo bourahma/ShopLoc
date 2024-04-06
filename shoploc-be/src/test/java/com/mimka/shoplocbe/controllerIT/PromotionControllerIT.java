@@ -1,7 +1,6 @@
 package com.mimka.shoplocbe.controllerIT;
 
 import com.mimka.shoplocbe.dto.product.PromotionDTO;
-import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -17,9 +16,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PromotionControllerIT extends ControllerIT {
 
     @Test
-    @Transactional
+    void testGetAllCommercePromotions_ReturnOK () throws Exception {
+        mockMvc.perform(get("/promotion/6")
+                        .header("Authorization", "Bearer " + merchantJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    @Test
     void testCreateOfferPromotion_ReturnCreated () throws Exception {
-        mockMvc.perform(post("/promotion/offer/8")
+        mockMvc.perform(post("/promotion/offer")
                         .header("Authorization", "Bearer " + merchantJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(this.getOfferPromotionDTO())))
@@ -27,20 +35,12 @@ class PromotionControllerIT extends ControllerIT {
     }
 
     @Test
-    @Transactional
     void testCreateDiscountPromotion_ReturnCreated () throws Exception {
-        mockMvc.perform(post("/promotion/discount/8")
+        mockMvc.perform(post("/promotion/discount")
                         .header("Authorization", "Bearer " + merchantJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(this.getDiscountPromotionDTO())))
                 .andExpect(status().isCreated());
-    }
-
-    @Test
-    void testGetPromotion_ReturnOk () throws Exception {
-        mockMvc.perform(get("/promotion/1")
-                        .header("Authorization", "Bearer " + merchantJWTToken))
-                .andExpect(status().isOk());
     }
 
     @NotNull
@@ -49,6 +49,7 @@ class PromotionControllerIT extends ControllerIT {
         offerPromotionDTO.setStartDate(LocalDate.of(2024, 4, 1));
         offerPromotionDTO.setEndDate(LocalDate.of(2024, 4, 30));
         offerPromotionDTO.setDescription("Achetez 3, obtenez-en 1 gratuitement");
+        offerPromotionDTO.setProductId(8L);
         offerPromotionDTO.setCommerceId(8L);
         offerPromotionDTO.setRequiredItems(3);
         offerPromotionDTO.setOfferedItems(1);
@@ -62,6 +63,7 @@ class PromotionControllerIT extends ControllerIT {
         discountPromotionDTO.setStartDate(LocalDate.of(2024, 3, 1));
         discountPromotionDTO.setEndDate(LocalDate.of(2024, 5, 15));
         discountPromotionDTO.setDescription("Vente de printemps");
+        discountPromotionDTO.setProductId(12L);
         discountPromotionDTO.setCommerceId(5L);
         discountPromotionDTO.setDiscountPercent(20);
 

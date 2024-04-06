@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalTime;
 
@@ -38,6 +39,8 @@ public class CommerceDTO {
     private CommerceTypeDTO commerceType;
 
     private String imageUrl;
+
+    private MultipartFile multipartFile;
 
     private boolean disabled;
 

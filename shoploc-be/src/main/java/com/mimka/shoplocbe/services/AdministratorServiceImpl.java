@@ -1,6 +1,5 @@
 package com.mimka.shoplocbe.services;
 
-import com.mimka.shoplocbe.configurations.CustomUserDetails;
 import com.mimka.shoplocbe.entities.*;
 import com.mimka.shoplocbe.repositories.AdministratorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,15 +33,14 @@ public class AdministratorServiceImpl implements AdministratorService, UserDetai
 
         Set<GrantedAuthority> authorities = Set.of(new SimpleGrantedAuthority(user.getRole().getRoleName()));
 
-        return new CustomUserDetails(
+        return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
                 user.getEnabled(),
                 true,
                 true,
                 true,
-                authorities,
-                user.getId());
+                authorities);
     }
 
     private Administrator getAdministratorByUsername(String username) {

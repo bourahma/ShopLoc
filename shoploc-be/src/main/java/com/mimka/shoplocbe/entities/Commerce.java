@@ -53,7 +53,4 @@ public class Commerce {
 
     @OneToMany(mappedBy = "commerce")
     private Set<ProductCategory> productCategories;
-
-    @OneToMany(mappedBy = "commerce")
-    private Set<Merchant> merchants;
 }

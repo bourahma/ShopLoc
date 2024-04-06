@@ -15,9 +15,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
-import com.mimka.shoplocbe.configurations.CustomUserDetails;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -31,15 +29,11 @@ public class MerchantServiceImpl implements MerchantService, UserDetailsService 
 
     private final DtoUtil dtoUtil;
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
     @Autowired
-    public MerchantServiceImpl(MerchantRepository merchantRepository, RoleRepository roleRepository, DtoUtil dtoUtil,
-                               BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public MerchantServiceImpl(MerchantRepository merchantRepository, RoleRepository roleRepository, DtoUtil dtoUtil) {
         this.merchantRepository = merchantRepository;
         this.roleRepository = roleRepository;
         this.dtoUtil = dtoUtil;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -53,16 +47,14 @@ public class MerchantServiceImpl implements MerchantService, UserDetailsService 
 
         Set<GrantedAuthority> authorities = Set.of(new SimpleGrantedAuthority(user.getRole().getRoleName()));
 
-        return new CustomUserDetails(
+        return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
                 user.getEnabled(),
                 true,
                 true,
                 true,
-                authorities,
-                user.getId()
-                );
+                authorities);
     }
 
     public boolean emailAndUsernameUniquenessValid(String email, String username) throws RegistrationException {
@@ -92,19 +84,9 @@ public class MerchantServiceImpl implements MerchantService, UserDetailsService 
             merchant.setEnabled(true);
             merchant.setCommerce(commerce);
             merchant.setSubscriptionDate(LocalDate.now());
-            merchant.setPassword(this.bCryptPasswordEncoder.encode(merchantDTO.getPassword()));
-
             // Merchant is saved.
             this.merchantRepository.save(merchant);
         }
         return merchant;
-    }
-
-    @Override
-    public Long getCommerceIdByMerchantId(Long merchantId) {
-        if (this.merchantRepository.findById(merchantId).isEmpty()) {
-            throw new IllegalArgumentException("Aucun commerçant n'est associé à cet identifiant.");
-        }
-        return this.merchantRepository.findById(merchantId).get().getCommerce().getCommerceId();
     }
 }

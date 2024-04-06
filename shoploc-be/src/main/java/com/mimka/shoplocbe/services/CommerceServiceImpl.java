@@ -1,6 +1,7 @@
 package com.mimka.shoplocbe.services;
 
 import com.mimka.shoplocbe.dto.commerce.CommerceDTO;
+import com.mimka.shoplocbe.dto.commerce.CommerceDTOUtil;
 import com.mimka.shoplocbe.entities.Commerce;
 import com.mimka.shoplocbe.entities.CommerceType;
 import com.mimka.shoplocbe.entities.Product;

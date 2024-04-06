@@ -75,7 +75,6 @@ public class FidelityCardServiceImpl implements FidelityCardService {
 
     private void createPointTransaction(FidelityCard fidelityCard, long commerceId, double amount, TransactionType type) {
         PointTransaction transaction = new PointTransaction();
-        transaction.setFidelityCard(fidelityCard);
         transaction.setCommerce(this.commerceRepository.findByCommerceIdAndDisabled(commerceId, false));
         transaction.setTransactionDate(LocalDateTime.now());
         transaction.setType(type);

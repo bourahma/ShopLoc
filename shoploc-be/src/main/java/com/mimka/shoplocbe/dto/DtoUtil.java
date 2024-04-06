@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DtoUtil {
 
-    private final ModelMapper modelMapper;
+    private ModelMapper modelMapper;
 
     @Autowired
     public DtoUtil(ModelMapper modelMapper) {

@@ -10,7 +10,7 @@ public interface ProductCategoryService {
 
     ProductCategory createProductCategory (ProductCategoryDTO productCategoryDTO);
 
-    void saveProductCategory (ProductCategory productCategory);
+    ProductCategory saveProductCategory (ProductCategory productCategory);
 
     ProductCategory updateProductCategory (Long productCategoryId, ProductCategoryDTO productCategoryDTO) throws ProductCategoryNotFoundException;
 }

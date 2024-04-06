@@ -2,14 +2,10 @@ import axios from "axios";
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
-const baseUrl = "authentication/merchant/register";
+const baseUrl = "merchant/register";
 
-const registerMerchant = async (credentials, token) => {
-  const response = await axios.post(`${SERVER_URL}/${baseUrl}`, credentials, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+const registerMerchant = async (credentials) => {
+  const response = await axios.post(`${SERVER_URL}/${baseUrl}`, credentials);
   return response.data;
 };
 

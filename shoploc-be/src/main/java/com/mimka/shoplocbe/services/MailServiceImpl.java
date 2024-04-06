@@ -1,11 +1,11 @@
 package com.mimka.shoplocbe.services;
 
 import com.mimka.shoplocbe.dto.user.MerchantDTO;
-import com.mimka.shoplocbe.entities.*;
+import com.mimka.shoplocbe.entities.Customer;
+import com.mimka.shoplocbe.entities.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -13,18 +13,12 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
-@Slf4j
 @Service
 public class MailServiceImpl {
     private final JavaMailSender javaMailSender;
 
     @Value("${be.url}")
     private String beUrl;
-
-    @Value("${spring.mail.username}")
-    private String emailFrom;
     @Autowired
     public MailServiceImpl (JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
@@ -65,7 +59,7 @@ public class MailServiceImpl {
         helper.setText(content, true);
         helper.setTo(user.getEmail());
         helper.setSubject("Confirmation d'inscription");
-        helper.setFrom(new InternetAddress(emailFrom));
+        helper.setFrom(new InternetAddress("projet_etu_fil@univ-lille.fr"));
 
         javaMailSender.send(message);
 
@@ -105,7 +99,7 @@ public class MailServiceImpl {
         helper.setText(content, true);
         helper.setTo(user.getEmail());
         helper.setSubject("Veuillez confirmer votre inscription");
-        helper.setFrom(new InternetAddress(emailFrom));
+        helper.setFrom(new InternetAddress("projet_etu_fil@univ-lille.fr"));
 
         javaMailSender.send(message);
     }
@@ -153,171 +147,10 @@ public class MailServiceImpl {
         helper.setText(content, true);
         helper.setTo(merchantDTO.getEmail());
         helper.setSubject("Céation de votre compte commerçant");
-        helper.setFrom(new InternetAddress(emailFrom));
+        helper.setFrom(new InternetAddress("projet_etu_fil@univ-lille.fr"));
 
         javaMailSender.send(message);
-    }
 
-    @Async
-    public void triggerPromotionToCustomers(Promotion promotion, Commerce commerce, List<Customer> customers) throws MessagingException {
-        for (Customer customer : customers) {
-            sendPromotionEmail(customer, commerce, promotion);
-        }
-    }
-
-    private void sendPromotionEmail(Customer customer, Commerce commerce, Promotion promotion) throws MessagingException {
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
-        String subject = "Découvrez notre nouvelle promotion exclusive chez " + commerce.getCommerceName() + " !";
-        String content = buildPromotionContent(customer, commerce, promotion);
-
-        helper.setText(content, true);
-        helper.setTo(customer.getEmail());
-        helper.setSubject(subject);
-        helper.setFrom(new InternetAddress(emailFrom));
-
-        javaMailSender.send(message);
-    }
-
-    private String buildPromotionContent(Customer customer, Commerce commerce, Promotion promotion) {
-        String greeting = String.format("Cher(ère) %s,", customer.getFirstname());
-        String introCommerce = String.format("Voici une offre spéciale de %s, ouvert de %s à %s.",
-                commerce.getCommerceName(),
-                commerce.getOpeningHour(),
-                commerce.getClosingHour());
-        String detail;
-
-        if ("discount".equalsIgnoreCase(promotion.getPromotionType())) {
-            detail = String.format("Profitez d'une réduction de %d%% sur les produits sélectionnés jusqu'au %s.",
-                    promotion.getDiscountPercent(),
-                    promotion.getEndDate().toString());
-        } else {
-            detail = String.format("Obtenez %d articles gratuits pour l'achat de %d articles jusqu'au %s.",
-                    promotion.getOfferedItems(),
-                    promotion.getRequiredItems(),
-                    promotion.getEndDate().toString());
-        }
-
-        String signature = "Cordialement, <br> L'équipe de " + commerce.getCommerceName();
-        String content = String.format("""
-            <!DOCTYPE html>
-            <html lang="fr">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Information sur la promotion</title>
-            </head>
-            <body>
-                <p>%s</p>
-                <p>%s</p>
-                <p>%s</p>
-                %s
-         
-            </body>
-            </html>
-            """, greeting, introCommerce, detail, signature);
-
-        return content;
-    }
-
-    @Async
-    public void triggerCommerceHoursChange(Commerce commerce, List<Customer> customers) throws MessagingException {
-        for (Customer customer : customers) {
-            sendHoursChangeEmail(customer, commerce);
-        }
-    }
-
-    private void sendHoursChangeEmail(Customer customer, Commerce commerce) throws MessagingException {
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
-        String subject = "Changement d'horaires chez " + commerce.getCommerceName();
-        String content = buildHoursChangeContent(customer, commerce);
-
-        helper.setText(content, true);
-        helper.setTo(customer.getEmail());
-        helper.setSubject(subject);
-        helper.setFrom(new InternetAddress(emailFrom));
-
-        javaMailSender.send(message);
-    }
-
-    private String buildHoursChangeContent(Customer customer, Commerce commerce) {
-        String greeting = String.format("Cher(ère) %s,", customer.getFirstname());
-        String introCommerce = String.format("Nous voulons vous informer des nouveaux horaires de %s.",
-                commerce.getCommerceName());
-        String detail = String.format("Nos nouvelles heures d'ouverture sont de %s à %s.",
-                commerce.getOpeningHour(), commerce.getClosingHour());
-        String signature = "Cordialement,\nL'équipe de " + commerce.getCommerceName();
-
-        String content = String.format("""
-            <!DOCTYPE html>
-            <html lang="fr">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Changement d'horaires</title>
-            </head>
-            <body>
-                <p>%s</p>
-                <p>%s</p>
-                <p>%s</p>
-                <p>%s</p>
-            </body>
-            </html>
-            """, greeting, introCommerce, detail, signature);
-
-        return content;
-    }
-
-    @Async
-    public void triggerMerchantsProductOutOfStock(Product product, List<Merchant> merchants) throws MessagingException {
-        for (Merchant merchant : merchants) {
-            sendProductOutOfStockEmail(merchant, product);
-        }
-    }
-
-    private void sendProductOutOfStockEmail(Merchant merchant, Product product) throws MessagingException {
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
-        String subject = "Alerte de rupture de stock pour " + product.getProductName();
-        String content = buildProductOutOfStockContent(merchant, product);
-
-        helper.setText(content, true);
-        helper.setTo(merchant.getEmail());
-        helper.setSubject(subject);
-        helper.setFrom(new InternetAddress(emailFrom));
-
-        javaMailSender.send(message);
-    }
-
-    private String buildProductOutOfStockContent(Merchant merchant, Product product) {
-        String greeting = String.format("Cher(ère) %s,", merchant.getFirstname());
-        String intro = "Nous vous informons d'une rupture de stock pour un de vos produits.";
-        String detail = String.format("Le produit \"%s\" est maintenant en rupture de stock. Veuillez reconstituer le stock pour continuer les ventes.",
-                product.getProductName());
-        String signature = "Cordialement,\nL'équipe de gestion de stock ShopLoc";
-
-        String content = String.format("""
-            <!DOCTYPE html>
-            <html lang="fr">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Alerte de rupture de stock</title>
-            </head>
-            <body>
-                <p>%s</p>
-                <p>%s</p>
-                <p>%s</p>
-                <p>%s</p>
-            </body>
-            </html>
-            """, greeting, intro, detail, signature);
-
-        return content;
     }
 
 }

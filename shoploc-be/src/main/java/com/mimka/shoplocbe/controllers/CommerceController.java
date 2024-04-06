@@ -10,11 +10,9 @@ import com.mimka.shoplocbe.facades.CommerceFacade;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Set;
@@ -50,13 +48,6 @@ public class CommerceController {
         return this.commerceFacade.createCommerceType(commerceTypeDTO);
     }
 
-
-    @GetMapping("/merchant/{merchantId}")
-    @PreAuthorize("hasAnyAuthority('SCOPE_MERCHANT')")
-    public Long commerceIdByMerchant (@PathVariable Long merchantId) {
-        return this.commerceFacade.getCommerceIdByMerchantId(merchantId);
-    }
-
     @GetMapping("/types")
     @PreAuthorize("hasAnyAuthority('SCOPE_CUSTOMER', 'SCOPE_MERCHANT', 'SCOPE_ADMINISTRATOR')")
     public List<CommerceTypeDTO> commerceTypes ( ) {
@@ -75,35 +66,31 @@ public class CommerceController {
         return this.commerceFacade.getCommerce (commerceId);
     }
 
+    @PostMapping("/{commerceId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAnyAuthority('SCOPE_MERCHANT')")
+    public CommerceDTO addProduct (@PathVariable("commerceId") Long commerceId, @RequestBody @Valid ProductDTO productDTO) throws CommerceNotFoundException {
+        return this.commerceFacade.addProduct (commerceId, productDTO);
+    }
+
     @GetMapping("/{commerceId}/products")
     @PreAuthorize("hasAnyAuthority('SCOPE_CUSTOMER', 'SCOPE_MERCHANT', 'SCOPE_ADMINISTRATOR')")
     public List<ProductDTO> commerceProducts (@PathVariable("commerceId") Long commerceId) throws CommerceNotFoundException {
         return this.commerceFacade.getCommerceProducts(commerceId);
     }
 
-    @GetMapping("/merchant/{merchantId}/products")
-    @PreAuthorize("hasAnyAuthority('SCOPE_CUSTOMER', 'SCOPE_MERCHANT', 'SCOPE_ADMINISTRATOR')")
-    public List<ProductDTO> merchantProducts (@PathVariable("merchantId") Long merchantId) throws CommerceNotFoundException {
-        Long commerceId = this.commerceFacade.getCommerceIdByMerchantId(merchantId);
-        System.out.println("this is the commerce id " + commerceId);
-        return this.commerceFacade.getCommerceProducts(commerceId);
-    }
-
-    @PutMapping(path = "/{commerceId}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PutMapping("/{commerceId}")
     @PreAuthorize("hasAnyAuthority('SCOPE_MERCHANT')")
-    public CommerceDTO updateCommerce (@RequestPart @Valid CommerceDTO commerceDTO,
-                                       @RequestParam("multipartFile") MultipartFile multipartFile,
-                                       @PathVariable("commerceId") Long commerceId) throws CommerceNotFoundException, CommerceTypeNotFoundException {
+    public CommerceDTO updateCommerce (@PathVariable("commerceId") Long commerceId, @RequestBody @Valid CommerceDTO commerceDTO) throws CommerceNotFoundException, CommerceTypeNotFoundException {
         commerceDTO.setCommerceId(commerceId);
-        return this.commerceFacade.updateCommerce(commerceDTO, multipartFile);
+        return this.commerceFacade.updateCommerce(commerceDTO);
     }
 
-    @PostMapping(path = "/", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyAuthority('SCOPE_ADMINISTRATOR')")
-    public CommerceDTO createCommerce (@RequestPart @Valid CommerceDTO commerceDTO,
-                                       @RequestParam("multipartFile") MultipartFile multipartFile) throws CommerceTypeNotFoundException {
-        return this.commerceFacade.addCommerce(commerceDTO, multipartFile);
+    public CommerceDTO createCommerce (@RequestBody @Valid CommerceDTO commerceDTO) throws CommerceTypeNotFoundException {
+        return this.commerceFacade.addCommerce(commerceDTO);
     }
 
     @DeleteMapping("/{commerceId}")

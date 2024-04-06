@@ -3,7 +3,6 @@ package com.mimka.shoplocbe.controllers;
 import com.mimka.shoplocbe.dto.order.OrderDTO;
 import com.mimka.shoplocbe.exception.CommerceNotFoundException;
 import com.mimka.shoplocbe.exception.InsufficientFundsException;
-import com.mimka.shoplocbe.exception.ProductException;
 import com.mimka.shoplocbe.facades.OrderFacade;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +31,12 @@ public class OrderController {
     }
 
     @GetMapping("/settle/using-balance/{orderId}")
-    public OrderDTO settleOrderUsingBalance (@PathVariable long orderId, Principal principal) throws InsufficientFundsException, ProductException {
+    public OrderDTO settleOrderUsingBalance (@PathVariable long orderId, Principal principal) throws InsufficientFundsException {
         return this.orderFacade.settleOrder(principal.getName(), orderId, false);
     }
 
     @GetMapping("/settle/using-points/{orderId}")
-    public OrderDTO settleOrderUsingPoints (@PathVariable long orderId, Principal principal) throws InsufficientFundsException, ProductException {
+    public OrderDTO settleOrderUsingPoints (@PathVariable long orderId, Principal principal) throws InsufficientFundsException {
         return this.orderFacade.settleOrder(principal.getName(), orderId, true);
     }
 
@@ -47,12 +46,12 @@ public class OrderController {
     }
 
     @GetMapping("/settle/using-qr-code-points/{qRCodeUUID}")
-    public Map<String,String> settleOrderUsingPointsQRCode (@PathVariable String qRCodeUUID) throws InsufficientFundsException, ProductException {
+    public Map<String,String> settleOrderUsingPointsQRCode (@PathVariable String qRCodeUUID) throws InsufficientFundsException {
         return this.orderFacade.settleOrderUsingPointsQRCode(qRCodeUUID);
     }
 
     @GetMapping("/settle/using-qr-code-balance/{qRCodeUUID}")
-    public Map<String,String> settleOrderUsingBalanceQRCode (@PathVariable String qRCodeUUID) throws InsufficientFundsException, ProductException {
+    public Map<String,String> settleOrderUsingBalanceQRCode (@PathVariable String qRCodeUUID) throws InsufficientFundsException {
         return this.orderFacade.settleOrderUsingBalanceQRCode(qRCodeUUID);
     }
 }

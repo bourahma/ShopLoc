@@ -1,5 +1,6 @@
 package com.mimka.shoplocbe.batchIT;
 
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.*;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -8,6 +9,7 @@ import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -52,6 +54,7 @@ class BatchSchedulerIT {
     }
 
     @Test
+    @Rollback
     void testVFPBatch_ReturnCOMPLETED() throws Exception {
 
         testBatchVFP(1, 9, true, true);

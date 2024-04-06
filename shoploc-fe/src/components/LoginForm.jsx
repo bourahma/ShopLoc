@@ -27,10 +27,8 @@ const LoginForm = () => {
           "userToken",
           JSON.stringify(data["access-token"])
         );
-        window.localStorage.setItem(
-          "userRole",
-          JSON.stringify(userRole || data["role"])
-        );
+        console.log(data);
+        window.localStorage.setItem("userRole", JSON.stringify(data["role"]));
         navigate(successUrl);
       })
       .catch((error) => {
@@ -187,7 +185,7 @@ const LoginForm = () => {
             </Button>
           )}
           {userRole && (
-            <Button className="" onClick={() => setUserRole("CUSTOMER")}>
+            <Button className="" onClick={() => setUserRole(null)}>
               Êtes-vous client ?
             </Button>
           )}

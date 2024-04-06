@@ -42,7 +42,6 @@ public class OrderDTOUtil {
                         orderProduct.getProduct().getProductName(),
                         orderProduct.getProduct().getPrice(),
                         orderProduct.getProduct().getRewardPointsPrice(),
-                        orderProduct.getProduct().getPromotion() == null ? 0 : orderProduct.getProduct().getPromotion().getPromotionId(),
                         orderProduct.getQuantity()))
                 .collect(Collectors.toSet());
     };
