@@ -16,7 +16,7 @@ VALUES
 
 INSERT INTO Customer (id, username, lastname, firstname, password, email, enabled, vfp_used, phone_number, role, is_vfp_membership, fidelity_card_id)
 VALUES
-    (1, 'Joe', 'John','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'az.az201221@gmail.com', TRUE, TRUE, '06 54 71 03 11', 1, TRUE, '123e4567-e89b-12d3-a456-426614174000'),
+    (1, 'Joe', 'John','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'az.az2012221@gmail.com', TRUE, TRUE, '06 54 71 03 11', 1, TRUE, '123e4567-e89b-12d3-a456-426614174000'),
     (2, 'Mohammed', 'El Khir','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'mohammed@gmail.com', FALSE, FALSE, '06 54 71 03 11', 1, TRUE, '723a4867-e89b-16l3-a858-856918174111'),
     (3, 'Donald', 'Trump','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'az@gmail.com', TRUE, FALSE, '06 54 71 03 11', 1, FALSE, 'e89b-16l3-a858-723a4867-856918174111'),
     (4, 'Jonas', 'Dupont','user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'jonas@gmail.com', TRUE, FALSE, '06 54 71 03 11', 1, FALSE, 'e89b-a858-723a-16l34867-856918174111');
@@ -75,8 +75,8 @@ VALUES
     (5, 'Café des Artistes', '11:00:00', '19:30:00', 14, 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/oscar-nord-6rgwUHMokWU-unsplash.jpg', 5, FALSE),
     (6, 'Fleuriste Parfumé', '09:30:00', '17:00:00', 8, 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/roman-kraft-_oH66az_yug-unsplash.jpg', 6, FALSE),
     (7, 'Artisan du Bois', '10:00:00', '18:00:00', 11, 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/bailey-alexander-DAd_Wn6Mj78-unsplash.jpg', 7, FALSE),
-    (8, 'Délice du Café', '07:00:00', '21:00:00', 14, 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/milo-miloezger-rKYRJu0n06Y-unsplash.jpg', 8, FALSE),
-    (9, 'NULL', '07:00:00', '21:00:00', 15, 'NULL', 9, TRUE);
+    (8, 'Délice du Café', '07:00:00', '21:00:00', 14, 'https://acdnocowtfyjmqeomcec.supabase.co/storage/v1/object/public/shoploc-bucket/milo-miloezger-rKYRJu0n06Y-unsplash.jpg', 8, FALSE);
+
 
 --  ProductCategory's insertion :
 INSERT INTO Product_Category (product_category_id, commerce_id, label, description)
@@ -128,7 +128,7 @@ VALUES
 -- Decoded password : 12345678
 INSERT INTO Merchant (id, username, lastname, firstname, password, email, enabled, phone_number, role, subscription_date, commerce_id)
 VALUES
-    (3, 'Loris', 'Johnson', 'user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'michael.j@gmail.com', TRUE, '06 21 21 84 31', 3, '2024-01-24', 1);
+    (3, 'Loris', 'Johnson', 'user', '$2a$10$jV8P6OmZreOsoqq5p1vp8O8vrvzHriyJBhVHvyKi1mMr5b9fb8yfC', 'az.az2012221@gmail.com', TRUE, '06 21 21 84 31', 3, '2024-01-24', 1);
 
 
 -- OrderStatus's data insertion :
