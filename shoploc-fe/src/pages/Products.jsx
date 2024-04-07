@@ -1,23 +1,43 @@
-import { useEffect, useState } from "react";
+import { React, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import commerceService from "../services/commerce";
 import productSample from "../images/productSample.png";
 import { useCart } from "../services/CartContext";
 import RatingStars from "../components/RatingStars";
 import { FaGift } from "react-icons/fa";
+import DirectionMap from "../components/DirectionMap";
 
 const Product = () => {
     const { commercantId } = useParams();
     const navigate = useNavigate();
     const [commerce, setCommerce] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
-    const [selectedCategory, setSelectedCategory] = useState(""); // State to store the selected category
+    const [selectedCategory, setSelectedCategory] = useState("");
     const { addToCart } = useCart();
     const [products, setProducts] = useState([]);
     const [showOverlay, setShowOverlay] = useState(true);
-    const [categories, setCategories] = useState([]); // State to store the fetched categories
+    const [categories, setCategories] = useState([]);
     const token = localStorage.getItem("userToken");
     const cleanedToken = JSON.parse(token);
+    const [showMap, setShowMap] = useState(false);
+    const [userLocation, setUserLocation] = useState(null); // Coordonnées géographiques de l'utilisateur
+
+    useEffect(() => {
+        // Get user's location using geolocation API
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    setUserLocation({ lat: latitude, lng: longitude });
+                },
+                (error) => {
+                    console.error("Error getting user location:", error);
+                }
+            );
+        } else {
+            console.error("Geolocation is not supported by your browser");
+        }
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -34,7 +54,6 @@ const Product = () => {
                 );
                 setProducts(commerceProducts);
 
-                // Fetch categories
                 const categoriesData =
                     await commerceService.fetchProductsCategories(
                         cleanedToken,
@@ -57,9 +76,6 @@ const Product = () => {
         );
     }
 
-    console.log(products);
-
-    // Filter products based on the selected category
     const filteredProducts = products.filter((product) => {
         const productNameIncludesQuery = product.productName
             .toLowerCase()
@@ -71,7 +87,7 @@ const Product = () => {
     });
 
     const handleBackButtonClick = () => {
-        navigate(-1); // This will navigate back to the previous page
+        navigate(-1);
     };
 
     const handleAddToCart = (product) => {
@@ -82,6 +98,15 @@ const Product = () => {
     const toggleOverlay = () => {
         setShowOverlay(!showOverlay);
     };
+
+    const handleShowMap = () => {
+        setShowMap(!showMap);
+    };
+
+    console.log(userLocation);
+    console.log(commerce.addressDTO);
+    const commerceAddress =
+        commerce.addressDTO.street + ", " + commerce.addressDTO.city;
 
     return (
         <div className="container grid grid-cols-12 gap-10 mx-auto my-8 px-12">
@@ -102,7 +127,7 @@ const Product = () => {
                             clipRule="evenodd"
                         ></path>
                     </svg>
-                    Back
+                    Retour
                 </button>
                 <img
                     src={commerce.imageUrl}
@@ -124,6 +149,12 @@ const Product = () => {
                     <p>
                         {commerce.openingHour}-{commerce.closingHour}
                     </p>
+                    <button
+                        className="bg-shopred text-white py-2 px-4 rounded-md mt-4 hover:bg-red-700"
+                        onClick={handleShowMap}
+                    >
+                        {showMap ? "X Fermer la carte" : "Voir l'itinéraire"}
+                    </button>
                 </div>
             </div>
             <div className="col-span-10">
@@ -157,6 +188,20 @@ const Product = () => {
                         />
                     </div>
                 </div>
+                {showMap && (
+                    <div className="relative h-96 mb-10">
+                        <button
+                            className="absolute top-0 z-50 right-0 bg-shopred text-white py-1 px-3 rounded-md hover:bg-red-700"
+                            onClick={handleShowMap}
+                        >
+                            X 
+                        </button>
+                        <DirectionMap
+                            origin={userLocation}
+                            destination={commerceAddress}
+                        />
+                    </div>
+                )}
                 <div className="grid md:grid-cols-4 gap-4">
                     {filteredProducts.length === 0 ? (
                         <p className="text-red-500 font-bold">
@@ -216,7 +261,7 @@ const Product = () => {
                                     <h3 className="text-lg font-semibold flex justify-between">
                                         {produit.productName}
                                         {produit.gift && (
-                                            <div className="flex text-sm items-center text-shopred justify-center bg-shopyellow/75 px-2 rounded-full">                   
+                                            <div className="flex text-sm items-center text-shopred justify-center bg-shopyellow/75 px-2 rounded-full">
                                                 Gift
                                                 <FaGift className="text-shopred text-sm ml-1" />
                                             </div>

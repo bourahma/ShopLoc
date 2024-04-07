@@ -26,130 +26,150 @@ import CommerceRegistrationForm from "./components/RegisterCommerce";
 import MerchantRegistrationForm from "./components/RegisterMerchant";
 import LaunchPromo from "./components/LaunchPromo";
 import PromoDetails from "./components/PromoDetails";
+import Vfp from "./pages/Vfp"
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Template />}>
-          <Route
-            index
-            element={
-              <PublicRoute>
-                <Header />
-                <FirstScreen />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/home"
-            element={
-              <PrivateRoute>
-                <Header />
-                <HomeComponent />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/signup"
-            element={
-              <PublicRoute>
-                <Header />
-                <SignupForm />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <PublicRoute>
-                <Header />
-                <LoginForm />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/commercant/:commercantId"
-            element={
-              <PrivateRoute>
-                <Header />
-                <Products />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/cart"
-            element={
-              <PrivateRoute>
-                <Header />
-                <Cart />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/admin/home"
-            element={
-              <PrivateRoute>
-                <Header />
-                <AdminHome />
-              </PrivateRoute>
-            }
-          >
-            <Route index element={<CommerceRegistrationForm />} />
-            <Route
-              path="create-merchant"
-              element={<MerchantRegistrationForm />}
-            />
-            <Route path="launch-promo" element={<LaunchPromo />} />
-            <Route
-              path="promo-details/:promotionId"
-              element={<PromoDetails />}
-            />
-          </Route>
-          <Route
-            path="/profile"
-            element={
-              <PrivateRoute>
-                <Header />
-                <Profile />
-              </PrivateRoute>
-            }
-          />
+      <BrowserRouter>
+          <Routes>
+              <Route path="/" element={<Template />}>
+                  <Route
+                      index
+                      element={
+                          <PublicRoute>
+                              <Header />
+                              <FirstScreen />
+                          </PublicRoute>
+                      }
+                  />
+                  <Route
+                      path="/home"
+                      element={
+                          <PrivateRoute>
+                              <Header />
+                              <HomeComponent />
+                          </PrivateRoute>
+                      }
+                  />
+                  <Route
+                      path="/signup"
+                      element={
+                          <PublicRoute>
+                              <Header />
+                              <SignupForm />
+                          </PublicRoute>
+                      }
+                  />
+                  <Route
+                      path="/login"
+                      element={
+                          <PublicRoute>
+                              <Header />
+                              <LoginForm />
+                          </PublicRoute>
+                      }
+                  />
+                  <Route
+                      path="/commercant/:commercantId"
+                      element={
+                          <PrivateRoute>
+                              <Header />
+                              <Products />
+                          </PrivateRoute>
+                      }
+                  />
+                  <Route
+                      path="/cart"
+                      element={
+                          <PrivateRoute>
+                              <Header />
+                              <Cart />
+                          </PrivateRoute>
+                      }
+                  />
+                  <Route
+                      path="/admin/home"
+                      element={
+                          <PrivateRoute>
+                              <Header />
+                              <AdminHome />
+                          </PrivateRoute>
+                      }
+                  >
+                      <Route index element={<CommerceRegistrationForm />} />
+                      <Route
+                          path="create-merchant"
+                          element={<MerchantRegistrationForm />}
+                      />
+                      <Route path="launch-promo" element={<LaunchPromo />} />
+                      <Route
+                          path="promo-details/:promotionId"
+                          element={<PromoDetails />}
+                      />
+                  </Route>
+                  <Route
+                      path="/profile"
+                      element={
+                          <PrivateRoute>
+                              <Header />
+                              <Profile />
+                          </PrivateRoute>
+                      }
+                  />
 
-          <Route
-            path="/checkout"
-            element={
-              <PrivateRoute>
-                <Header />
-                <Checkout />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/merchant/home"
-            element={
-              <PrivateRoute>
-                <Header />
-                <MerchantHome />
-              </PrivateRoute>
-            }
-          >
-            <Route index element={<MerchantProducts />} />
-            <Route path="ajouterProduit/:commerceId" element={<AddProduct />} />
-            <Route path="promotion/:commerceId" element={<AddPromotion />} />
-            <Route path="addCategory/:commerceId" element={<AddCategory />} />
-            <Route
-              path="productDetails/:productId"
-              element={<ProductDetails />}
-            />
-            <Route
-              path="updateProduct/:productId"
-              element={<UpdateProduct />}
-            />
-          </Route>
-        </Route>
-      </Routes>
-    </BrowserRouter>
+                  <Route
+                      path="/profile/vfp"
+                      element={
+                          <PrivateRoute>
+                              <Header />
+                              <Vfp/>
+                          </PrivateRoute>
+                      }
+                  />
+
+                  <Route
+                      path="/checkout"
+                      element={
+                          <PrivateRoute>
+                              <Header />
+                              <Checkout />
+                          </PrivateRoute>
+                      }
+                  />
+                  <Route
+                      path="/merchant/home"
+                      element={
+                          <PrivateRoute>
+                              <Header />
+                              <MerchantHome />
+                          </PrivateRoute>
+                      }
+                  >
+                      <Route index element={<MerchantProducts />} />
+                      <Route
+                          path="ajouterProduit/:commerceId"
+                          element={<AddProduct />}
+                      />
+                      <Route
+                          path="promotion/:commerceId"
+                          element={<AddPromotion />}
+                      />
+                      <Route
+                          path="addCategory/:commerceId"
+                          element={<AddCategory />}
+                      />
+                      <Route
+                          path="productDetails/:productId"
+                          element={<ProductDetails />}
+                      />
+                      <Route
+                          path="updateProduct/:productId"
+                          element={<UpdateProduct />}
+                      />
+                  </Route>
+              </Route>
+          </Routes>
+      </BrowserRouter>
   );
 }
 

@@ -6,6 +6,7 @@ import axios from "axios";
 import { fetchCustomerProfile } from "../services/customer";
 import { fetchLoyaltyCard } from "../services/carteDeFidelite";
 import vfp from "../images/vfp.png";
+import { Link } from "react-router-dom";
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
@@ -18,7 +19,6 @@ const ProfilePage = () => {
     const [timer, setTimer] = useState(0);
     const [isVfpMember, setIsVfpMember] = useState(false);
     const [vfpDetails, setVfpDetails] = useState(null);
-    const [benefits, setBenefits] = useState([]);
 
     const token = localStorage.getItem("userToken");
     const cleanedToken = JSON.parse(token);
@@ -29,31 +29,27 @@ const ProfilePage = () => {
                 const profileData = await fetchCustomerProfile(cleanedToken);
                 const loyaltyCredit = await fetchLoyaltyCard(cleanedToken);
                 const vfpData = await fetchVfpMembership(cleanedToken);
-                const benefitsData = await fetchBenefits(cleanedToken);
 
                 if (profileData) {
                     setCustomerData(profileData);
                 }
                 if (loyaltyCredit) {
-                    setLoyaltyPoints(loyaltyCredit.points);
+                    setLoyaltyPoints(loyaltyCredit);
                 }
                 if (vfpData) {
                     setIsVfpMember(vfpData.vfpMember);
                     setVfpDetails(vfpData);
                 }
-
-                 if (benefitsData) {
-                     setBenefits(benefitsData);
-                 }
             } catch (error) {
-                console.error("Error fetching profile data:", error);
+                console.error(
+                    "Erreur lors de la récupération des données de profil :",
+                    error
+                );
             }
         };
 
         fetchData();
     }, [cleanedToken]);
-
-    console.log(customerData);
 
     const fetchVfpMembership = async (token) => {
         try {
@@ -64,24 +60,13 @@ const ProfilePage = () => {
             });
             return response.data;
         } catch (error) {
-            console.error("Error fetching VFP membership data:", error);
+            console.error(
+                "Erreur lors de la récupération des données d'adhésion VFP :",
+                error
+            );
             return null;
         }
     };
-
-      const fetchBenefits = async (token) => {
-          try {
-              const response = await axios.get(`${SERVER_URL}/benefit/`, {
-                  headers: {
-                      Authorization: `Bearer ${token}`,
-                  },
-              });
-              return response.data;
-          } catch (error) {
-              console.error("Error fetching benefits data:", error);
-              return [];
-          }
-      };
 
     const handleGenerateQRCode = () => {
         setShowQRCode(true);
@@ -92,7 +77,7 @@ const ProfilePage = () => {
         setTimeout(() => {
             setShowQRCode(false);
             clearInterval(interval);
-        }, 30000); // Hide QR code after 30 seconds
+        }, 30000); // Masquer le code QR après 30 secondes
     };
 
     return (
@@ -107,22 +92,23 @@ const ProfilePage = () => {
                         />
                     </div>
                     <div className="flex items-center justify-center mb-4">
-                        {/* <FaStar className="text-yellow-500 text-4xl mr-2" /> */}
                         <h2 className="text-2xl font-bold">
-                            Félicitations ! <br /> Vous etes un membre VFP
+                            Félicitations ! <br /> Vous êtes membre VFP
                         </h2>
                     </div>
                     <div className="text-gray-800 mt-4">
-                        <p>Date de début: {vfpDetails.grantedDate}</p>
-                        <p>
-                            Date d'expiration:{" "}
-                            {vfpDetails.expirationDate}
-                        </p>
+                        <p>Date de début : {vfpDetails.grantedDate}</p>
+                        <p>Date d'expiration : {vfpDetails.expirationDate}</p>
                     </div>
-                    <button
-                    className={"py-1 px-2 mt-2 rounded bg-shopred hover:bg-red-700 text-white font-bold"}
-                    onClick={""}
-                >Mes Cadeaux </button>
+                    <Link to="/profile/vfp">
+                        <button
+                            className={
+                                "py-1 px-2 mt-2 rounded bg-shopred hover:bg-red-700 text-white font-bold"
+                            }
+                        >
+                            Mon espace VFP
+                        </button>
+                    </Link>
                 </div>
             )}
             <div className="max-w-md mx-auto bg-shopgray border border-shopred rounded-lg overflow-hidden">
@@ -130,13 +116,13 @@ const ProfilePage = () => {
                     <div className="flex items-center justify-center">
                         <FaUser className="text-3xl text-shopred mr-2" />
                         <h2 className="text-2xl font-bold">
-                            Profile Information
+                            Informations du profil
                         </h2>
                     </div>
                     {customerData && (
                         <div className="mt-4">
                             <p className="text-gray-800">
-                                <span className="font-semibold">Name :</span>{" "}
+                                <span className="font-semibold">Nom :</span>{" "}
                                 {customerData.firstname} {customerData.lastname}
                             </p>
                             <p className="text-gray-800">
@@ -145,7 +131,7 @@ const ProfilePage = () => {
                             </p>
                             <p className="text-gray-800">
                                 <span className="font-semibold">
-                                    Phone Number :
+                                    Numéro de téléphone :
                                 </span>{" "}
                                 {customerData.phoneNumber}
                             </p>
@@ -156,19 +142,31 @@ const ProfilePage = () => {
             <div className="max-w-md mx-auto mt-8 bg-shopgray border border-shopred rounded-lg overflow-hidden p-4">
                 <div className="flex items-center justify-center mb-4">
                     <FaStar className="text-yellow-500 text-4xl mr-2" />
-                    <h2 className="text-2xl font-bold">Loyalty Card</h2>
+                    <h2 className="text-2xl font-bold">Carte de fidélité</h2>
                 </div>
                 <div className="flex items-center justify-center">
                     <div className="text-gray-800 flex items-center justify-center">
                         <span className="font-semibold text-2xl mr-2">
-                            {loyaltyPoints}
+                            {loyaltyPoints.points}
                         </span>
-                        <span className="text-xl">points</span>
+                        <span className="text-xl font-bold">points</span>
                     </div>
                     <div className="text-gray-600 mx-4">=</div>
                     <div className="text-gray-800 flex items-center justify-center">
                         <span className="font-semibold text-2xl mr-2">
-                            {(loyaltyPoints * 1).toFixed(2)}
+                            {(loyaltyPoints.points * 1).toFixed(2)}
+                        </span>
+                        <span className="text-xl">€</span>
+                    </div>
+                </div>
+                <div className="flex items-center justify-center mt-2">
+                    <div className="text-gray-800 flex items-center justify-center">
+                        <span className="text-xl font-bold">Balance</span>
+                    </div>
+                    <div className="text-gray-600 mx-4">=</div>
+                    <div className="text-gray-800 flex items-center justify-center">
+                        <span className="font-semibold text-2xl mr-2">
+                            {(loyaltyPoints.balance * 1).toFixed(2)}
                         </span>
                         <span className="text-xl">&euro;</span>
                     </div>
@@ -190,10 +188,12 @@ const ProfilePage = () => {
                                 clipRule="evenodd"
                             />
                         </svg>
-                        <h2 className="text-2xl font-bold">Cart Item Count</h2>
+                        <h2 className="text-2xl font-bold">
+                            Nombre d'articles dans le panier
+                        </h2>
                     </div>
                     <p className="text-gray-800 mt-4">
-                        Cart Item Count: {itemCount}
+                        Nombre d'articles dans le panier : {itemCount}
                     </p>
                 </div>
             </div>
@@ -201,7 +201,7 @@ const ProfilePage = () => {
                 <div className="max-w-md mx-auto mt-8 bg-shopgray border border-shopred rounded-lg overflow-hidden">
                     <div className="p-4">
                         <div className="flex items-center justify-center">
-                            <h2 className="text-2xl font-bold">QR Code</h2>
+                            <h2 className="text-2xl font-bold">Code QR</h2>
                         </div>
                         <div className="mt-4 flex justify-center">
                             <QRCode value="https://example.com" size={200} />
@@ -220,8 +220,8 @@ const ProfilePage = () => {
                     disabled={showQRCode}
                 >
                     {showQRCode
-                        ? `Disabled after ... ${timer}s`
-                        : "Generate QR Code"}
+                        ? `Désactivé après ... ${timer}s`
+                        : "Générer le code QR"}
                 </button>
             </div>
         </div>

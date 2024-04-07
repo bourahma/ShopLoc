@@ -19,6 +19,8 @@ const CheckoutPage = () => {
     const [showCreditCard, setShowCreditCard] = useState(false);
     const [rechargeSuccess, setRechargeSuccess] = useState(false);
     const [totalBeforePayment, setTotalBeforePayment] = useState(0);
+    const [commercantIdBeforePayment, setCommercantIdBeforePayment] =
+        useState(0);
     const [paymentOverlay, setPaymentOverlay] = useState(false);
     const [allGift, setAllGift] = useState(false);
     const [allNoGift, setAllNoGift] = useState(false);
@@ -252,6 +254,7 @@ const CheckoutPage = () => {
                     }
                 );
                 // Vérifier si le paiement a réussi
+                setCommercantIdBeforePayment(cartItems[0].commerceId);
                 if (response.status === 200) {
                     // Retirer les produits cadeaux du panier
                     const GiftItems = cartItems.filter((item) => item.gift);
@@ -287,6 +290,7 @@ const CheckoutPage = () => {
                     }
                 );
                 setTotalBeforePayment(totalPrice);
+                setCommercantIdBeforePayment(cartItems[0].commerceId);
                 // Vérifier si le paiement a réussi
                 if (response.status === 200) {
                     clearCart();
@@ -356,9 +360,13 @@ const CheckoutPage = () => {
                             <div className="flex justify-center space-x-4">
                                 <button
                                     className="bg-white text-green-500 text-sm px-6 py-2 rounded-md hover:bg-green-100"
-                                    onClick={() => navigate("/")}
+                                    onClick={() =>
+                                        navigate(
+                                            `/commercant/${commercantIdBeforePayment}`
+                                        )
+                                    }
                                 >
-                                    Continuer le shopping
+                                    Voir L'iténeraire
                                 </button>
                                 {!allGift && !allNoGift && (
                                     <button
@@ -420,7 +428,7 @@ const CheckoutPage = () => {
                                 <div className="flex items-center justify-center mb-4">
                                     <FaStar className="text-yellow-500 text-4xl mr-2" />
                                     <h2 className="text-2xl font-bold">
-                                        Loyalty Card
+                                        Carte de fidélité
                                     </h2>
                                 </div>
                                 <div className="flex items-center justify-center">
@@ -467,15 +475,15 @@ const CheckoutPage = () => {
                             <div className="text-center mt-4 font-semibold">
                                 {allGift && (
                                     <p className="text-green-400">
-                                        Tout vos produits sont des cadeaux,
-                                        préfére de les acheter en utilisant des
-                                        points si vous avez
+                                        Tous vos produits sont des cadeaux, il
+                                        est donc préférable de les acheter avec
+                                        des points si vous en avez
                                     </p>
                                 )}
                                 {!allGift && !allNoGift && (
                                     <p className="text-green-400">
                                         Attention ! Quelques produits sont
-                                        payable avec des points si vous avez
+                                        payable avec des points si vous en avez
                                     </p>
                                 )}
                             </div>
@@ -589,7 +597,7 @@ const CheckoutPage = () => {
                             <div className="flex items-center justify-center mb-4">
                                 <FaStar className="text-yellow-500 text-4xl mr-2" />
                                 <h2 className="text-2xl font-bold">
-                                    Loyalty Card
+                                    Carte de fidélité
                                 </h2>
                             </div>
                             <div className="flex items-center justify-center">
@@ -612,14 +620,14 @@ const CheckoutPage = () => {
                             {allGift && (
                                 <p className="text-green-500">
                                     Tous les produits sont des cadeaux, vous
-                                    pouvez tous payer avec les points !
+                                    pouvez payer avec des points !
                                 </p>
                             )}
                             {allNoGift && (
                                 <p className="text-red-500">
-                                    Aucun produit cadeau dans le panier, vous ne
-                                    pouvez pas utiliser cette méthode de
-                                    paiement.
+                                    Il n'y a pas de produits cadeaux dans le
+                                    panier, vous ne pouvez pas utiliser ce mode
+                                    de paiement.
                                 </p>
                             )}
                             {!allGift && !allNoGift && (
